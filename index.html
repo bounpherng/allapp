@@ -1,0 +1,856 @@
+<!doctype html>
+<html lang="lo">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="ລະບົບອອນໄລນ໌" />
+  <meta name="theme-color" content="#2ecc71" />
+  <title>ລວມເຄື່ອງມືຕ່າງໆ</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  
+  <link rel="icon" href="/icon-192.png" />
+  <style>
+    :root {
+      --primary-color: #2ecc71;
+      --secondary-color: #27ae60;
+      --danger-color: #e74c3c;
+      --text-color: #ecf0f1;
+      --bg-color-dark: #1a2525;
+      --card-bg: rgba(44, 62, 80, 0.75);
+      --border-color: rgba(46, 204, 113, 0.3);
+      --shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      --font-family: 'Noto Sans Lao', system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+    }
+
+    @keyframes gradient-animation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      color: var(--text-color);
+      font-family: var(--font-family);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background: linear-gradient(-45deg, #1a2525, #2c3e50, #27ae60, #1a2525);
+      background-size: 400% 400%;
+      animation: gradient-animation 15s ease infinite;
+      padding: 16px;
+    }
+
+    .hidden { display: none !important; }
+
+    #app-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      animation: fadeIn .6s ease-out;
+      position: relative;
+    }
+
+    #login-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+      animation: fadeIn .6s ease-out;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: clamp(24px, 4vw, 40px);
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      overflow-x: hidden;
+    }
+    
+    #login-container .card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .logo {
+      width: clamp(80px, 15vw, 100px);
+      aspect-ratio: 1/1;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 0 28px var(--secondary-color);
+      border: 3px solid var(--secondary-color);
+    }
+
+    .title {
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 700;
+      text-shadow: 0 0 12px rgba(46, 204, 113, 0.7);
+    }
+
+    .badge {
+      font-weight: 500;
+      color: var(--primary-color);
+      font-size: clamp(14px, 2vw, 16px);
+    }
+    
+    /* === START: REVISED GRID LAYOUT (1 Column Mobile) === */
+    .grid { 
+      display: flex;
+      flex-direction: column; /* Mobile: 1 column by default */
+      gap: 12px; /* Reduced gap for compactness */
+      width: 100%; 
+    }
+    
+    /* Desktop: 3 columns */
+    @media (min-width: 769px) {
+      .grid {
+        flex-direction: row; /* Change back to horizontal */
+        flex-wrap: wrap;
+        gap: 16px; /* Restore original gap for desktop */
+      }
+      .link-card {
+        flex-basis: calc(33.333% - 11px);
+        flex-grow: 1;
+      }
+    }
+    /* === END: REVISED GRID LAYOUT === */
+
+    .link-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 16px;
+      padding: 16px; /* Reduced padding for compactness */
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border-color);
+      transition: transform .3s ease, box-shadow .3s ease, background .3s ease;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      text-decoration: none;
+    }
+
+    .link-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+      background: rgba(46, 204, 113, 0.15);
+    }
+
+    .link-icon { font-size: 24px; line-height: 1; color: var(--secondary-color); width: 40px; text-align: center; } /* Reduced icon size */
+    .link-text { flex-grow: 1; font-size: clamp(16px, 2.5vw, 18px); font-weight: 500; color: #fff; }
+    .link-arrow { font-size: 20px; opacity: .8; transition: transform .3s ease; color: var(--text-color); }
+    .link-card:hover .link-arrow { transform: translateX(5px); }
+
+    #sidebar-toggle {
+      display: block;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: transparent;
+      border: none;
+      color: var(--text-color);
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    #sidebar {
+      position: fixed;
+      top: 0;
+      left: -320px;
+      height: 100%;
+      width: 300px;
+      z-index: 1000;
+      transition: left 0.3s ease;
+      padding: 20px;
+      overflow-y: auto;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    #sidebar.open { left: 0; }
+    #sidebar-backdrop {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+      z-index: 999;
+    }
+
+    #sidebar-backdrop.active { display: block; }
+    #sidebar .hero { margin-bottom: 16px; gap: 8px; }
+    .user-info { font-size: 14px; color: #bdc3c7; word-break: break-all; }
+
+    .sidebar-menu { width: 100%; border-top: 1px solid var(--border-color); margin-top: 16px; padding-top: 16px; }
+    .sidebar-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      padding: 12px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: var(--font-family);
+      font-size: 16px;
+      width: 100%;
+      margin-bottom: 12px;
+      transition: background .3s, transform .2s;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar-btn:hover { background: rgba(46, 204, 113, 0.2); transform: translateX(5px); }
+    .sidebar-btn.danger-btn { background: var(--danger-color); border-color: #c0392b; }
+    .sidebar-btn.danger-btn:hover { background: #c0392b; }
+    .footer { margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 20px; text-align: center; font-size: clamp(13px, 2vw, 14px); color: #b7c4c9; }
+    .social-links { display: flex; justify-content: center; gap: 16px; margin-bottom: 16px; }
+    .social-links a { color: var(--text-color); font-size: 24px; transition: color .3s ease, transform .3s ease; }
+    .social-links a:hover { color: var(--primary-color); transform: scale(1.1); }
+
+    #admin-panel .card { padding: clamp(16px, 3vw, 24px); min-height: auto; }
+    #admin-panel h2 { margin-bottom: 20px; }
+    
+    .form-grid { 
+        display: grid;
+        gap: 16px; 
+        margin-bottom: 20px; 
+    }
+    @media (min-width: 600px) { 
+        .form-grid { 
+            grid-template-columns: 1fr 1fr;
+        } 
+    }
+    
+    .form-group { display: flex; flex-direction: column; }
+    .form-group label { margin-bottom: 6px; font-size: 14px; }
+    .form-group input, .form-group select {
+      background-color: rgba(0,0,0,0.2);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 16px;
+      width: 100%;
+    }
+    .form-actions { display: flex; gap: 12px; justify-content: flex-end; }
+    .btn {
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      font-family: var(--font-family);
+      transition: background-color .3s;
+    }
+    .btn-primary { background-color: var(--primary-color); color: #fff; }
+    .btn-primary:hover { background-color: var(--secondary-color); }
+    .btn-secondary { background-color: #95a5a6; color: #fff; }
+    .btn-secondary:hover { background-color: #7f8c8d; }
+    .btn-danger { background-color: var(--danger-color); color: #fff; }
+    .btn-danger:hover { background-color: #c0392b; }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .data-table th, .data-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 14px;
+    }
+    .data-table th {
+      background-color: var(--secondary-color);
+      color: #fff;
+      text-transform: uppercase;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover { background-color: rgba(46, 204, 113, 0.1); }
+    .btn-icon { background: transparent; border: none; font-size: 18px; cursor: pointer; color: var(--primary-color); padding: 5px; }
+    .btn-edit { color: #3498db; }
+    .btn-delete { color: var(--danger-color); }
+
+    @media (max-width: 600px) {
+      .data-table, .data-table tbody, .data-table td, .data-table tr, .data-table th {
+        display: block;
+        width: 100%;
+      }
+      .data-table thead { display: none; }
+      .data-table tr {
+        margin-bottom: 15px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .data-table td {
+        border-bottom: 1px solid var(--border-color);
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+      }
+      .data-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        width: calc(50% - 20px);
+        text-align: left;
+        font-weight: 700;
+        color: var(--secondary-color);
+      }
+      
+      .data-table td:last-child {
+        text-align: center;
+        padding: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+      }
+      .data-table td:last-child::before {
+        content: none;
+      }
+      .btn-icon {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        background-color: rgba(255, 255, 255, 0.05);
+        font-size: 16px;
+        transition: background-color 0.2s;
+      }
+      .btn-icon:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+      }
+      .btn-icon span {
+        display: inline;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      body { padding: 0; }
+      #app-content, .container { padding: 0; }
+      .card {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        min-height: 100vh;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        padding: 40px 20px;
+      }
+      #login-container .card { justify-content: center; }
+      .title { font-size: clamp(20px, 5vw, 28px); }
+      .link-text { font-size: clamp(15px, 4vw, 17px); }
+      .form-grid { grid-template-columns: 1fr !important; gap: 12px; }
+      .form-actions { flex-direction: column; align-items: stretch; }
+      .form-actions .btn { width: 100%; margin-bottom: 8px; }
+      #admin-panel .card { padding: 16px; border-radius: 0; }
+    }
+
+    @media (min-width: 769px) {
+      #sidebar { border-top-right-radius: 24px; border-bottom-right-radius: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="login-container">
+    <section class="card">
+      <header class="hero">
+        <img class="logo" src="https://i.ibb.co/F4VGPVB1/image.png" alt="ລະບົບອອນໄລ Logo" />
+        <h1 class="title">ກະລຸນາເຂົ້າສູ່ລະບົບ</h1>
+        <p class="badge">ເພື່ອສືບຕໍ່ໃຊ້ງານລະບົບອອນໄລນ໌</p>
+      </header>
+      <button id="google-signin-btn" style="background-color: #ffffff; color: #333; border: none; padding: 12px 24px; border-radius: 8px; font-family: var(--font-family); font-size: 16px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; transition: background-color .3s ease, box-shadow .3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        <i class="fab fa-google" style="font-size: 20px; color: #DB4437;"></i>
+        <span>ເຂົ້າສູ່ລະບົບດ້ວຍ Google</span>
+      </button>
+    </section>
+  </div>
+
+  <div id="app-content" class="hidden">
+    <button id="sidebar-toggle" aria-label="Open sidebar menu"><i class="fas fa-bars"></i></button>
+    <div id="sidebar-backdrop"></div>
+    <aside id="sidebar">
+      <header class="hero">
+        <img id="user-photo" class="logo" src="https://placehold.co/120x120/2c3e50/ecf0f1?text=User" alt="ຮູບໂປຣໄຟລ໌" />
+        <h2 id="user-display-name" class="title" style="font-size: 1.2em;">ຍິນດີຕ້ອນຮັບ</h2>
+         <p id="user-email" class="user-info"></p>
+      </header>
+      <div class="sidebar-menu">
+        <button id="admin-manage-btn" class="sidebar-btn hidden"><i class="fas fa-database"></i><span>ຈັດການຂໍ້ມູນ</span></button>
+        <button id="about-app-btn" class="sidebar-btn"><i class="fas fa-info-circle"></i><span>ກ່ຽວກັບແອັບ</span></button>
+        <button id="logout-btn" class="sidebar-btn danger-btn"><i class="fas fa-sign-out-alt"></i><span>ອອກຈາກລະບົບ</span></button>
+      </div>
+    </aside>
+
+    <main id="main-content" class="container">
+      <section class="card main-card">
+        <header class="hero">
+           <img class="logo" src="https://i.ibb.co/F4VGPVB1/image.png" alt="ລະບົບອອນໄລ Logo" />
+          <h1 class="title">ລວມເຄື່ອງມືຕ່າງໆ</h1>
+          <p class="badge" id="lao-date"></p>
+        </header>
+       
+        <div class="grid" id="link-grid"></div>
+        <footer class="footer">
+          <div class="social-links">
+            <a href="https://www.facebook.com/Phetsaiyaphoom?rdid=r1ybXu9G2h95D2NO" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+             <a href="https://www.youtube.com/@it-banban5487" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="https://api.whatsapp.com/send/?phone=8562091270509" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+          </div>
+          <div class="footer-note">
+            <p>ພັດທະນາໂດຍ: <b>ທ.ບຸນເຜີ້ງ ເພັດໄຊຍະພູມ</b></p>
+            <p>ໂທ: <a href="tel:+8562091270509"><b>020 9127 0509</b></a></p>
+            <p>Copyright 2025 ©</p>
+          </div>
+        </footer>
+      </section>
+    </main>
+
+    <div id="admin-panel" class="container hidden">
+      <section class="card">
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+          <h2 class="title" style="font-size: 1.5em; margin-bottom: 0;">ຈັດການຂໍ້ມູນ Dashboard</h2>
+          <button id="back-to-dashboard-btn" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> ກັບຄືນ</button>
+        </header>
+        <form id="button-form" class="card" style="background: rgba(0,0,0,0.2); margin-bottom: 24px;">
+          <h3 id="form-title" style="margin-bottom: 16px;">ເພີ່ມປຸ່ມໃໝ່</h3>
+          <input type="hidden" id="form-doc-id">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="button-name">ຊື່ປຸ່ມ (Name)</label>
+              <input type="text" id="button-name" required>
+            </div>
+             <div class="form-group">
+              <label for="button-link">ລິ້ງ (Link)</label>
+              <input type="url" id="button-link" required>
+            </div>
+            <div class="form-group">
+              <label for="button-icon">ໄອຄອນ (Font Awesome)</label>
+              <input type="text" id="button-icon" placeholder="ຕົວຢ່າງ: fa-globe">
+            </div>
+            <div class="form-group">
+              <label for="button-sort">ລຳດັບ (Sort Order)</label>
+              <input type="number" id="button-sort" value="99">
+            </div>
+            <div class="form-group">
+              <label for="button-status">ສະຖານະ (Status)</label>
+              <select id="button-status">
+                <option value="true">ເປີດໃຊ້ງານ (True)</option>
+                <option value="false">ປິດໃຊ້ງານ (False)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-actions">
+             <button type="button" id="form-clear-btn" class="btn btn-secondary">ລ້າງຟອມ</button>
+            <button type="submit" class="btn btn-primary">ບັນທຶກ</button>
+          </div>
+        </form>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                 <th>ຊື່</th>
+                <th>Icon</th>
+                <th>ລຳດັບ</th>
+                <th>ສະຖານະ</th>
+                <th>ຈັດການ</th>
+              </tr>
+             </thead>
+            <tbody id="buttons-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, getDocs, doc, addDoc, updateDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyD8fd_23dLQPbLqfqbakpJtlzjIOD_B-Jw",
+      authDomain: "myapp-506ca.firebaseapp.com",
+      projectId: "myapp-506ca",
+      storageBucket: "myapp-506ca.appspot.com",
+      messagingSenderId: "341275741284",
+      appId: "1:341275741284:web:f955e6c5a273e4be616371"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const buttonsCollectionRef = collection(db, "dashboard_buttons");
+    const loginContainer = document.getElementById('login-container');
+    const appContent = document.getElementById('app-content');
+    const mainContent = document.getElementById('main-content');
+    const googleSignInBtn = document.getElementById('google-signin-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const userPhoto = document.getElementById('user-photo');
+    const userDisplayName = document.getElementById('user-display-name');
+    const userEmail = document.getElementById('user-email');
+    const linkGrid = document.getElementById('link-grid');
+    const laoDateEl = document.getElementById('lao-date');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+    const aboutAppBtn = document.getElementById('about-app-btn');
+    const adminPanel = document.getElementById('admin-panel');
+    const adminManageBtn = document.getElementById('admin-manage-btn');
+    const backToDashboardBtn = document.getElementById('back-to-dashboard-btn');
+    const buttonForm = document.getElementById('button-form');
+    const formTitle = document.getElementById('form-title');
+    const formDocId = document.getElementById('form-doc-id');
+    const formClearBtn = document.getElementById('form-clear-btn');
+    const buttonsTableBody = document.getElementById('buttons-table-body');
+
+    const signInWithGoogle = () => {
+      const provider = new GoogleAuthProvider();
+      signInWithPopup(auth, provider).catch((error) => console.error("Sign-in Error:", error));
+    };
+
+    const signOutUser = () => {
+      signOut(auth).catch((error) => console.error("Sign-out Error:", error));
+    };
+
+    const showNotification = (title, icon = 'success') => {
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: icon,
+        title: title,
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+           toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+      });
+    };
+    
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        loginContainer.classList.add('hidden');
+        appContent.classList.remove('hidden');
+        mainContent.classList.remove('hidden');
+        adminPanel.classList.add('hidden');
+        updateUserInfo(user);
+        checkAdminStatusAndLoadDashboard(user);
+      } else {
+        loginContainer.classList.remove('hidden');
+        appContent.classList.add('hidden');
+        linkGrid.innerHTML = '';
+          adminManageBtn.classList.add('hidden');
+      }
+    });
+    const updateUserInfo = (user) => {
+      userPhoto.src = user.photoURL || 'https://placehold.co/120x120/2c3e50/ecf0f1?text=User';
+      userDisplayName.textContent = user.displayName || 'ຜູ້ໃຊ້';
+      userEmail.textContent = user.email;
+    };
+
+    const checkAdminStatusAndLoadDashboard = async (user) => {
+      try {
+        const adminQuerySnapshot = await getDocs(collection(db, "admins"));
+        const adminEmails = adminQuerySnapshot.docs.map(doc => doc.data().email.trim().toLowerCase());
+        const isAdmin = adminEmails.includes(user.email.toLowerCase());
+        adminManageBtn.classList.toggle('hidden', !isAdmin);
+        loadDashboardButtons(isAdmin);
+      } catch (error) {
+        console.error("Error checking admin status:", error);
+        loadDashboardButtons(false);
+        adminManageBtn.classList.add('hidden');
+      }
+    };
+
+    const loadDashboardButtons = async (isAdmin) => {
+      linkGrid.innerHTML = 'ກຳລັງໂຫລດ...';
+      try {
+        const querySnapshot = await getDocs(buttonsCollectionRef);
+        let buttons = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        buttons.sort((a, b) => (a.sortOrder || 99) - (b.sortOrder || 99));
+        const buttonsToShow = isAdmin ? buttons : buttons.filter(button => String(button.status) === "true");
+        renderButtons(buttonsToShow);
+      } catch (error) {
+        console.error("Error loading dashboard buttons:", error);
+        linkGrid.innerHTML = '<p style="color: var(--danger-color);">ບໍ່ສາມາດໂຫລດຂໍ້ມູນໄດ້.</p>';
+      }
+    };
+    const renderButtons = (buttons) => {
+      linkGrid.innerHTML = buttons.length === 0 ?
+        '<p>ບໍ່ພົບຂໍ້ມູນລາຍການ.</p>' :
+        buttons.map(button => `
+          <a class="link-card" href="${button.link || '#'}" target="_blank" rel="noopener">
+            <i class="link-icon fas ${button.icon || 'fa-link'}"></i>
+            <span class="link-text">${button.name || 'ບໍ່ມີຊື່'}</span>
+            <i class="link-arrow fas fa-chevron-right"></i>
+          </a>
+        `).join('');
+    };
+
+    const loadAdminTable = async () => {
+      buttonsTableBody.innerHTML = '<tr><td colspan="5">ກຳລັງໂຫລດ...</td></tr>';
+      try {
+        const querySnapshot = await getDocs(buttonsCollectionRef);
+        let buttons = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        buttons.sort((a, b) => (a.sortOrder || 99) - (b.sortOrder || 99));
+        renderAdminTable(buttons);
+      } catch (error) {
+        console.error("Error loading data for admin table:", error);
+        buttonsTableBody.innerHTML = '<tr><td colspan="5" style="color: var(--danger-color);">ໂຫລດຂໍ້ມູນບໍ່ສຳເລັດ</td></tr>';
+      }
+    };
+    const renderAdminTable = (buttons) => {
+      buttonsTableBody.innerHTML = buttons.length === 0 ?
+        '<tr><td colspan="5">ບໍ່ມີຂໍ້ມູນໃນລະບົບ</td></tr>' :
+        buttons.map(btn => `
+          <tr data-id="${btn.id}">
+            <td data-label="ຊື່">${btn.name || ''}</td>
+            <td data-label="Icon"><i class="fas ${btn.icon || ''}"></i> ${btn.icon || ''}</td>
+            <td data-label="ລຳດັບ">${btn.sortOrder || 99}</td>
+            <td data-label="ສະຖານະ">${String(btn.status) === 'true' ? 'ເປີດ' : 'ປິດ'}</td>
+            <td data-label="ຈັດການ">
+              <button class="btn-icon btn-edit" data-id="${btn.id}" title="ແກ້ໄຂ"><i class="fas fa-edit"></i> <span>ແກ້ໄຂ</span></button>
+              <button class="btn-icon btn-delete" data-id="${btn.id}" title="ລົບ"><i class="fas fa-trash-alt"></i> <span>ລົບ</span></button>
+            </td>
+          </tr>
+        `).join('');
+    };
+
+    const handleFormSubmit = async (e) => {
+      e.preventDefault();
+      const docId = formDocId.value;
+      const buttonData = {
+        name: document.getElementById('button-name').value,
+        link: document.getElementById('button-link').value,
+        icon: document.getElementById('button-icon').value,
+        sortOrder: Number(document.getElementById('button-sort').value),
+        status: document.getElementById('button-status').value,
+      };
+      try {
+        if (docId) {
+          await updateDoc(doc(db, "dashboard_buttons", docId), buttonData);
+          showNotification("ອັບເດດຂໍ້ມູນສຳເລັດ!");
+        } else {
+          await addDoc(buttonsCollectionRef, buttonData);
+          showNotification("ເພີ່ມຂໍ້ມູນໃໝ່ສຳເລັດ!");
+        }
+        clearForm();
+        loadAdminTable();
+        checkAdminStatusAndLoadDashboard(auth.currentUser);
+      } catch (error) {
+        console.error("Error saving data:", error);
+        showNotification("ເກີດຂໍ້ຜິດພາດໃນການບັນທຶກຂໍ້ມູນ.", 'error');
+      }
+    };
+
+    const handleTableClick = (e) => {
+      const button = e.target.closest('button');
+      if (!button) return;
+      const docId = button.dataset.id;
+      if (!docId) return;
+      if (button.classList.contains('btn-edit')) {
+        editButton(docId);
+      }
+      if (button.classList.contains('btn-delete')) {
+        deleteButton(docId);
+      }
+    };
+
+    const editButton = async (docId) => {
+      Swal.fire({
+        title: 'ກຳລັງໂຫລດຂໍ້ມູນ...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+      try {
+        const docSnap = await getDoc(doc(db, "dashboard_buttons", docId));
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          formDocId.value = docId;
+          document.getElementById('button-name').value = data.name || '';
+          document.getElementById('button-link').value = data.link || '';
+          document.getElementById('button-icon').value = data.icon || '';
+          document.getElementById('button-sort').value = data.sortOrder || 99;
+          document.getElementById('button-status').value = String(data.status) === 'true' ? 'true' : 'false';
+          formTitle.textContent = "ແກ້ໄຂຂໍ້ມູນປຸ່ມ";
+          
+          Swal.close();
+          
+          buttonForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            Swal.close();
+            showNotification("ບໍ່ພົບຂໍ້ມູນທີ່ຕ້ອງການແກ້ໄຂ", "error");
+        }
+      } catch (error) {
+        Swal.close();
+        console.error("Error fetching document for edit:", error);
+        showNotification("ເກີດຂໍ້ຜິດພາດໃນການໂຫລດຂໍ້ມູນ", "error");
+      }
+    };
+    const deleteButton = (docId) => {
+        Swal.fire({
+            title: 'ທ່ານແນ່ໃຈບໍ່?',
+            text: "ທ່ານຕ້ອງການລົບລາຍການນີ້ແທ້ບໍ່? ຖ້າລົບແລ້ວຈະບໍ່ສາມາດກູ້ຄືນໄດ້!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e74c3c',
+            
+            cancelButtonColor: '#95a5a6',
+            confirmButtonText: 'ແມ່ນ, ລົບເລີຍ!',
+            cancelButtonText: 'ຍົກເລີກ'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await deleteDoc(doc(db, "dashboard_buttons", docId));
+                           showNotification("ລົບຂໍ້ມູນສຳເລັດ!", 'success');
+                    loadAdminTable();
+                    checkAdminStatusAndLoadDashboard(auth.currentUser);
+                } catch (error) {
+                    console.error("Error deleting document:", error);
+    
+                    showNotification("ເກີດຂໍ້ຜິດພາດໃນການລົບຂໍ້ມູນ.", 'error');
+                }
+            }
+        });
+    };
+    
+    const clearForm = () => {
+      buttonForm.reset();
+      formDocId.value = '';
+      formTitle.textContent = "ເພີ່ມປຸ່ມໃໝ່";
+    };
+    googleSignInBtn.addEventListener('click', signInWithGoogle);
+    logoutBtn.addEventListener('click', signOutUser);
+    
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      sidebarBackdrop.classList.toggle('active');
+    });
+    sidebarBackdrop.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      sidebarBackdrop.classList.remove('active');
+    });
+    adminManageBtn.addEventListener('click', () => {
+      mainContent.classList.add('hidden');
+      adminPanel.classList.remove('hidden');
+      sidebar.classList.remove('open');
+      sidebarBackdrop.classList.remove('active');
+      loadAdminTable();
+    });
+    backToDashboardBtn.addEventListener('click', () => {
+      mainContent.classList.remove('hidden');
+      adminPanel.classList.add('hidden');
+    });
+    aboutAppBtn.addEventListener('click', () => {
+      Swal.fire({
+        title: '<strong>ກ່ຽວກັບແອັບພລິເຄຊັນ</strong>',
+        icon: 'info',
+        html:
+          'ລະບົບລວມເຄື່ອງມືອອນໄລນ໌<br>' +
+          'ພັດທະນາໂດຍ: <b>ທ. ບຸນເຜີ້ງ ເພັດໄຊຍະພູມ</b>',
+        showCloseButton: true,
+        focusConfirm: false,
+        confirmButtonText: '<i class="fa fa-thumbs-up"></i> ຮັບຊາບ!',
+        confirmButtonAriaLabel: 'Thumbs up, great!',
+      })
+    });
+
+    buttonForm.addEventListener('submit', handleFormSubmit);
+    formClearBtn.addEventListener('click', clearForm);
+    buttonsTableBody.addEventListener('click', handleTableClick);
+    function formatLaoDate() {
+      const date = new Date();
+      const days = ['ວັນອາທິດ', 'ວັນຈັນ', 'ວັນອັງຄານ', 'ວັນພຸດ', 'ວັນພະຫັດ', 'ວັນສຸກ', 'ວັນເສົາ'];
+      const months = ['ມັງກອນ', 'ກຸມພາ', 'ມີນາ', 'ເມສາ', 'ພຶດສະພາ', 'ມິຖຸນາ', 'ກໍລະກົດ', 'ສິງຫາ', 'ກັນຍາ', 'ຕຸລາ', 'ພະຈິກ', 'ທັນວາ'];
+      return `${days[date.getDay()]} ທີ ${date.getDate()} ເດືອນ ${months[date.getMonth()]} ປີ ${date.getFullYear()}`;
+    }
+    laoDateEl.textContent = formatLaoDate();
+  </script>
+
+
+
+<script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+          .then(registration => {
+            console.log('Service Worker registered: ', registration);
+          })
+          .catch(error => {
+            console.log('Service Worker registration failed: ', error);
+          });
+      });
+    }
+</script>
+
+</body>
+</html>
