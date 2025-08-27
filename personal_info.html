@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ລະບົບບັນທຶກຂໍ້ມູນສ່ວນຕົວ</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- SweetAlert2 for Notifications -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --text-color: #ecf0f1;
+            --bg-color: #2c3e50;
+            --card-bg: rgba(44, 62, 80, 0.85);
+            --border-color: rgba(52, 152, 219, 0.5);
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            --font-family: 'Noto Sans Lao', system-ui, sans-serif;
+        }
+
+        /* --- Base Styles & Animations --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: linear-gradient(45deg, #2c3e50, #34495e);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Main Containers --- */
+        .container {
+            width: 100%;
+            max-width: 900px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: clamp(20px, 4vw, 40px);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+        }
+
+        /* --- Login & Access Denied Views --- */
+        #login-container .card, #access-denied-container .card {
+            max-width: 450px;
+            margin: auto;
+            text-align: center;
+        }
+
+        #login-container h1, #access-denied-container h1 {
+            font-size: 2em;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        #access-denied-container h1 {
+            color: var(--danger-color);
+        }
+
+        #login-container p, #access-denied-container p {
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+
+        #google-signin-btn {
+            background-color: #fff;
+            color: #333;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-family: var(--font-family);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #google-signin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        #google-signin-btn .fa-google {
+            color: #DB4437;
+        }
+
+        /* --- App View Header --- */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-color);
+        }
+
+        .user-info span {
+            font-weight: 500;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            font-family: var(--font-family);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .btn-danger { background-color: var(--danger-color); }
+        .btn-danger:hover { background-color: #c0392b; }
+        .btn-secondary { background-color: #7f8c8d; }
+        .btn-secondary:hover { background-color: #6c7a7b; }
+        .btn-success { background-color: var(--success-color); }
+        .btn-success:hover { background-color: #27ae60; }
+
+
+        /* --- Form & Fields --- */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .main-title {
+            text-align: center;
+            font-size: 2.2em;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .security-warning {
+            text-align: center;
+            background-color: rgba(231, 76, 60, 0.1);
+            border: 1px solid var(--danger-color);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .security-warning i {
+            margin-right: 10px;
+        }
+
+        fieldset {
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        legend {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.4em;
+            padding: 0 15px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="password"],
+        input[type="email"],
+        textarea {
+            font-family: var(--font-family);
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            background-color: rgba(0, 0, 0, 0.2);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+        }
+
+        input:disabled, textarea:disabled {
+            background-color: rgba(0, 0, 0, 0.1);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .password-group {
+            position: relative;
+        }
+        
+        .password-group .icon-btn {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            opacity: 0.7;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px;
+        }
+        .password-group .icon-btn:hover {
+            opacity: 1;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+            }
+            .container {
+                padding: 0;
+            }
+            .card {
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            .app-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .form-actions {
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Login View -->
+    <div id="login-container" class="container">
+        <section class="card">
+            <h1><i class="fas fa-lock"></i> ລະບົບບັນທຶກຂໍ້ມູນ</h1>
+            <p>ກະລຸນາເຂົ້າສູ່ລະບົບດ້ວຍ Google ເພື່ອເຂົ້າເຖິງ ແລະ ບັນທຶກຂໍ້ມູນຂອງທ່ານຢ່າງປອດໄພ.</p>
+            <button id="google-signin-btn">
+                <i class="fab fa-google"></i>
+                <span>ເຂົ້າສູ່ລະບົບດ້ວຍ Google</span>
+            </button>
+        </section>
+    </div>
+
+    <!-- Access Denied View -->
+    <div id="access-denied-container" class="container hidden">
+        <section class="card">
+            <h1><i class="fas fa-ban"></i> ບໍ່ມີສິດເຂົ້າເຖິງ</h1>
+            <p>ຂໍອະໄພ, ບັນຊີຂອງທ່ານບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ເຂົ້າເຖິງໜ້າຂໍ້ມູນນີ້.</p>
+            <p>ກະລຸນາຕິດຕໍ່ຜູ້ເບິ່ງແຍງລະບົບ.</p>
+        </section>
+    </div>
+
+    <!-- Main App View -->
+    <div id="app-container" class="container hidden">
+        <section class="card">
+            <header class="app-header">
+                <div class="user-info">
+                    <img id="user-photo" src="" alt="User Photo">
+                    <span id="user-email"></span>
+                </div>
+                <div>
+                    <a href="./index.html" class="btn btn-secondary" style="text-decoration: none;"><i class="fas fa-arrow-left"></i> ກັບຄືນໜ້າຫຼັກ</a>
+                    <button id="logout-btn" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> ອອກຈາກລະບົບ</button>
+                </div>
+            </header>
+
+            <main>
+                <h1 class="main-title">ຂໍ້ມູນສ່ວນຕົວ ແລະ ການເຮັດວຽກ</h1>
+                
+                <div class="security-warning">
+                    <i class="fas fa-exclamation-triangle"></i> 
+                    <strong>ຄຳເຕືອນ:</strong> ເພື່ອຄວາມປອດໄພ, ບໍ່ຄວນບັນທຶກລະຫັດຜ່ານທີ່ສຳຄັນທີ່ສຸດ. ໃຊ້ໜ້ານີ້ເພື່ອບັນທຶກຂໍ້ມູນສ່ວນຕົວເທົ່ານັ້ນ.
+                </div>
+
+                <form id="info-form">
+                    <!-- Work Information -->
+                    <fieldset>
+                        <legend><i class="fas fa-briefcase"></i> ຂໍ້ມູນການເຮັດວຽກ</legend>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="workplace">ບ່ອນເຮັດວຽກ</label>
+                                <input type="text" id="workplace" value="ຫ້ອງການປະກັນສັງຄົມແຂວງອັດຕະປື" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="date_sso95">ວັນເດືອນປີເຂົ້າ ຫປສ 95</label>
+                                <input type="date" id="date_sso95" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="date_sso_full">ວັນເດືອນປີເຂົ້າການ ຫປສ ສົມບູນ</label>
+                                <input type="date" id="date_sso_full" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="date_trade_union">ວັນເດືອນປີເຂົ້າກຳມະບານ ຮາກຖານ</label>
+                                <input type="date" id="date_trade_union" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="date_youth_union">ວັນທີເຂົ້າຊາວໜຸ່ມ</label>
+                                <input type="date" id="date_youth_union" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="date_party_reserve">ວັນເດືອນປີເຂົ້າພັກສຳຮອງ</label>
+                                <input type="date" id="date_party_reserve" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="date_party_full">ວັນເດືອນປີເຂົ້າສົມບູນ</label>
+                                <input type="date" id="date_party_full" disabled>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="other_info">ຂໍ້ມູນອື່ນໆໃນອະນາຄົດ</label>
+                                <textarea id="other_info" disabled></textarea>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Account Information -->
+                    <fieldset>
+                        <legend><i class="fas fa-users-cog"></i> ຂໍ້ມູນບັນຊີ</legend>
+                        
+                        <!-- Account 1 -->
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="email1">Gmail</label>
+                                <input type="email" id="email1" value="bunpheing33@gmail.com" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="gmail_pass1">ລະຫັດຜ່ານ Gmail</label>
+                                <div class="password-group">
+                                    <input type="password" id="gmail_pass1" disabled>
+                                    <button type="button" class="icon-btn toggle-vis" data-target="gmail_pass1"><i class="fas fa-eye"></i></button>
+                                    <button type="button" class="icon-btn copy-btn" style="right: 40px;" data-target="gmail_pass1"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                             <div class="form-group">
+                                <label for="fb_pass1">ລະຫັດຜ່ານ Facebook</label>
+                                <div class="password-group">
+                                    <input type="password" id="fb_pass1" disabled>
+                                    <button type="button" class="icon-btn toggle-vis" data-target="fb_pass1"><i class="fas fa-eye"></i></button>
+                                    <button type="button" class="icon-btn copy-btn" style="right: 40px;" data-target="fb_pass1"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <hr style="border-color: var(--border-color); margin: 20px 0;">
+
+                        <!-- Account 2 -->
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="email2">Gmail</label>
+                                <input type="email" id="email2" value="myshare350@gmail.com" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="gmail_pass2">ລະຫັດຜ່ານ Gmail</label>
+                                <div class="password-group">
+                                    <input type="password" id="gmail_pass2" disabled>
+                                    <button type="button" class="icon-btn toggle-vis" data-target="gmail_pass2"><i class="fas fa-eye"></i></button>
+                                    <button type="button" class="icon-btn copy-btn" style="right: 40px;" data-target="gmail_pass2"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="fb_pass2">ລະຫັດຜ່ານ Facebook</label>
+                                <div class="password-group">
+                                    <input type="password" id="fb_pass2" disabled>
+                                    <button type="button" class="icon-btn toggle-vis" data-target="fb_pass2"><i class="fas fa-eye"></i></button>
+                                    <button type="button" class="icon-btn copy-btn" style="right: 40px;" data-target="fb_pass2"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <hr style="border-color: var(--border-color); margin: 20px 0;">
+
+                        <!-- Account 3 -->
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="email3">Gmail</label>
+                                <input type="email" id="email3" value="itban65@gmail.com" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="gmail_pass3">ລະຫັດຜ່ານ Gmail</label>
+                                <div class="password-group">
+                                    <input type="password" id="gmail_pass3" disabled>
+                                    <button type="button" class="icon-btn toggle-vis" data-target="gmail_pass3"><i class="fas fa-eye"></i></button>
+                                    <button type="button" class="icon-btn copy-btn" style="right: 40px;" data-target="gmail_pass3"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="fb_pass3">ລະຫັດຜ່ານ Facebook</label>
+                                <div class="password-group">
+                                    <input type="password" id="fb_pass3" disabled>
+                                    <button type="button" class="icon-btn toggle-vis" data-target="fb_pass3"><i class="fas fa-eye"></i></button>
+                                    <button type="button" class="icon-btn copy-btn" style="right: 40px;" data-target="fb_pass3"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <div id="form-actions-view" class="form-actions">
+                        <button type="button" id="edit-btn" class="btn"><i class="fas fa-pencil-alt"></i> ແກ້ໄຂຂໍ້ມູນ</button>
+                    </div>
+
+                    <div id="form-actions-edit" class="form-actions hidden">
+                        <button type="button" id="cancel-btn" class="btn btn-secondary"><i class="fas fa-times"></i> ຍົກເລີກ</button>
+                        <button type="submit" id="save-btn" class="btn btn-success"><i class="fas fa-save"></i> ບັນທຶກຂໍ້ມູນ</button>
+                    </div>
+                </form>
+            </main>
+        </section>
+    </div>
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // Firebase configuration from your project
+        const firebaseConfig = {
+            apiKey: "AIzaSyD8fd_23dLQPbLqfqbakpJtlzjIOD_B-Jw",
+            authDomain: "myapp-506ca.firebaseapp.com",
+            projectId: "myapp-506ca",
+            storageBucket: "myapp-506ca.appspot.com",
+            messagingSenderId: "341275741284",
+            appId: "1:341275741284:web:f955e6c5a273e4be616371"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // --- DOM Elements ---
+        const loginContainer = document.getElementById('login-container');
+        const appContainer = document.getElementById('app-container');
+        const accessDeniedContainer = document.getElementById('access-denied-container');
+        const googleSignInBtn = document.getElementById('google-signin-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const userPhoto = document.getElementById('user-photo');
+        const userEmail = document.getElementById('user-email');
+        const infoForm = document.getElementById('info-form');
+        const editBtn = document.getElementById('edit-btn');
+        const saveBtn = document.getElementById('save-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const viewActions = document.getElementById('form-actions-view');
+        const editActions = document.getElementById('form-actions-edit');
+        
+        const allInputs = infoForm.querySelectorAll('input, textarea');
+        const allToggleBtns = infoForm.querySelectorAll('.toggle-vis');
+        const allCopyBtns = infoForm.querySelectorAll('.copy-btn');
+
+        // --- Helper Functions ---
+        const showNotification = (title, icon = 'success') => {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: icon,
+                title: title,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+        };
+
+        const setFormState = (isEditing) => {
+            allInputs.forEach(input => {
+                if (input.id !== 'workplace' && !input.id.startsWith('email')) {
+                    input.disabled = !isEditing;
+                }
+            });
+            viewActions.classList.toggle('hidden', isEditing);
+            editActions.classList.toggle('hidden', !isEditing);
+        };
+
+        // --- Authentication & Authorization ---
+        const signInWithGoogle = () => {
+            const provider = new GoogleAuthProvider();
+            signInWithPopup(auth, provider).catch(error => {
+                console.error("Authentication Error:", error);
+                showNotification('ການເຂົ້າສູ່ລະບົບຜິດພາດ', 'error');
+            });
+        };
+
+        const signOutUser = () => {
+            signOut(auth).catch(error => {
+                console.error("Sign Out Error:", error);
+                showNotification('ການອອກຈາກລະບົບຜິດພາດ', 'error');
+            });
+        };
+        
+        // ===== IMPROVED AUTHORIZATION CHECK =====
+        // This function now ONLY checks against the 'admins' collection in Firestore.
+        const checkAuthorization = async (user) => {
+            if (!user) return false;
+            
+            try {
+                const adminsCol = collection(db, "admins");
+                const adminSnapshot = await getDocs(adminsCol);
+                const adminEmails = adminSnapshot.docs.map(doc => doc.data().email.trim().toLowerCase());
+                
+                // Return true only if the user's email is found in the collection
+                return adminEmails.includes(user.email.trim().toLowerCase());
+            } catch (e) {
+                console.error("Error checking 'admins' collection: ", e);
+                showNotification("ບໍ່ສາມາດກວດສອບສິດໄດ້", "error");
+                return false; // Fail safely if Firestore check fails
+            }
+        };
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const isAuthorized = await checkAuthorization(user);
+
+                if (isAuthorized) {
+                    // User is authorized, show the app
+                    loginContainer.classList.add('hidden');
+                    accessDeniedContainer.classList.add('hidden');
+                    appContainer.classList.remove('hidden');
+                    userPhoto.src = user.photoURL;
+                    userEmail.textContent = user.email;
+                    loadData(user);
+                } else {
+                    // User is logged in but NOT authorized
+                    loginContainer.classList.add('hidden');
+                    appContainer.classList.add('hidden');
+                    accessDeniedContainer.classList.remove('hidden');
+                    signOutUser(); 
+                }
+            } else {
+                // User is signed out
+                loginContainer.classList.remove('hidden');
+                appContainer.classList.add('hidden');
+                accessDeniedContainer.classList.add('hidden');
+            }
+        });
+
+        // --- Firestore Data Handling ---
+        const getDataDocRef = (user) => {
+            return doc(db, "personal_notes", user.uid);
+        };
+
+        const loadData = async (user) => {
+            if (!user) return;
+            const docRef = getDataDocRef(user);
+            try {
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    Object.keys(data).forEach(key => {
+                        const element = document.getElementById(key);
+                        if (element) {
+                            element.value = data[key];
+                        }
+                    });
+                    showNotification('ໂຫຼດຂໍ້ມູນສຳເລັດ', 'success');
+                } else {
+                    showNotification('ຍິນດີຕ້ອນຮັບ! ກະລຸນາຕື່ມຂໍ້ມູນຂອງທ່ານ.', 'info');
+                }
+            } catch (error) {
+                console.error("Error loading data:", error);
+                showNotification('ບໍ່ສາມາດໂຫຼດຂໍ້ມູນໄດ້', 'error');
+            } finally {
+                setFormState(false);
+            }
+        };
+
+        const saveData = async () => {
+            const user = auth.currentUser;
+            if (!user) {
+                showNotification('ກະລຸນາເຂົ້າສູ່ລະບົບກ່ອນ', 'error');
+                return;
+            }
+            const isAuthorized = await checkAuthorization(user);
+            if (!isAuthorized) {
+                 showNotification('ທ່ານບໍ່ມີສິດບັນທຶກຂໍ້ມູນ', 'error');
+                 return;
+            }
+            
+            const dataToSave = {};
+            allInputs.forEach(input => {
+                dataToSave[input.id] = input.value;
+            });
+
+            const docRef = getDataDocRef(user);
+            try {
+                await setDoc(docRef, dataToSave, { merge: true });
+                showNotification('ບັນທຶກຂໍ້ມູນສຳເລັດ!', 'success');
+                setFormState(false);
+            } catch (error) {
+                console.error("Error saving data:", error);
+                showNotification('ການບັນທຶກຂໍ້ມູນຜິດພາດ', 'error');
+            }
+        };
+
+        // --- Event Listeners ---
+        googleSignInBtn.addEventListener('click', signInWithGoogle);
+        logoutBtn.addEventListener('click', signOutUser);
+
+        editBtn.addEventListener('click', () => {
+            setFormState(true);
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            loadData(auth.currentUser);
+        });
+
+        infoForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveData();
+        });
+        
+        allToggleBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetInput = document.getElementById(btn.dataset.target);
+                const icon = btn.querySelector('i');
+                if (targetInput.type === 'password') {
+                    targetInput.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    targetInput.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        });
+
+        allCopyBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetInput = document.getElementById(btn.dataset.target);
+                
+                if (targetInput.value === "") {
+                    showNotification('ບໍ່ມີຂໍ້ມູນໃຫ້ຄັດລອກ', 'warning');
+                    return;
+                }
+                const originalType = targetInput.type;
+                targetInput.type = 'text';
+                targetInput.select();
+                targetInput.setSelectionRange(0, 99999);
+                
+                try {
+                    document.execCommand('copy');
+                    showNotification('ຄັດລອກລະຫັດຜ່ານແລ້ວ!', 'success');
+                } catch (err) {
+                    showNotification('ບໍ່ສາມາດຄັດລອກໄດ້', 'error');
+                }
+
+                targetInput.type = originalType;
+                window.getSelection().removeAllRanges();
+            });
+        });
+
+    </script>
+</body>
+</html>
