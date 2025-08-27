@@ -331,7 +331,6 @@
     .btn-edit { color: #3498db; }
     .btn-delete { color: var(--danger-color); }
 
-    /* START: Styles for Config Panel */
     #config-panel h1, #config-panel h2 {
       color: var(--primary-color);
       text-align: center;
@@ -369,8 +368,6 @@
       width: 100%;
       margin-top: 10px;
     }
-    /* END: Styles for Config Panel */
-
 
     @media (max-width: 600px) {
       .data-table, .data-table tbody, .data-table td, .data-table tr, .data-table th {
@@ -484,6 +481,8 @@
       <div class="sidebar-menu">
         <button id="admin-manage-btn" class="sidebar-btn hidden"><i class="fas fa-database"></i><span>ຈັດການຂໍ້ມູນ</span></button>
         <button id="config-manage-btn" class="sidebar-btn hidden"><i class="fas fa-cog"></i><span>ຈັດການຂໍ້ມູນຄຳນວນ</span></button>
+        <!-- ===== NEW BUTTON ADDED HERE ===== -->
+        <button id="personal-info-btn" class="sidebar-btn hidden"><i class="fas fa-user-shield"></i><span>ຂໍ້ມູນສ່ວນຕົວ</span></button>
         <button id="about-app-btn" class="sidebar-btn"><i class="fas fa-info-circle"></i><span>ກ່ຽວກັບແອັບ</span></button>
         <button id="logout-btn" class="sidebar-btn danger-btn"><i class="fas fa-sign-out-alt"></i><span>ອອກຈາກລະບົບ</span></button>
       </div>
@@ -506,7 +505,7 @@
           </div>
           <div class="footer-note">
             <p>ພັດທະນາໂດຍ: <b>ທ.ບຸນເຜີ້ງ ເພັດໄຊຍະພູມ</b></p>
-            <p>ໂທ: <a href="tel:+8562091270509"><b>020 9127 0509 vs 1.1</b></a></p>
+            <p>ໂທ: <a href="tel:+8562091270509"><b>020 9127 0509 vs 1.2</b></a></p>
             <p>Copyright 2025 ©</p>
           </div>
         </footer>
@@ -676,10 +675,12 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script type="module">
+    // Import Firebase modules
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, collection, getDocs, doc, addDoc, updateDoc, deleteDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     
+    // Firebase configuration from your project
     const firebaseConfig = {
       apiKey: "AIzaSyD8fd_23dLQPbLqfqbakpJtlzjIOD_B-Jw",
       authDomain: "myapp-506ca.firebaseapp.com",
@@ -689,6 +690,7 @@
       appId: "1:341275741284:web:f955e6c5a273e4be616371"
     };
     
+    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
@@ -720,11 +722,14 @@
     const formClearBtn = document.getElementById('form-clear-btn');
     const buttonsTableBody = document.getElementById('buttons-table-body');
     
-    // Admin Panel (Config settings) - NEW
+    // Admin Panel (Config settings)
     const configPanel = document.getElementById('config-panel');
     const configManageBtn = document.getElementById('config-manage-btn');
     const backToDashboardFromConfigBtn = document.getElementById('back-to-dashboard-from-config-btn');
     const configForm = document.getElementById('config-form');
+
+    // Personal Info Button (NEW)
+    const personalInfoBtn = document.getElementById('personal-info-btn');
 
     // --- Helper Functions ---
     const showNotification = (title, icon = 'success') => {
@@ -802,6 +807,7 @@
         linkGrid.innerHTML = '';
         adminManageBtn.classList.add('hidden');
         configManageBtn.classList.add('hidden');
+        personalInfoBtn.classList.add('hidden'); // Hide on logout
       }
     });
     
@@ -818,15 +824,18 @@
         const adminEmails = adminQuerySnapshot.docs.map(doc => doc.data().email.trim().toLowerCase());
         const isAdmin = adminEmails.includes(user.email.toLowerCase());
         
+        // Toggle visibility of all admin buttons based on status
         adminManageBtn.classList.toggle('hidden', !isAdmin);
-        configManageBtn.classList.toggle('hidden', !isAdmin); // Show/hide new button
+        configManageBtn.classList.toggle('hidden', !isAdmin);
+        personalInfoBtn.classList.toggle('hidden', !isAdmin);
         
         loadDashboardButtons(isAdmin);
       } catch (error) {
         console.error("Error checking admin status:", error);
-        loadDashboardButtons(false);
+        loadDashboardButtons(false); // Load public view on error
         adminManageBtn.classList.add('hidden');
         configManageBtn.classList.add('hidden');
+        personalInfoBtn.classList.add('hidden');
       }
     };
 
@@ -984,7 +993,7 @@
       formTitle.textContent = "ເພີ່ມປຸ່ມໃໝ່";
     };
 
-    // --- Admin Panel (Configuration) Logic - NEW ---
+    // --- Admin Panel (Configuration) Logic ---
     const getConfigDocRef = () => doc(db, "configuration", "appConfig");
 
     async function loadConfigIntoForm() {
@@ -1142,6 +1151,14 @@
             configPanel.classList.remove('hidden');
             closeSidebar();
             loadConfigIntoForm();
+        });
+    });
+
+    // ===== NEW EVENT LISTENER =====
+    personalInfoBtn.addEventListener('click', () => {
+        promptForAdminCode(() => {
+            // On successful code entry, navigate to the personal info page
+            window.location.href = './personal_info.html';
         });
     });
 
