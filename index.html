@@ -6,15 +6,16 @@
   <meta name="description" content="ລະບົບອອນໄລນ໌" />
   <meta name="theme-color" content="#2ecc71" />
   <title>ລວມເຄື່ອງມືຕ່າງໆ</title>
+  
   <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icon-192.png" />
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-  
-  <link rel="icon" href="/icon-192.png" />
+
   <style>
     :root {
       --primary-color: #2ecc71;
@@ -26,6 +27,7 @@
       --border-color: rgba(46, 204, 113, 0.3);
       --shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
       --font-family: 'Noto Sans Lao', system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+      --input-bg: rgba(0, 0, 0, 0.2);
     }
 
     @keyframes gradient-animation {
@@ -54,6 +56,7 @@
       background-size: 400% 400%;
       animation: gradient-animation 15s ease infinite;
       padding: 16px;
+      line-height: 1.6;
     }
 
     .hidden { display: none !important; }
@@ -134,33 +137,30 @@
       font-size: clamp(14px, 2vw, 16px);
     }
     
-    /* === START: REVISED GRID LAYOUT (1 Column Mobile) === */
     .grid { 
       display: flex;
-      flex-direction: column; /* Mobile: 1 column by default */
-      gap: 12px; /* Reduced gap for compactness */
-      width: 100%; 
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
     }
     
-    /* Desktop: 3 columns */
     @media (min-width: 769px) {
       .grid {
-        flex-direction: row; /* Change back to horizontal */
+        flex-direction: row;
         flex-wrap: wrap;
-        gap: 16px; /* Restore original gap for desktop */
+        gap: 16px;
       }
       .link-card {
         flex-basis: calc(33.333% - 11px);
         flex-grow: 1;
       }
     }
-    /* === END: REVISED GRID LAYOUT === */
 
     .link-card {
       position: relative;
       overflow: hidden;
       border-radius: 16px;
-      padding: 16px; /* Reduced padding for compactness */
+      padding: 16px;
       background: rgba(0, 0, 0, 0.2);
       border: 1px solid var(--border-color);
       transition: transform .3s ease, box-shadow .3s ease, background .3s ease;
@@ -177,7 +177,7 @@
       background: rgba(46, 204, 113, 0.15);
     }
 
-    .link-icon { font-size: 24px; line-height: 1; color: var(--secondary-color); width: 40px; text-align: center; } /* Reduced icon size */
+    .link-icon { font-size: 24px; line-height: 1; color: var(--secondary-color); width: 40px; text-align: center; }
     .link-text { flex-grow: 1; font-size: clamp(16px, 2.5vw, 18px); font-weight: 500; color: #fff; }
     .link-arrow { font-size: 20px; opacity: .8; transition: transform .3s ease; color: var(--text-color); }
     .link-card:hover .link-arrow { transform: translateX(5px); }
@@ -258,8 +258,8 @@
     .social-links a { color: var(--text-color); font-size: 24px; transition: color .3s ease, transform .3s ease; }
     .social-links a:hover { color: var(--primary-color); transform: scale(1.1); }
 
-    #admin-panel .card { padding: clamp(16px, 3vw, 24px); min-height: auto; }
-    #admin-panel h2 { margin-bottom: 20px; }
+    #admin-panel .card, #config-panel .card { padding: clamp(16px, 3vw, 24px); min-height: auto; }
+    #admin-panel h2, #config-panel h2 { margin-bottom: 20px; }
     
     .form-grid { 
         display: grid;
@@ -330,6 +330,47 @@
     .btn-icon { background: transparent; border: none; font-size: 18px; cursor: pointer; color: var(--primary-color); padding: 5px; }
     .btn-edit { color: #3498db; }
     .btn-delete { color: var(--danger-color); }
+
+    /* START: Styles for Config Panel */
+    #config-panel h1, #config-panel h2 {
+      color: var(--primary-color);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #config-panel fieldset {
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    #config-panel legend {
+      color: var(--primary-color);
+      font-weight: 700;
+      font-size: 1.2em;
+      padding: 0 10px;
+    }
+    #config-panel .form-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    #config-panel .dynamic-group {
+        border: 1px solid rgba(255,255,255,0.1);
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        background-color: rgba(0,0,0,0.1);
+    }
+    #config-panel .dynamic-group h4 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 10px;
+    }
+    #config-panel .btn {
+      width: 100%;
+      margin-top: 10px;
+    }
+    /* END: Styles for Config Panel */
+
 
     @media (max-width: 600px) {
       .data-table, .data-table tbody, .data-table td, .data-table tr, .data-table th {
@@ -408,7 +449,7 @@
       .form-grid { grid-template-columns: 1fr !important; gap: 12px; }
       .form-actions { flex-direction: column; align-items: stretch; }
       .form-actions .btn { width: 100%; margin-bottom: 8px; }
-      #admin-panel .card { padding: 16px; border-radius: 0; }
+      #admin-panel .card, #config-panel .card { padding: 16px; border-radius: 0; }
     }
 
     @media (min-width: 769px) {
@@ -438,10 +479,11 @@
       <header class="hero">
         <img id="user-photo" class="logo" src="https://placehold.co/120x120/2c3e50/ecf0f1?text=User" alt="ຮູບໂປຣໄຟລ໌" />
         <h2 id="user-display-name" class="title" style="font-size: 1.2em;">ຍິນດີຕ້ອນຮັບ</h2>
-         <p id="user-email" class="user-info"></p>
+        <p id="user-email" class="user-info"></p>
       </header>
       <div class="sidebar-menu">
         <button id="admin-manage-btn" class="sidebar-btn hidden"><i class="fas fa-database"></i><span>ຈັດການຂໍ້ມູນ</span></button>
+        <button id="config-manage-btn" class="sidebar-btn hidden"><i class="fas fa-cog"></i><span>ຈັດການຂໍ້ມູນຄຳນວນ</span></button>
         <button id="about-app-btn" class="sidebar-btn"><i class="fas fa-info-circle"></i><span>ກ່ຽວກັບແອັບ</span></button>
         <button id="logout-btn" class="sidebar-btn danger-btn"><i class="fas fa-sign-out-alt"></i><span>ອອກຈາກລະບົບ</span></button>
       </div>
@@ -450,7 +492,7 @@
     <main id="main-content" class="container">
       <section class="card main-card">
         <header class="hero">
-           <img class="logo" src="https://i.ibb.co/F4VGPVB1/image.png" alt="ລະບົບອອນໄລ Logo" />
+          <img class="logo" src="https://i.ibb.co/F4VGPVB1/image.png" alt="ລະບົບອອນໄລ Logo" />
           <h1 class="title">ລວມເຄື່ອງມືຕ່າງໆ</h1>
           <p class="badge" id="lao-date"></p>
         </header>
@@ -459,12 +501,12 @@
         <footer class="footer">
           <div class="social-links">
             <a href="https://www.facebook.com/Phetsaiyaphoom?rdid=r1ybXu9G2h95D2NO" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-             <a href="https://www.youtube.com/@it-banban5487" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="https://www.youtube.com/@it-banban5487" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
             <a href="https://api.whatsapp.com/send/?phone=8562091270509" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
           </div>
           <div class="footer-note">
             <p>ພັດທະນາໂດຍ: <b>ທ.ບຸນເຜີ້ງ ເພັດໄຊຍະພູມ</b></p>
-            <p>ໂທ: <a href="tel:+8562091270509"><b>020 9127 0509</b></a></p>
+            <p>ໂທ: <a href="tel:+8562091270509"><b>020 9127 0509 vs 1.1</b></a></p>
             <p>Copyright 2025 ©</p>
           </div>
         </footer>
@@ -485,7 +527,7 @@
               <label for="button-name">ຊື່ປຸ່ມ (Name)</label>
               <input type="text" id="button-name" required>
             </div>
-             <div class="form-group">
+            <div class="form-group">
               <label for="button-link">ລິ້ງ (Link)</label>
               <input type="url" id="button-link" required>
             </div>
@@ -514,17 +556,120 @@
           <table class="data-table">
             <thead>
               <tr>
-                 <th>ຊື່</th>
+                <th>ຊື່</th>
                 <th>Icon</th>
                 <th>ລຳດັບ</th>
                 <th>ສະຖານະ</th>
                 <th>ຈັດການ</th>
               </tr>
-             </thead>
+            </thead>
             <tbody id="buttons-table-body"></tbody>
           </table>
         </div>
       </section>
+    </div>
+    
+    <div id="config-panel" class="container hidden">
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h2 class="title" style="font-size: 1.5em; margin-bottom: 0;">ຈັດການຂໍ້ມູນການຕັ້ງຄ່າ</h2>
+            <button id="back-to-dashboard-from-config-btn" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> ກັບຄືນ</button>
+        </header>
+        <p style="text-align:center; opacity:0.8; margin-bottom: 20px;">
+            ຟອມນີ້ຈະໂຫຼດ ແລະ ບັນທຶກຂໍ້ມູນທັງໝົດລົງໃນ Document: <strong>configuration/appConfig</strong>
+        </p>
+
+        <form id="config-form">
+            <fieldset>
+                <legend>ເງິນເດືອນ (Salary)</legend>
+                <div class="form-grid">
+                    <div class="form-group"><label for="salary_indexMultiplier">ຕົວຄູນດັດສະນີ</label><input type="number" id="salary_indexMultiplier"></div>
+                    <div class="form-group"><label for="salary_livingAllowance">ເງິນຄ່າຄອງຊີບ</label><input type="number" id="salary_livingAllowance"></div>
+                    <div class="form-group"><label for="salary_childAllowance">ອຸດໜູນລູກ</label><input type="number" id="salary_childAllowance"></div>
+                    <div class="form-group"><label for="salary_wifeAllowance">ອຸດໜູນເມຍ</label><input type="number" id="salary_wifeAllowance"></div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>ການຫັກ (Deductions)</legend>
+                <div class="form-grid">
+                    <div class="form-group"><label for="deductions_civilRate">ອັດຕາຫັກປະກັນສັງຄົມ (ລັດຖະກອນ)</label><input type="number" step="0.001" id="deductions_civilRate"></div>
+                    <div class="form-group"><label for="deductions_pensionHealthRate">ອັດຕາຫັກປະກັນສຸຂະພາບ (ບຳນານ)</label><input type="number" step="0.00001" id="deductions_pensionHealthRate"></div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>ອຸດໜູນພາກລັດ (Government Subsidy)</legend>
+                <div class="form-grid">
+                    <div class="form-group"><label for="govSubsidy_deathAllowanceYearsLimit">ປີຈຳກັດ (ເສຍຊີວິດ)</label><input type="number" id="govSubsidy_deathAllowanceYearsLimit"></div>
+                    <div class="form-group"><label for="govSubsidy_deathAllowanceBaseMonths">ເດືອນພື້ນຖານ (ເສຍຊີວິດ)</label><input type="number" id="govSubsidy_deathAllowanceBaseMonths"></div>
+                    <div class="form-group"><label for="govSubsidy_deathAllowanceFormulaMonths1">ເດືອນໃນສູດ 1</label><input type="number" id="govSubsidy_deathAllowanceFormulaMonths1"></div>
+                    <div class="form-group"><label for="govSubsidy_deathAllowanceFormulaMonths2">ເດືອນໃນສູດ 2</label><input type="number" id="govSubsidy_deathAllowanceFormulaMonths2"></div>
+                    <div class="form-group"><label for="govSubsidy_deathAllowanceFormulaMonths3">ເດືອນໃນສູດ 3</label><input type="number" id="govSubsidy_deathAllowanceFormulaMonths3"></div>
+                    <div class="form-group"><label for="govSubsidy_widowAllowanceMonths">ເດືອນອຸດໜູນໝ້າຍ</label><input type="number" id="govSubsidy_widowAllowanceMonths"></div>
+                    <div class="form-group"><label for="govSubsidy_severancePayMultiplier">ຕົວຄູນບຳເນັດອອກການ</label><input type="number" step="0.1" id="govSubsidy_severancePayMultiplier"></div>
+                    <div class="form-group"><label for="govSubsidy_widowPensionMultiplier">ຕົວຄູນບຳນານໝ້າຍ</label><input type="number" step="0.1" id="govSubsidy_widowPensionMultiplier"></div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>ອຸດໜູນພາກວິສາຫະກິດ (Enterprise Subsidy)</legend>
+                <div class="form-grid">
+                     <div class="form-group"><label for="entSubsidy_baseMonths">ເດືອນພື້ນຖານ</label><input type="number" id="entSubsidy_baseMonths"></div>
+                     <div class="form-group"><label for="entSubsidy_childbirthBenefitMultiplier">ຕົວຄູນບຳເນັດເກີດລູກ</label><input type="number" step="0.1" id="entSubsidy_childbirthBenefitMultiplier"></div>
+                </div>
+                <br>
+                <div class="dynamic-group">
+                    <h4>ຕົວຄູນອຸດໜູນເກີດລູກ</h4>
+                    <div class="form-grid">
+                        <div class="form-group"><label for="entSubsidy_ca_month1">ເດືອນ 1</label><input type="number" step="0.1" id="entSubsidy_ca_month1"></div>
+                        <div class="form-group"><label for="entSubsidy_ca_month2">ເດືອນ 2</label><input type="number" step="0.1" id="entSubsidy_ca_month2"></div>
+                        <div class="form-group"><label for="entSubsidy_ca_month3">ເດືອນ 3</label><input type="number" step="0.1" id="entSubsidy_ca_month3"></div>
+                        <div class="form-group"><label for="entSubsidy_ca_month4">ເດືອນ 4</label><input type="number" step="0.1" id="entSubsidy_ca_month4"></div>
+                    </div>
+                </div>
+                <div class="dynamic-group">
+                    <h4>ເງິນເສຍຊີວິດ</h4>
+                    <div class="form-grid">
+                        <div class="form-group"><label for="entSubsidy_db_yearLimit">ປີຈຳກັດ</label><input type="number" id="entSubsidy_db_yearLimit"></div>
+                        <div class="form-group"><label for="entSubsidy_db_baseMonths">ເດືອນພື້ນຖານ</label><input type="number" id="entSubsidy_db_baseMonths"></div>
+                        <div class="form-group"><label for="entSubsidy_db_formulaMonths1">ເດືອນໃນສູດ 1</label><input type="number" id="entSubsidy_db_formulaMonths1"></div>
+                        <div class="form-group"><label for="entSubsidy_db_formulaMonths2">ເດືອນໃນສູດ 2</label><input type="number" id="entSubsidy_db_formulaMonths2"></div>
+                        <div class="form-group"><label for="entSubsidy_db_formulaMonths3">ເດືອນໃນສູດ 3</label><input type="number" id="entSubsidy_db_formulaMonths3"></div>
+                    </div>
+                </div>
+                <div class="dynamic-group">
+                    <h4>ບຳເນັດອອກການ</h4>
+                    <div class="form-grid">
+                         <div class="form-group"><label for="entSubsidy_sp_maxMonths">ເດືອນສູງສຸດ</label><input type="number" id="entSubsidy_sp_maxMonths"></div>
+                         <div class="form-group"><label for="entSubsidy_sp_yearMultiplier">ຕົວຄູນປີ</label><input type="number" step="0.1" id="entSubsidy_sp_yearMultiplier"></div>
+                    </div>
+                </div>
+            </fieldset>
+            
+            <fieldset>
+                <legend>ຂັ້ນເງິນປີການ (Year Allowance Tiers)</legend>
+                <div id="yearTiersContainer"></div>
+            </fieldset>
+
+            <fieldset>
+                <legend>ຂັ້ນອາກອນ (Tax Brackets)</legend>
+                <div id="taxBracketsContainer"></div>
+            </fieldset>
+
+            <fieldset>
+                <legend>ການຕັ້ງຄ່າໜ້າເວັບ (UI)</legend>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="ui_visitorCountStart">ຈຳນວນຜູ້ເຂົ້າຊົມເລີ່ມຕົ້ນ</label>
+                        <input type="number" id="ui_visitorCountStart">
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">ບັນທຶກການຕັ້ງຄ່າ</button>
+            </div>
+        </form>
     </div>
   </div>
 
@@ -533,7 +678,8 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, collection, getDocs, doc, addDoc, updateDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, addDoc, updateDoc, deleteDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    
     const firebaseConfig = {
       apiKey: "AIzaSyD8fd_23dLQPbLqfqbakpJtlzjIOD_B-Jw",
       authDomain: "myapp-506ca.firebaseapp.com",
@@ -542,10 +688,13 @@
       messagingSenderId: "341275741284",
       appId: "1:341275741284:web:f955e6c5a273e4be616371"
     };
+    
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
     const buttonsCollectionRef = collection(db, "dashboard_buttons");
+
+    // --- DOM Elements ---
     const loginContainer = document.getElementById('login-container');
     const appContent = document.getElementById('app-content');
     const mainContent = document.getElementById('main-content');
@@ -560,6 +709,8 @@
     const sidebar = document.getElementById('sidebar');
     const sidebarBackdrop = document.getElementById('sidebar-backdrop');
     const aboutAppBtn = document.getElementById('about-app-btn');
+    
+    // Admin Panel (Dashboard buttons)
     const adminPanel = document.getElementById('admin-panel');
     const adminManageBtn = document.getElementById('admin-manage-btn');
     const backToDashboardBtn = document.getElementById('back-to-dashboard-btn');
@@ -568,16 +719,14 @@
     const formDocId = document.getElementById('form-doc-id');
     const formClearBtn = document.getElementById('form-clear-btn');
     const buttonsTableBody = document.getElementById('buttons-table-body');
+    
+    // Admin Panel (Config settings) - NEW
+    const configPanel = document.getElementById('config-panel');
+    const configManageBtn = document.getElementById('config-manage-btn');
+    const backToDashboardFromConfigBtn = document.getElementById('back-to-dashboard-from-config-btn');
+    const configForm = document.getElementById('config-form');
 
-    const signInWithGoogle = () => {
-      const provider = new GoogleAuthProvider();
-      signInWithPopup(auth, provider).catch((error) => console.error("Sign-in Error:", error));
-    };
-
-    const signOutUser = () => {
-      signOut(auth).catch((error) => console.error("Sign-out Error:", error));
-    };
-
+    // --- Helper Functions ---
     const showNotification = (title, icon = 'success') => {
       Swal.fire({
         toast: true,
@@ -588,10 +737,54 @@
         timer: 3000,
         timerProgressBar: true,
         didOpen: (toast) => {
-           toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseenter', Swal.stopTimer)
           toast.addEventListener('mouseleave', Swal.resumeTimer)
         }
       });
+    };
+    
+    const promptForAdminCode = (onSuccessCallback) => {
+        Swal.fire({
+            title: 'ໃສ່ລະຫັດເພື່ອເຂົ້າເຖິງ',
+            input: 'password',
+            inputPlaceholder: 'ກະລຸນາໃສ່ລະຫັດ',
+            inputAttributes: {
+                autocapitalize: 'off',
+                autocorrect: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'ຢືນยัน',
+            cancelButtonText: 'ຍົກເລີກ',
+            showLoaderOnConfirm: true,
+            preConfirm: (code) => {
+                if (code === '6203') {
+                    return true;
+                } else {
+                    Swal.showValidationMessage('ລະຫັດບໍ່ຖືກຕ້ອງ!');
+                    return false;
+                }
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                onSuccessCallback();
+            }
+        });
+    };
+    
+    const closeSidebar = () => {
+        sidebar.classList.remove('open');
+        sidebarBackdrop.classList.remove('active');
+    };
+
+    // --- Authentication ---
+    const signInWithGoogle = () => {
+      const provider = new GoogleAuthProvider();
+      signInWithPopup(auth, provider).catch((error) => console.error("Sign-in Error:", error));
+    };
+
+    const signOutUser = () => {
+      signOut(auth).catch((error) => console.error("Sign-out Error:", error));
     };
     
     onAuthStateChanged(auth, (user) => {
@@ -600,32 +793,40 @@
         appContent.classList.remove('hidden');
         mainContent.classList.remove('hidden');
         adminPanel.classList.add('hidden');
+        configPanel.classList.add('hidden');
         updateUserInfo(user);
         checkAdminStatusAndLoadDashboard(user);
       } else {
         loginContainer.classList.remove('hidden');
         appContent.classList.add('hidden');
         linkGrid.innerHTML = '';
-          adminManageBtn.classList.add('hidden');
+        adminManageBtn.classList.add('hidden');
+        configManageBtn.classList.add('hidden');
       }
     });
+    
     const updateUserInfo = (user) => {
       userPhoto.src = user.photoURL || 'https://placehold.co/120x120/2c3e50/ecf0f1?text=User';
       userDisplayName.textContent = user.displayName || 'ຜູ້ໃຊ້';
       userEmail.textContent = user.email;
     };
 
+    // --- Admin & Dashboard Logic ---
     const checkAdminStatusAndLoadDashboard = async (user) => {
       try {
         const adminQuerySnapshot = await getDocs(collection(db, "admins"));
         const adminEmails = adminQuerySnapshot.docs.map(doc => doc.data().email.trim().toLowerCase());
         const isAdmin = adminEmails.includes(user.email.toLowerCase());
+        
         adminManageBtn.classList.toggle('hidden', !isAdmin);
+        configManageBtn.classList.toggle('hidden', !isAdmin); // Show/hide new button
+        
         loadDashboardButtons(isAdmin);
       } catch (error) {
         console.error("Error checking admin status:", error);
         loadDashboardButtons(false);
         adminManageBtn.classList.add('hidden');
+        configManageBtn.classList.add('hidden');
       }
     };
 
@@ -642,6 +843,7 @@
         linkGrid.innerHTML = '<p style="color: var(--danger-color);">ບໍ່ສາມາດໂຫລດຂໍ້ມູນໄດ້.</p>';
       }
     };
+    
     const renderButtons = (buttons) => {
       linkGrid.innerHTML = buttons.length === 0 ?
         '<p>ບໍ່ພົບຂໍ້ມູນລາຍການ.</p>' :
@@ -654,6 +856,7 @@
         `).join('');
     };
 
+    // --- Admin Panel (Dashboard Buttons) Logic ---
     const loadAdminTable = async () => {
       buttonsTableBody.innerHTML = '<tr><td colspan="5">ກຳລັງໂຫລດ...</td></tr>';
       try {
@@ -666,6 +869,7 @@
         buttonsTableBody.innerHTML = '<tr><td colspan="5" style="color: var(--danger-color);">ໂຫລດຂໍ້ມູນບໍ່ສຳເລັດ</td></tr>';
       }
     };
+    
     const renderAdminTable = (buttons) => {
       buttonsTableBody.innerHTML = buttons.length === 0 ?
         '<tr><td colspan="5">ບໍ່ມີຂໍ້ມູນໃນລະບົບ</td></tr>' :
@@ -724,13 +928,7 @@
     };
 
     const editButton = async (docId) => {
-      Swal.fire({
-        title: 'ກຳລັງໂຫລດຂໍ້ມູນ...',
-        allowOutsideClick: false,
-        didOpen: () => {
-          Swal.showLoading();
-        }
-      });
+      Swal.fire({ title: 'ກຳລັງໂຫລດຂໍ້ມູນ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
       try {
         const docSnap = await getDoc(doc(db, "dashboard_buttons", docId));
         if (docSnap.exists()) {
@@ -742,9 +940,7 @@
           document.getElementById('button-sort').value = data.sortOrder || 99;
           document.getElementById('button-status').value = String(data.status) === 'true' ? 'true' : 'false';
           formTitle.textContent = "ແກ້ໄຂຂໍ້ມູນປຸ່ມ";
-          
           Swal.close();
-          
           buttonForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } else {
             Swal.close();
@@ -756,6 +952,7 @@
         showNotification("ເກີດຂໍ້ຜິດພາດໃນການໂຫລດຂໍ້ມູນ", "error");
       }
     };
+
     const deleteButton = (docId) => {
         Swal.fire({
             title: 'ທ່ານແນ່ໃຈບໍ່?',
@@ -763,7 +960,6 @@
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#e74c3c',
-            
             cancelButtonColor: '#95a5a6',
             confirmButtonText: 'ແມ່ນ, ລົບເລີຍ!',
             cancelButtonText: 'ຍົກເລີກ'
@@ -771,12 +967,11 @@
             if (result.isConfirmed) {
                 try {
                     await deleteDoc(doc(db, "dashboard_buttons", docId));
-                           showNotification("ລົບຂໍ້ມູນສຳເລັດ!", 'success');
+                    showNotification("ລົບຂໍ້ມູນສຳເລັດ!", 'success');
                     loadAdminTable();
                     checkAdminStatusAndLoadDashboard(auth.currentUser);
                 } catch (error) {
                     console.error("Error deleting document:", error);
-    
                     showNotification("ເກີດຂໍ້ຜິດພາດໃນການລົບຂໍ້ມູນ.", 'error');
                 }
             }
@@ -788,6 +983,138 @@
       formDocId.value = '';
       formTitle.textContent = "ເພີ່ມປຸ່ມໃໝ່";
     };
+
+    // --- Admin Panel (Configuration) Logic - NEW ---
+    const getConfigDocRef = () => doc(db, "configuration", "appConfig");
+
+    async function loadConfigIntoForm() {
+        Swal.fire({ title: 'ກຳລັງໂຫຼດຂໍ້ມູນການຕັ້ງຄ່າ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+        const docRef = getConfigDocRef();
+        try {
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                populateFormWithData(data);
+                Swal.fire('ໂຫຼດສຳເລັດ', 'ໂຫຼດການຕັ້ງຄ່າຈາກຖານຂໍ້ມູນສຳເລັດ.', 'success');
+            } else {
+                Swal.fire('ຄຳເຕືອນ', 'ບໍ່ພົບຂໍ້ມູນການຕັ້ງຄ່າ, ກະລຸນາຕັ້ງຄ່າຂໍ້ມູນກ່ອນ.', 'warning');
+            }
+        } catch (error) {
+            console.error("Error loading config document:", error);
+            Swal.fire('ຜິດພາດ', `ບໍ່ສາມາດໂຫຼດຂໍ້ມູນໄດ້: ${error.message}`, 'error');
+        }
+    }
+
+    function populateFormWithData(data) {
+        try {
+            const populateGroup = (groupName, groupData) => {
+                if (!groupData) return;
+                Object.keys(groupData).forEach(key => {
+                    const element = document.getElementById(`${groupName}_${key}`);
+                    if (element) element.value = groupData[key];
+                });
+            };
+            
+            populateGroup('salary', data.salary);
+            populateGroup('deductions', data.deductions);
+            populateGroup('govSubsidy', data.govSubsidy);
+            populateGroup('ui', data.ui);
+            
+            if (data.entSubsidy) {
+                document.getElementById('entSubsidy_baseMonths').value = data.entSubsidy.baseMonths;
+                document.getElementById('entSubsidy_childbirthBenefitMultiplier').value = data.entSubsidy.childbirthBenefitMultiplier;
+                populateGroup('entSubsidy_ca', data.entSubsidy.childbirthAllowanceMultipliers);
+                populateGroup('entSubsidy_db', data.entSubsidy.deathBenefit);
+                populateGroup('entSubsidy_sp', data.entSubsidy.severancePay);
+            }
+            
+            const yearTiersContainer = document.getElementById('yearTiersContainer');
+            yearTiersContainer.innerHTML = '';
+            if (data.yearAllowanceTiers) {
+                data.yearAllowanceTiers.forEach((tier, index) => {
+                    yearTiersContainer.innerHTML += `
+                        <div class="dynamic-group tier-group">
+                            <h4>ຂັ້ນທີ ${index + 1}</h4>
+                            <div class="form-grid">
+                                <div class="form-group"><label>ປີສູງສຸດ (maxYears)</label><input type="text" class="tier-maxYears" value="${tier.maxYears}"></div>
+                                <div class="form-group"><label>ອັດຕາ (rate)</label><input type="number" class="tier-rate" value="${tier.rate}"></div>
+                                <div class="form-group"><label>ເງິນພື້ນຖານ (base)</label><input type="number" class="tier-base" value="${tier.base}"></div>
+                                <div class="form-group"><label>ປີສູງສຸດກ່ອນໜ້າ (previousMax)</label><input type="number" class="tier-previousMax" value="${tier.previousMax}"></div>
+                            </div>
+                        </div>`;
+                });
+            }
+
+            const taxBracketsContainer = document.getElementById('taxBracketsContainer');
+            taxBracketsContainer.innerHTML = '';
+            if (data.taxBrackets) {
+                data.taxBrackets.forEach((bracket, index) => {
+                    taxBracketsContainer.innerHTML += `
+                         <div class="dynamic-group bracket-group">
+                            <h4>ຂັ້ນທີ ${index + 1}</h4>
+                            <div class="form-grid">
+                                <div class="form-group"><label>ລາຍຮັບສູງສຸດ (max)</label><input type="text" class="bracket-max" value="${bracket.max}"></div>
+                                <div class="form-group"><label>ອັດຕາ (rate)</label><input type="number" step="0.01" class="bracket-rate" value="${bracket.rate}"></div>
+                                <div class="form-group"><label>ອາກອນພື້ນຖານ (base)</label><input type="number" class="bracket-base" value="${bracket.base}"></div>
+                            </div>
+                        </div>`;
+                });
+            }
+        } catch (error) {
+            console.error("Error populating form with data:", error);
+            Swal.fire('ຜິດພາດ', `ບໍ່ສາມາດຕັ້ງຄ່າຂໍ້ມູນໃສ່ຟອມໄດ້: ${error.message}`, 'error');
+        }
+    }
+
+    async function handleConfigFormSubmit(e) {
+        e.preventDefault();
+        Swal.fire({ title: 'ກຳລັງບັນທຶກຂໍ້ມູນ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+        try {
+            const getVal = (id) => Number(document.getElementById(id).value);
+            
+            const newConfig = {
+                salary: { indexMultiplier: getVal('salary_indexMultiplier'), livingAllowance: getVal('salary_livingAllowance'), childAllowance: getVal('salary_childAllowance'), wifeAllowance: getVal('salary_wifeAllowance') },
+                deductions: { civilRate: getVal('deductions_civilRate'), pensionHealthRate: getVal('deductions_pensionHealthRate') },
+                govSubsidy: { deathAllowanceYearsLimit: getVal('govSubsidy_deathAllowanceYearsLimit'), deathAllowanceBaseMonths: getVal('govSubsidy_deathAllowanceBaseMonths'), deathAllowanceFormulaMonths1: getVal('govSubsidy_deathAllowanceFormulaMonths1'), deathAllowanceFormulaMonths2: getVal('govSubsidy_deathAllowanceFormulaMonths2'), deathAllowanceFormulaMonths3: getVal('govSubsidy_deathAllowanceFormulaMonths3'), widowAllowanceMonths: getVal('govSubsidy_widowAllowanceMonths'), severancePayMultiplier: getVal('govSubsidy_severancePayMultiplier'), widowPensionMultiplier: getVal('govSubsidy_widowPensionMultiplier') },
+                entSubsidy: {
+                    baseMonths: getVal('entSubsidy_baseMonths'), childbirthBenefitMultiplier: getVal('entSubsidy_childbirthBenefitMultiplier'),
+                    childbirthAllowanceMultipliers: { month1: getVal('entSubsidy_ca_month1'), month2: getVal('entSubsidy_ca_month2'), month3: getVal('entSubsidy_ca_month3'), month4: getVal('entSubsidy_ca_month4') },
+                    deathBenefit: { yearLimit: getVal('entSubsidy_db_yearLimit'), baseMonths: getVal('entSubsidy_db_baseMonths'), formulaMonths1: getVal('entSubsidy_db_formulaMonths1'), formulaMonths2: getVal('entSubsidy_db_formulaMonths2'), formulaMonths3: getVal('entSubsidy_db_formulaMonths3') },
+                    severancePay: { maxMonths: getVal('entSubsidy_sp_maxMonths'), yearMultiplier: getVal('entSubsidy_sp_yearMultiplier') }
+                },
+                ui: { visitorCountStart: getVal('ui_visitorCountStart') },
+                yearAllowanceTiers: [],
+                taxBrackets: []
+            };
+
+            document.querySelectorAll('.tier-group').forEach(group => {
+                const maxYearsValue = group.querySelector('.tier-maxYears').value;
+                newConfig.yearAllowanceTiers.push({
+                    maxYears: maxYearsValue.toLowerCase() === 'infinity' ? 'Infinity' : Number(maxYearsValue),
+                    rate: Number(group.querySelector('.tier-rate').value),
+                    base: Number(group.querySelector('.tier-base').value),
+                    previousMax: Number(group.querySelector('.tier-previousMax').value)
+                });
+            });
+            document.querySelectorAll('.bracket-group').forEach(group => {
+                 const maxValue = group.querySelector('.bracket-max').value;
+                 newConfig.taxBrackets.push({
+                    max: maxValue.toLowerCase() === 'infinity' ? 'Infinity' : Number(maxValue),
+                    rate: Number(group.querySelector('.bracket-rate').value),
+                    base: Number(group.querySelector('.bracket-base').value)
+                });
+            });
+
+            const docRef = getConfigDocRef();
+            await setDoc(docRef, newConfig);
+            Swal.fire('ບັນທຶກສຳເລັດ!', 'ຂໍ້ມູນການຕັ້ງຄ່າໄດ້ຖືກອັບເດດແລ້ວ.', 'success');
+        } catch (error) {
+             console.error(error);
+             Swal.fire('ຜິດພາດ', `ບໍ່ສາມາດບັນທຶກຂໍ້ມູນໄດ້: ${error.message}`, 'error');
+        }
+    }
+
+    // --- Event Listeners ---
     googleSignInBtn.addEventListener('click', signInWithGoogle);
     logoutBtn.addEventListener('click', signOutUser);
     
@@ -795,28 +1122,44 @@
       sidebar.classList.toggle('open');
       sidebarBackdrop.classList.toggle('active');
     });
-    sidebarBackdrop.addEventListener('click', () => {
-      sidebar.classList.remove('open');
-      sidebarBackdrop.classList.remove('active');
-    });
+    
+    sidebarBackdrop.addEventListener('click', closeSidebar);
+    
     adminManageBtn.addEventListener('click', () => {
-      mainContent.classList.add('hidden');
-      adminPanel.classList.remove('hidden');
-      sidebar.classList.remove('open');
-      sidebarBackdrop.classList.remove('active');
-      loadAdminTable();
+      promptForAdminCode(() => {
+        mainContent.classList.add('hidden');
+        configPanel.classList.add('hidden');
+        adminPanel.classList.remove('hidden');
+        closeSidebar();
+        loadAdminTable();
+      });
     });
+
+    configManageBtn.addEventListener('click', () => {
+        promptForAdminCode(() => {
+            mainContent.classList.add('hidden');
+            adminPanel.classList.add('hidden');
+            configPanel.classList.remove('hidden');
+            closeSidebar();
+            loadConfigIntoForm();
+        });
+    });
+
     backToDashboardBtn.addEventListener('click', () => {
       mainContent.classList.remove('hidden');
       adminPanel.classList.add('hidden');
     });
+
+    backToDashboardFromConfigBtn.addEventListener('click', () => {
+      mainContent.classList.remove('hidden');
+      configPanel.classList.add('hidden');
+    });
+
     aboutAppBtn.addEventListener('click', () => {
       Swal.fire({
         title: '<strong>ກ່ຽວກັບແອັບພລິເຄຊັນ</strong>',
         icon: 'info',
-        html:
-          'ລະບົບລວມເຄື່ອງມືອອນໄລນ໌<br>' +
-          'ພັດທະນາໂດຍ: <b>ທ. ບຸນເຜີ້ງ ເພັດໄຊຍະພູມ</b>',
+        html: 'ລະບົບລວມເຄື່ອງມືອອນໄລນ໌<br>' + 'ພັດທະນາໂດຍ: <b>ທ. ບຸນເຜີ້ງ ເພັດໄຊຍະພູມ</b>',
         showCloseButton: true,
         focusConfirm: false,
         confirmButtonText: '<i class="fa fa-thumbs-up"></i> ຮັບຊາບ!',
@@ -827,6 +1170,9 @@
     buttonForm.addEventListener('submit', handleFormSubmit);
     formClearBtn.addEventListener('click', clearForm);
     buttonsTableBody.addEventListener('click', handleTableClick);
+    configForm.addEventListener('submit', handleConfigFormSubmit);
+
+    // --- Initial Load ---
     function formatLaoDate() {
       const date = new Date();
       const days = ['ວັນອາທິດ', 'ວັນຈັນ', 'ວັນອັງຄານ', 'ວັນພຸດ', 'ວັນພະຫັດ', 'ວັນສຸກ', 'ວັນເສົາ'];
@@ -835,9 +1181,6 @@
     }
     laoDateEl.textContent = formatLaoDate();
   </script>
-
-
-
 <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -851,6 +1194,5 @@
       });
     }
 </script>
-
 </body>
 </html>
