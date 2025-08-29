@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2ecc71">
+  <title>ຄຳນວນເງິນເດືອນ ແລະ ອຸດໜູນ ອປຊ</title>
+  <base target="_top">
+
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  
+  <style>
+    :root {
+      --primary-color: #2ecc71;
+      --secondary-color: #27ae60;
+      --accent-color: #e67e22;
+      --danger-color: #e74c3c;
+      --text-color: #ecf0f1;
+      --bg-color-dark: #1a2525;
+      --card-bg: rgba(44, 62, 80, 0.75);
+      --input-bg: rgba(0, 0, 0, 0.2);
+      --border-color: rgba(46, 204, 113, 0.3);
+      --shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      --font-family: 'Noto Sans Lao', system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+      --accent1: #ffd700;
+      --accent2: #ff8c00;
+      --muted: #bbb;
+    }
+    @keyframes gradient-animation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      color: var(--text-color);
+      font-family: var(--font-family);
+      display: flex;
+      flex-direction: column; align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background: linear-gradient(-45deg, #1a2525, #2c3e50, #27ae60, #1a2525);
+      background-size: 400% 400%; animation: gradient-animation 15s ease infinite;
+      padding: 16px;
+    }
+    .container { width: 100%; max-width: 900px; animation: fadeIn .6s ease-out; }
+    .page {
+      display: none; flex-direction: column; gap: 24px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 24px; padding: clamp(20px, 4vw, 32px);
+      margin-bottom: 20px;
+    }
+    .page.active { display: flex; }
+    .hero {
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center; gap: 12px;
+    }
+    .logo {
+      width: clamp(100px, 15vw, 120px); aspect-ratio: 1/1;
+      border-radius: 50%; object-fit: cover;
+      box-shadow: 0 0 28px var(--secondary-color);
+      border: 3px solid var(--secondary-color);
+    }
+	.security-warning {
+        text-align: center;
+        background-color: rgba(231, 76, 60, 0.1);
+        border: 1px solid var(--danger-color);
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+    }
+    .security-warning i {
+        margin-right: 10px;
+    }
+		
+    .title { font-size: clamp(20px, 3vw, 28px); font-weight: 700; text-shadow: 0 0 12px rgba(46, 204, 113, 0.7); }
+    .subtitle { font-size: clamp(14px, 2vw, 16px); color: #d5f5e3; opacity: .92; }
+    #date-lao { font-weight: 500; color: var(--primary-color); }
+    .grid { display: grid; gap: 16px; width: 100%; }
+    @media (min-width: 600px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    .link-card {
+      position: relative; overflow: hidden; border-radius: 16px;
+      padding: 20px; background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border-color); transition: transform .3s ease, box-shadow .3s ease, background .3s ease;
+      cursor: pointer; display: flex; align-items: center; gap: 16px;
+    }
+    .link-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4); background: rgba(46, 204, 113, 0.15); }
+    .link-icon { font-size: 28px; line-height: 1; color: var(--primary-color); width: 40px; text-align: center; }
+    .link-text { flex-grow: 1; font-size: clamp(16px, 2.5vw, 18px); font-weight: 500; color: #fff; }
+    .link-arrow { font-size: 20px; opacity: .8; transition: transform .3s ease; }
+    .link-card:hover .link-arrow { transform: translateX(5px); }
+    .form-container { width: 100%; }
+    .form-group { margin-bottom: 16px; display: flex; flex-direction: column; }
+    label { margin-bottom: 8px; font-weight: 500; color: var(--text-color); font-size: 14px; opacity: 0.9; }
+    input, select, textarea {
+      font-family: var(--font-family); width: 100%; padding: 12px;
+      border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;
+      background-color: var(--input-bg); color: var(--text-color);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    input::placeholder, textarea::placeholder { color: rgba(236, 240, 241, 0.5); }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.4); outline: none; }
+    select option { background-color: #2c3e50; color: var(--text-color); }
+    .button-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 20px; }
+    .btn {
+      background-color: var(--primary-color); color: white; border: none; padding: 10px 20px;
+      border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500;
+      font-family: var(--font-family); transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    .btn.btn-primary { background-color: var(--primary-color); }
+    .btn.btn-primary:hover { background-color: #25a25a; }
+    .btn.btn-secondary { background-color: #3498db; }
+    .btn.btn-secondary:hover { background-color: #2980b9; }
+    .btn.btn-danger { background-color: var(--danger-color); }
+    .btn.btn-danger:hover { background-color: #c0392b; }
+    .btn.btn-accent { background-color: var(--accent-color); }
+    .btn.btn-accent:hover { background-color: #d35400; }
+    .btn.btn-back { background-color: transparent; border: 1px solid var(--border-color); }
+    .btn.btn-back:hover { background-color: rgba(255,255,255,0.1); }
+    .result {
+      margin-top: 20px; padding: 20px; background-color: rgba(0,0,0,0.2);
+      border-left: 5px solid var(--primary-color); border-radius: 8px; display: none;
+    }
+    .result h3 { color: var(--primary-color); margin-top: 0; margin-bottom: 15px; font-size: 18px; }
+    .result p { margin: 8px 0; font-size: 15px; display: flex; justify-content: space-between; }
+    .result p strong { color: #bdc3c7; font-weight: 500; }
+    .result p span { color: #fff; font-weight: 700; }
+    #govResult p {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 16px;
+      margin: 4px 0; border-radius: 8px; transition: background-color 0.3s; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    #govResult p:last-child { border-bottom: none; }
+    #govResult p strong { color: var(--text-color); opacity: 0.8; font-weight: 500; }
+    #govResult p span { font-weight: 500; color: #fff; }
+    .result-highlight {
+      background-color: rgba(46, 204, 113, 0.15); margin-top: 16px !important;
+      padding: 18px 16px !important; border-left: 5px solid var(--primary-color);
+    }
+    .result-highlight strong { color: var(--primary-color) !important; font-weight: 700 !important; opacity: 1 !important; }
+    .result-highlight span { font-size: 1.2em; font-weight: 700 !important; color: #fff !important; }
+    .table-container { width: 100%; overflow-x: auto; margin-top: 15px; }
+    .table-container table { width: 100%; border-collapse: collapse; }
+    .table-container th, .table-container td { border-bottom: 1px solid var(--border-color); padding: 12px 15px; text-align: left; font-size: 14px; }
+    .table-container th { background-color: rgba(46, 204, 113, 0.15); color: var(--primary-color); font-weight: 700; }
+    .table-container tbody tr:last-child td { border-bottom: none; }
+    .table-container tbody tr:hover { background-color: rgba(46, 204, 113, 0.08); }
+    .download-btn { background-color: var(--secondary-color); }
+    .feedback-display { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border-color); }
+    .feedback-display h3 { margin-bottom: 16px; color: var(--primary-color); }
+    .feedback-item { background: rgba(0,0,0,0.15); border-radius: 8px; padding: 12px; margin-bottom: 12px; animation: fadeIn 0.5s ease; }
+    .feedback-item p { margin-bottom: 8px; line-height: 1.6; }
+    .feedback-item .meta { font-size: 12px; color: #bdc3c7; opacity: 0.8; margin-bottom: 8px; }
+    .feedback-reply-btn {
+      background: none; border: none; color: var(--accent-color); cursor: pointer; font-size: 13px;
+      font-weight: 500; padding: 4px 8px 4px 0; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .feedback-reply-btn:hover { text-decoration: underline; }
+    .reply-item { border-left: 3px solid var(--accent-color); padding-left: 12px; margin-top: 10px; margin-left: 20px; }
+    .footer {
+      margin-top: 24px; border-top: 1px solid var(--border-color);
+      padding-top: 20px; text-align: center; font-size: clamp(13px, 2vw, 14px); color: #b7c4c9;
+    }
+    .social-links { display: flex; justify-content: center; gap: 16px; margin-bottom: 16px; }
+    .social-links a { color: var(--text-color); font-size: 24px; transition: color .3s ease, transform .3s ease; }
+    .social-links a:hover { color: var(--primary-color); transform: scale(1.1); }
+    .note { line-height: 1.6; }
+    .note b { color: #ffffff; }
+    .hidden { display: none !important; }
+    @media (max-width: 768px) {
+      body { padding: 0; }
+      .page { border-radius: 0; border-left: none; border-right: none; min-height: 100vh; }
+      .button-group { flex-direction: column; align-items: stretch; }
+      #searchResult .table-container table,
+      #searchResult .table-container thead,
+      #searchResult .table-container tbody,
+      #searchResult .table-container th,
+      #searchResult .table-container td,
+      #searchResult .table-container tr { display: block; }
+      #searchResult .table-container thead tr { position: absolute; top: -9999px; left: -9999px; }
+      #searchResult .table-container tr {
+        border: 1px solid var(--border-color); border-radius: 12px;
+        margin-bottom: 12px; background: rgba(0, 0, 0, 0.2); padding: 12px;
+      }
+      #searchResult .table-container td {
+        border: none; border-bottom: 1px solid rgba(46, 204, 113, 0.15);
+        position: relative; padding-left: 45%; padding-top: 10px;
+        padding-bottom: 10px; text-align: right; min-height: 38px;
+        display: flex; align-items: center; justify-content: flex-end;
+      }
+      #searchResult .table-container td:before {
+        content: attr(data-label); position: absolute; left: 12px; width: 40%;
+        padding-right: 10px; white-space: nowrap; text-align: left;
+        font-weight: bold; color: var(--primary-color);
+      }
+      #searchResult .table-container td:last-child { border-bottom: 0; justify-content: center; padding-left: 0; gap: 8px; }
+      #searchResult .table-container td:last-child::before { display: none; }
+      #searchResult .table-container td.mobile-hidden { display: none; }
+    }
+    .prize-popup {
+        position: fixed; top: 50%; left: 50%; width: min(85vw, 450px);
+        transform: translate(-50%, -50%) scale(0.5);
+        background: radial-gradient(circle, #1a0b2e, #071027);
+        border-radius: 20px; border: 2px solid transparent;
+        box-shadow: 0 0 80px rgba(138, 43, 226, 0.7); z-index: 1000;
+        text-align: center; color: #fff; padding: clamp(1.5rem, 2vw, 2rem) 1rem;
+        opacity: 0; pointer-events: none; transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .prize-popup.active {
+        animation: prize-pop-in 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+                     prize-border-glow 2s infinite alternate;
+        opacity: 1; pointer-events: auto;
+    }
+    .prize-popup.warning { --accent1: #ffd700; --accent2: #ff8c00; box-shadow: 0 0 100px rgba(255, 215, 0, 0.8); }
+    .prize-popup.success { --accent1: #32cd32; --accent2: #008000; box-shadow: 0 0 100px rgba(50, 205, 50, 0.8); }
+    .prize-popup.error { --accent1: #ff4d4d; --accent2: #e74c3c; box-shadow: 0 0 100px rgba(231, 76, 60, 0.8); }
+    @keyframes prize-pop-in { to { transform: translate(-50%, -50%) scale(1); } }
+    @keyframes prize-border-glow { from { border-color: var(--accent2); } to { border-color: var(--accent1); } }
+    .prize-popup .icon {
+        font-size: clamp(4rem, 5vw, 5rem); animation: prize-icon-float 3s ease-in-out infinite;
+        text-shadow: 0 0 20px var(--accent2); line-height: 1;
+    }
+    @keyframes prize-icon-float { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-15px) scale(1.1); } }
+    .prize-popup .message { font-size: clamp(1.2rem, 2vw, 1.5rem); font-weight: 700; margin: 1rem 0 0.5rem; text-shadow: 0 0 10px var(--accent1), 0 0 20px var(--accent1); }
+    .prize-popup .sub-message { font-size: clamp(0.9rem, 1.5vw, 1rem); color: var(--muted); }
+    .close-popup {
+        position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 2rem;
+        color: #fff; cursor: pointer; opacity: 0.7; transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .close-popup:hover { opacity: 1; transform: rotate(90deg); }
+  </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="Home" class="page active">
+        <div class="hero">
+            <img src="https://i.ibb.co/36359Bf/image.png" alt="Logo" class="logo">
+            <h1 class="title">ຄິດໄລ່ເງິນເດືອນ-ອຸດໜູນຕ່າງໆ</h1>
+            <p id="date-lao"></p>
+        </div>
+         <div class="grid">
+            <div class="link-card" onclick="showPage('Salary')"> <i class="link-icon fas fa-money-bill-wave"></i> <span class="link-text">ຄຳນວນເງິນເດືອນ</span> <i class="link-arrow fas fa-chevron-right"></i> </div>
+            <div class="link-card" onclick="showPage('Government')"> <i class="link-icon fas fa-landmark"></i> <span class="link-text">ອຸດໜູນພາກລັດ</span> <i class="link-arrow fas fa-chevron-right"></i> </div>
+            <div class="link-card" onclick="showPage('Enterprise')"> <i class="link-icon fas fa-building"></i> <span class="link-text">ອຸດໜູນວິສາຫະກິດ</span> <i class="link-arrow fas fa-chevron-right"></i> </div>
+            <div class="link-card" onclick="showPage('Search')"> <i class="link-icon fas fa-search"></i> <span class="link-text">ຄົ້ນຫາຂໍ້ມູນ</span> <i class="link-arrow fas fa-chevron-right"></i> </div>
+            <div class="link-card" onclick="window.location.href='./index.html'" style="background-color: rgba(231, 76, 60, 0.15); grid-column: 1 / -1;"> <i class="link-icon fas fa-arrow-left" style="color: var(--danger-color);"></i> <span class="link-text">ກັບໄປໜ້າຫຼັກ</span> <i class="link-arrow fas fa-chevron-right"></i> </div>
+        </div>
+        <div class="feedback-container">
+            <label for="feedbackText">ຄຳຄິດເຫັນ ຫຼື ສະເໜີແນະ:</label>
+            <textarea id="feedbackText" placeholder="ຂຽນຄຳຄິດເຫັນຂອງທ່ານທີ່ນີ້..."></textarea>
+            <div class="button-group">
+                <button type="button" class="btn btn-primary" onclick="submitFeedback()"><i class="fas fa-paper-plane"></i> ສົ່ງຄຳຄິດເຫັນ</button>
+            </div>
+        </div>
+        <div id="feedbackDisplayArea" class="feedback-display"></div>
+		
+		<div class="security-warning">
+            <i class="fas fa-exclamation-triangle"></i> 
+            <strong>ຄຳເຕືອນ:</strong> ແອັບນີ້ສ້າງຂຶ້ນເພື່ອຊ່ວຍຄຳນວນຄິດໄລ່ເງີນອຸດໜຸນຕ່າງໆໃນເບື້ອງຕົ້ນເທົ່ານັ້ນ, ສອບຖາມຂໍ້ມູນເພີ່ມເຕີມທີ່ ອປຊ ໂທ: 1508.
+        </div>
+		
+        <footer class="footer">
+            <div class="social-links">
+                 <a href="https://www.facebook.com/Phetsaiyaphoom?rdid=r1ybXu9G2h95D2NO" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.youtube.com/@it-banban5487" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="https://api.whatsapp.com/send/?phone=8562091270509" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+            <div class="note">
+                </b><br> ພັດທະນາໂດຍ: <b>ທ.ບຸນເຜີ້ງ ເພັດໄຊຍະພູມ</b> |
+                ໂທ: <b>020 9127 0509 :Vs 1.1</b><br> 
+                <span id="admin-status" style="color: var(--accent-color);"></span>
+                ຈຳນວນຜູ້ເຂົ້າຊົມ: <span id="visitorCount">0</span>
+            </div>
+        </footer>
+    </div>
+    <div id="Salary" class="page">
+        <div class="hero">
+            <h1 class="title">ຄຳນວນເງິນເດືອນ</h1>
+            <p class="subtitle">ລັດຖະກອນ (ປົກຄອງ-ຄູອາຈານ)</p>
+        </div>
+        <div class="form-container">
+            <form id="salaryForm">
+                <input type="hidden" id="salaryEditDocId">
+                 <div class="form-group">
+                    <label for="category">ເນື້ອໃນລາຍລະອຽດ:</label>
+                    <select id="category" onchange="toggleFields()">
+                        <option value="">-- ເລືອກປະເພດ --</option>
+                         <option value="civil">ເງິນເດືອນພະນັກງານລັດຖະກອນ</option>
+						<option value="pension">ເງີນບຳນານ</option>
+					</select>
+                </div>
+                <div class="form-group">
+                     <label for="index">ດັດສະນີ:</label>
+                     <input type="number" id="index" min="0" placeholder="ປ້ອນຄ່າດັດສະນີ (ຕົວຢ່າງ: 226)">
+                 </div>
+                <div class="form-group">
+                    <label for="year">ປີການ:</label>
+                     <input type="number" id="year" min="0" placeholder="ປ້ອນຈຳນວນປີການ (ຕົວຢ່າງ: 10)">
+                 </div>
+                 <div class="form-group">
+                    <label for="position">ເງິນຕຳແໜ່ງ:</label>
+                    <input type="text" inputmode="numeric" id="position" oninput="formatAndRestrictNumber(this)" placeholder="ປ້ອນເງິນຕຳແໜ່ງ (ຕົວຢ່າງ: 200,000)">
+                 </div>
+                <div class="form-group">
+                     <label for="children">ຈຳນວນລູກ:</label>
+                    <input type="number" id="children" min="0" placeholder="ປ້ອນຈຳນວນລູກ (ຕົວຢ່າງ: 2)">
+                 </div>
+                 <div class="form-group" id="wifeGroup">
+                     <label for="wife">ຈຳນວນເມຍ:</label>
+                     <input type="number" id="wife" min="0" placeholder="ປ້ອນຈຳນວນເມຍ (ຕົວຢ່າງ: 1)">
+                </div>
+                <div class="form-group hidden" id="pensionGroup">
+                     <label for="pensionPercent">ເປີເຊັນບຳນານ (%):</label>
+                     <input type="number" id="pensionPercent" min="0" max="100" placeholder="ປ້ອນເປີເຊັນບຳນານ (ຕົວຢ່າງ: 80)">
+                </div>
+                <div class="button-group" id="salary-button-group">
+                     <button type="button" class="btn btn-primary" onclick="calculateSalary()"><i class="fas fa-calculator"></i> ຄຳນວນ</button>
+                     <button type="button" class="btn btn-danger" onclick="resetSalaryForm()"><i class="fas fa-trash"></i> ລ້າງຂໍ້ມູນ</button>
+                      <button type="button" class="btn btn-back" onclick="goHomeAndClearForms()"><i class="fas fa-arrow-left"></i> ກັບຄືນ</button>
+                </div>
+            </form>
+            <div id="salaryResult" class="result">
+                 <h3>ຜົນການຄຳນວນ</h3>
+                 <p><strong>ລວມເງິນກ່ອນຫັກ:</strong> <span id="totalBeforeDeduction">0</span> ກີບ</p>
+                <p><strong>ເງິນປີການ:</strong> <span id="yearAllowance">0</span> ກີບ</p>
+                <p><strong>ເງິນລູກ:</strong> <span id="childAllowance">0</span> ກີບ</p>
+                <p id="wifeLabel"><strong>ເງິນເມຍ:</strong> <span id="wifeAllowance">0</span> ກີບ</p>
+                <p id="deductionLabel"><strong>ຫັກ 8%:</strong> <span id="deduction8">0</span> ກີບ</p>
+                 <p id="taxLabel"><strong>ຫັກອາກອນ:</strong> <span id="tax">0</span> ກີບ</p>
+                <p><strong>ເງິນຄ່າຄອງຊີບເພີ່ມ:</strong> <span id="livingAllowance">0</span> ກີບ</p>
+                <p class="result-highlight"><strong>ລວມເງິນທັງໝົດ:</strong> <span id="totalNet">0</span> ກີບ</p>
+            </div>
+        </div>
+    </div>
+    <div id="Government" class="page">
+        <div class="hero">
+             <h1 class="title">ຄຳນວນເງິນອຸດໜຸນພາກລັດ</h1>
+              <p class="subtitle">ກອງທຶນປະກັນສັງຄົມແຫ່ງຊາດ (ອປຊ)</p>
+        </div>
+        <div class="form-container">
+            <form id="bonusForm">
+               <input type="hidden" id="govEditDocId">
+               <div class="form-group">
+                    <label for="detail">ເນື້ອໃນລາຍລະອຽດ:</label>
+                     <select id="detail" name="detail" onchange="updatePercentage()">
+                        <option value="">-- ເລືອກປະເພດ --</option>
+						<option value="ເງີນອຸດໜຸນບຳເນັດອອກການ">ເງີນອຸດໜຸນບຳເນັດອອກການ</option>
+						<option value="ເງີນອຸດໜຸນເສຍຊີວິດລັດຖະກອນ">ເງິນອຸດໜຸນເສຍຊີວິດລັດຖະກອນ</option>
+                       <option value="ເງີນອຸດໜຸນບຳນານເສຍຊີວິດ">ເງິນອຸດໜຸນບຳນານເສຍຊີວິດ</option>
+                       <option value="ເງີນອຸດໜຸນໝາຍເສຍຊີວິດ">ເງິນອຸດໜຸນໝາຍເສຍຊີວິດ</option>
+                      </select>
+               </div>
+                <div class="form-group">
+                     <label for="govIndex">ດັດສະນີ:</label>
+                    <input type="number" id="govIndex" name="index" placeholder="ປ້ອນຄ່າດັດສະນີ (ຕົວຢ່າງ: 226)">
+                 </div>
+                  <div class="form-group">
+                    <label for="serviceYears">ປີການ:</label>
+                     <input type="number" id="serviceYears" name="serviceYears" placeholder="ປ້ອນຈຳນວນປີການ (ຕົວຢ່າງ: 10)">
+                 </div>
+                 <div class="form-group">
+                      <label for="positionSalary">ເງິນຕຳແໜ່ງ:</label>
+                    <input type="text" inputmode="numeric" id="positionSalary" name="positionSalary" oninput="formatAndRestrictNumber(this)" placeholder="ປ້ອນເງິນຕຳແໜ່ງ (ຕົວຢ່າງ: 200,000)">
+                 </div>
+                 <div class="form-group hidden" id="percentageGroup">
+                  <label id="percentageLabel">ເປີເຊັນບຳນານ (%):</label>
+                      <input type="number" id="percentage" name="percentage" step="0.01" placeholder="ປ້ອນເປີເຊັນບຳນານ (ຕົວຢ່າງ: 85)">
+                </div>
+                 <div class="button-group" id="gov-button-group">
+                     <button type="button" class="btn btn-primary" onclick="validateAndCalculateGovernment()"><i class="fas fa-calculator"></i> ຄຳນວນ</button>
+                      <button type="button" class="btn btn-danger" onclick="clearGovForm()"><i class="fas fa-trash"></i> ລ້າງຂໍ້ມູນ</button>
+                    <button type="button" class="btn btn-back" onclick="goHomeAndClearForms()"><i class="fas fa-arrow-left"></i> ກັບຄືນ</button>
+                 </div>
+             </form>
+            <div id="govResult" class="result">
+                  <h3>ຜົນການຄຳນວນ</h3>
+                <p><strong>ເງິນເດືອນພື້ນຖານ:</strong> <span id="govBaseMonthlySalary">0</span></p>
+                <p><strong>ເງິນປີການ:</strong> <span id="govYearlyBonus">0</span></p>
+                <p><strong>ລວມເງິນກ່ອນຫັກ:</strong> <span id="govTotalDeduction">0</span></p>
+                 <p><strong>ເດືອນທີ່ໄດ້ຮັບ:</strong> <span id="govMonthsReceived">0</span></p>
+                 <p class="result-highlight"><strong>ລວມເງິນທັງໝົດທີ່ໄດ້ຮັບ:</strong> <span id="govTotalAmountReceived">0</span></p>
+            </div>
+         </div>
+    </div>
+    <div id="Enterprise" class="page">
+        <div class="hero">
+            <h1 class="title">ຄຳນວນເງິນອຸດໜຸນພາກວິສາຫະກິດ</h1>
+            <p class="subtitle">ກອງທຶນປະກັນສັງຄົມແຫ່ງຊາດ (ອປຊ)</p>
+        </div>
+        <div class="form-container">
+            <form id="supportForm">
+                <input type="hidden" id="entEditDocId">
+                <div class="form-group">
+                   <label for="entCategory">ເນື້ອໃນລາຍລະອຽດ:</label>
+                    <select id="entCategory" name="category" onchange="handleEnterpriseCategoryChange()">
+                         <option value="">-- ເລືອກປະເພດ --</option>
+                          <option value="ບຳເນັດເກີດລູກ">ບຳເນັດເກີດລູກ</option>
+                         <option value="ອຸດໜຸນເກີດລູກ">ອຸດໜຸນເກີດລູກ</option>
+						 <option value="ບຳເນັດອອກການ">ບຳເນັດອອກການ</option>
+                         <option value="ເງີນເສຍຊີວິດ">ເງິນເສຍຊີວິດ</option>
+                     </select>
+                </div>
+                <div class="form-group">
+                    <label for="contribution" id="contributionLabel">ຈຳນວນເງີນສົມທົບ 6 ເດືອນສຸດທ້າຍ:</label>
+                     <input type="text" inputmode="numeric" id="contribution" name="contribution" oninput="formatAndRestrictNumber(this)" placeholder="ປ້ອນເງິນສົມທົບ (ຕົວຢ່າງ: 27,000,000)">
+                 </div>
+                  <div class="form-group">
+                    <label for="months" id="monthsLabel">ເດືອນ:</label>
+                    <input type="number" id="months" name="months" step="1" placeholder="ປ້ອນຈຳນວນເດືອນ (ຕົວຢ່າງ: 12)">
+                 </div>
+                 <div class="form-group hidden" id="entChildrenField">
+                     <label for="entChildren">ຈຳນວນລູກ:</label>
+                    <input type="number" id="entChildren" name="children" step="1" placeholder="ປ້ອນຈຳນວນລູກ (ຕົວຢ່າງ: 1)">
+                </div>
+                 <div class="button-group" id="ent-button-group">
+                     <button type="button" class="btn btn-primary" onclick="calculateEnterprise()"><i class="fas fa-calculator"></i> ຄຳນວນ</button>
+                     <button type="button" class="btn btn-danger" onclick="clearEntForm()"><i class="fas fa-trash"></i> ລ້າງຂໍ້ມູນ</button>
+                     <button type="button" class="btn btn-back" onclick="goHomeAndClearForms()"><i class="fas fa-arrow-left"></i> ກັບຄືນ</button>
+                 </div>
+             </form>
+              <div id="entResult" class="result">
+                <h3>ຜົນການຄຳນວນ</h3>
+                <p class="result-highlight"><strong>ລວມເງິນທັງໝົດທີ່ໄດ້ຮັບ:</strong> <span id="entTotal">0</span> ກີບ</p>
+            </div>
+        </div>
+    </div>
+    <div id="Search" class="page">
+         <div class="hero">
+              <h1 class="title">ຄົ້ນຫາຂໍ້ມູນ</h1>
+             <p class="subtitle">ຄົ້ນຫາການຄຳນວນທີ່ຜ່ານມາ ແລະ ຊອກຫາດັດສະນີ</p>
+        </div>
+        <div class="form-container">
+            <form id="searchForm">
+                <div class="form-group">
+                     <label for="combobox1">ເລືອກລາຍການ:</label>
+                     <select id="combobox1" name="combobox1">
+                         <option value="">-- ກະລຸນາເລືອກ --</option>
+                        <option value="salaryHistory">ປະຫວັດຄຳນວນເງິນເດືອນ</option>
+                         <option value="indexData">ຄົ້ນຫາດັດສະນີ</option>
+                       <option value="govSupportHistory">ປະຫວັດຄຳນວນພາກລັດ</option>
+                         <option value="entSupportHistory">ປະຫວັດຄຳນວນພາກວິສາຫະກິດ</option>
+                    </select>
+                </div>
+                 <div class="form-group">
+                     <label for="textbox1">ໃສ່ຂໍ້ມູນເພື່ອຄົ້ນຫາ (ບໍ່ບັງຄັບ):</label>
+                     <input type="text" id="textbox1" name="textbox1" placeholder="ຕົວຢ່າງ: 4/2, ຄູອາຈານ">
+                </div>
+                <div class="button-group">
+                      <button type="button" id="searchButton" class="btn btn-primary" onclick="searchData()"><i class="fas fa-search"></i> ຄົ້ນຫາ</button>
+                     <button type="button" class="btn btn-back" onclick="goHomeAndClearForms()"><i class="fas fa-arrow-left"></i> ກັບຄືນ</button>
+                </div>
+            </form>
+            <div id="searchResult" class="result" style="padding:0; border:none; background:transparent;">
+                <div class="table-container" id="table-container">
+                    <table>
+                        <thead><tr id="table-header"></tr></thead>
+                        <tbody id="table-body"></tbody>
+                      </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="popup" class="prize-popup">
+  <button class="close-popup">&times;</button>
+  <div class="icon"></div>
+  <div class="message"></div>
+  <div class="sub-message"></div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import {
+    getFirestore, collection, addDoc, getDocs,
+    query, orderBy, limit, serverTimestamp, onSnapshot,
+    doc, getDoc, updateDoc, arrayUnion, deleteDoc
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  
+   const firebaseConfig = {
+    apiKey: "AIzaSyD8fd_23dLQPbLqfqbakpJtlzjIOD_B-Jw",
+    authDomain: "myapp-506ca.firebaseapp.com",
+    projectId: "myapp-506ca",
+    storageBucket: "myapp-506ca.appspot.com",
+    messagingSenderId: "341275741284",
+    appId: "1:341275741284:web:f955e6c5a273e4be616371"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  
+  window.db = db;
+  window.firestoreFunctions = {
+      collection, addDoc, getDocs, query, orderBy, limit, serverTimestamp,
+      onSnapshot, doc, getDoc, updateDoc, arrayUnion, deleteDoc
+  };
+  
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+        window.handleAuthSuccess(user);
+    } else {
+        window.location.replace('./index.html');
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', () => { listenForFeedback(); });
+</script>
+
+<script>
+let APP_CONFIG = null;
+let popupTimeout;
+let isSuperAdmin = false;
+const SUPER_ADMIN_UID = 'KiG4XbEvJEfNl8QjubHF540KIUI2';
+
+window.handleAuthSuccess = (user) => {
+    checkAdminStatus(user);
+    loadAndInitializeApp();
+};
+
+function checkAdminStatus(user) {
+    if (user && user.uid === SUPER_ADMIN_UID) {
+        isSuperAdmin = true;
+        const adminStatusEl = document.getElementById('admin-status');
+        if (adminStatusEl) {
+          adminStatusEl.textContent = `ສະບາຍດີ, Admin. | `;
+        }
+    } else {
+        isSuperAdmin = false;
+    }
+}
+
+async function loadAndInitializeApp() {
+    Swal.fire({ title: 'ກຳລັງໂຫຼດການຕັ້ງຄ່າ...', text: 'ກະລຸນາລໍຖ້າ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    try {
+        if (!window.db) { throw new Error("Firestore is not initialized."); }
+        const { doc, getDoc } = window.firestoreFunctions;
+        const configRef = doc(window.db, "configuration", "appConfig");
+        const docSnap = await getDoc(configRef);
+        if (docSnap.exists()) {
+            APP_CONFIG = docSnap.data();
+            if (APP_CONFIG.yearAllowanceTiers) { APP_CONFIG.yearAllowanceTiers.forEach(tier => { if (tier.maxYears === 'Infinity') { tier.maxYears = Infinity; } }); }
+            if (APP_CONFIG.taxBrackets) { APP_CONFIG.taxBrackets.forEach(bracket => { if (bracket.max === 'Infinity') { bracket.max = Infinity; } }); }
+            initializePrimaryFunctions();
+            Swal.close();
+        } else { throw new Error("ບໍ່ພົບຂໍ້ມູນການຕັ້ງຄ່າໃນ Firestore (configuration/appConfig)."); }
+    } catch (error) {
+        console.error("Error loading remote configuration: ", error);
+        Swal.fire({ icon: 'error', title: 'ເກີດຂໍ້ຜິດພາດ', text: `ບໍ່ສາມາດໂຫຼດຂໍ້ມູນການຕັ້ງຄ່າຫຼັກຂອງລະບົບໄດ້. ກະລຸນາລອງໃໝ່ອີກຄັ້ງ.`, allowOutsideClick: false, });
+    }
+}
+function showCustomPopup(type, message, subMessage = 'ກະລຸນາກວດສອບຂໍ້ມູນຂອງທ່ານຄືນ') {
+    const popup = document.getElementById('popup');
+    const popupIcon = popup.querySelector('.icon');
+    const popupMessage = popup.querySelector('.message');
+    const popupSubMessage = popup.querySelector('.sub-message');
+    if (popupTimeout) clearTimeout(popupTimeout);
+    let iconHtml = ''; let themeClass = '';
+    switch (type) {
+      case 'success': iconHtml = '✅'; themeClass = 'success'; subMessage = subMessage === 'ກະລຸນາກວດສອບຂໍ້ມູນຂອງທ່ານຄືນ' ? 'ຂໍ້ມູນຂອງທ່ານໄດ້ຖືກປະມວນຜົນສຳເລັດ!' : subMessage; break;
+      case 'warning': iconHtml = '⚠️'; themeClass = 'warning'; break;
+      case 'error': iconHtml = '❌'; themeClass = 'error'; break;
+      default: iconHtml = 'ℹ️'; themeClass = 'warning';
+    }
+    popupIcon.innerHTML = iconHtml;
+    popupMessage.textContent = message;
+    popupSubMessage.textContent = subMessage;
+    popup.classList.remove('success', 'warning', 'error');
+    popup.classList.add(themeClass);
+    popup.classList.add('active');
+    popupTimeout = setTimeout(() => { hidePopup(); }, 5000);
+}
+function hidePopup() {
+    const popup = document.getElementById('popup');
+    popup.classList.remove('active');
+    if (popupTimeout) clearTimeout(popupTimeout);
+}
+async function saveOrUpdateFirestore(collectionName, data, docId = null) {
+    if (!window.db) {
+        showCustomPopup('error', 'ຜິດພາດ', 'ບໍ່ສາມາດເຊື່ອມຕໍ່ຖານຂໍ້ມູນໄດ້.');
+        return false;
+    }
+    try {
+        const { collection, addDoc, updateDoc, doc, serverTimestamp } = window.firestoreFunctions;
+        if (docId) {
+            const docRef = doc(window.db, collectionName, docId);
+            await updateDoc(docRef, data);
+        } else {
+            const dataToSave = { ...data, savedAt: serverTimestamp() };
+            await addDoc(collection(window.db, collectionName), dataToSave);
+        }
+        return true;
+    } catch (error) {
+        console.error("Error writing document: ", error);
+        showCustomPopup('error', `ຜິດພາດໃນການບັນທຶກ`, `ເກີດຂໍ້ຜິດພາດ: ${error.message}`);
+        return false;
+    }
+}
+
+async function getDataFromFirestore(collectionName) {
+    if (!window.db) { return []; }
+    try {
+        const { collection, getDocs, query, orderBy, limit } = window.firestoreFunctions;
+        const q = query(collection(window.db, collectionName), orderBy("savedAt", "desc"), limit(50));
+        const querySnapshot = await getDocs(q);
+        const data = [];
+        querySnapshot.forEach((doc) => {
+            let docData = doc.data();
+            if (docData.savedAt && docData.savedAt.toDate) { docData.savedAt = docData.savedAt.toDate(); }
+            data.push({ id: doc.id, ...docData });
+        });
+        return data;
+    } catch (error) { console.error("Error getting documents: ", error); return []; }
+}
+document.addEventListener('DOMContentLoaded', () => {
+    const closePopupBtn = document.querySelector('.close-popup');
+    if (closePopupBtn) { closePopupBtn.addEventListener('click', hidePopup); }
+});
+function initializePrimaryFunctions() { displayLaoDate(); setupVisitorCounter(); initializeForms(); }
+function initializeForms() { toggleFields(); updatePercentage(); handleEnterpriseCategoryChange(); }
+function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+    const activePage = document.getElementById(pageId);
+    if (activePage) { activePage.classList.add('active'); window.scrollTo(0, 0); }
+}
+function goHomeAndClearForms() {
+    resetSalaryForm(); clearGovForm(); clearEntForm(); document.getElementById('searchForm').reset();
+    const tableHeader = document.getElementById('table-header');
+    const tableBody = document.getElementById('table-body');
+    const searchResult = document.getElementById('searchResult');
+    if(tableHeader) tableHeader.innerHTML = '';
+    if(tableBody) tableBody.innerHTML = '';
+    if(searchResult) searchResult.style.display = 'none';
+    showPage('Home');
+}
+function setupVisitorCounter() {
+    if (!APP_CONFIG || !APP_CONFIG.ui) { return; }
+    let count = localStorage.getItem('visitorCount') || APP_CONFIG.ui.visitorCountStart;
+    count = parseInt(count) + 1;
+    localStorage.setItem('visitorCount', count);
+    document.getElementById('visitorCount').innerText = count.toString().padStart(4, '0');
+}
+function displayLaoDate() {
+    const laoDays = ["ວັນອາທິດ", "ວັນຈັນ", "ວັນອັງຄານ", "ວັນພຸດ", "ວັນພະຫັດ", "ວັນສຸກ", "ວັນເສົາ"];
+    const laoMonths = ["ມັງກອນ", "ກຸມພາ", "ມີນາ", "ເມສາ", "ພຶດສະພາ", "ມິຖຸນາ", "ກໍລະກົດ", "ສິງຫາ", "ກັນຍາ", "ຕຸລາ", "ພະຈິກ", "ທັນວາ"];
+    const now = new Date();
+    const dateString = `${laoDays[now.getDay()]}, ວັນທີ ${now.getDate()} ເດືອນ ${laoMonths[now.getMonth()]} ປີ ${now.getFullYear()}`;
+    document.getElementById('date-lao').textContent = dateString;
+}
+function formatAndRestrictNumber(input) { let value = input.value.replace(/[^0-9]/g, ''); if (value) { input.value = parseInt(value, 10).toLocaleString('en-US'); } else { input.value = ''; } }
+function toggleFields() {
+    const category = document.getElementById('category').value;
+    const pensionGroup = document.getElementById('pensionGroup');
+    const wifeGroup = document.getElementById('wifeGroup'); const wifeLabel = document.getElementById('wifeLabel');
+    const deductionLabel = document.getElementById('deductionLabel'); const taxLabel = document.getElementById('taxLabel');
+    const isCivil = category === 'civil'; const isPension = category === 'pension';
+    pensionGroup.classList.toggle('hidden', !isPension); wifeGroup.classList.toggle('hidden', isPension);
+    if(wifeLabel) wifeLabel.style.display = isPension ? 'none' : 'flex';
+    if(taxLabel) taxLabel.style.display = isPension ? 'none' : 'flex';
+    if(deductionLabel) deductionLabel.innerHTML = `<strong>${isPension ? 'ຫັກປະກັນສຸຂະພາບ:' : 'ຫັກ 8%:'}</strong> <span id="deduction8">0</span> ກີບ`;
+}
+function updatePercentage() {
+    const detail = document.getElementById('detail').value; const group = document.getElementById('percentageGroup');
+    const show = detail === 'ເງີນອຸດໜຸນບຳນານເສຍຊີວິດ' || detail === 'ເງີນອຸດໜຸນໝາຍເສຍຊີວິດ';
+    group.classList.toggle('hidden', !show);
+}
+function handleEnterpriseCategoryChange() {
+    const category = document.getElementById('entCategory').value;
+    const childrenGroup = document.getElementById('entChildrenField');
+    const monthsInput = document.getElementById('months');
+    const monthsLabel = document.getElementById('monthsLabel');
+    const contributionLabel = document.getElementById('contributionLabel');
+    monthsInput.disabled = false;
+    monthsInput.value = '';
+    monthsInput.min = '1';
+    monthsInput.max = '';
+    monthsLabel.textContent = 'ເດືອນ:';
+    monthsInput.placeholder = "ປ້ອນຈຳນວນເດືອນ (ຕົວຢ່າງ: 12)";
+    contributionLabel.textContent = 'ຈຳນວນເງີນສົມທົບ 6 ເດືອນສຸດທ້າຍ:';
+    const showChildren = category === 'ອຸດໜຸນເກີດລູກ' || category === 'ບຳເນັດເກີດລູກ';
+    childrenGroup.classList.toggle('hidden', !showChildren);
+    if (category === 'ເງີນເສຍຊີວິດ' || category === 'ບຳເນັດອອກການ') {
+        monthsLabel.textContent = 'ເດືອນທັງໝົດທີ່ເຂົ້າ ອປຊ:';
+    }
+    
+    if (category === 'ບຳເນັດເກີດລູກ') {
+        monthsInput.value = 1;
+        monthsInput.disabled = true;
+    } else if (category === 'ອຸດໜຸນເກີດລູກ') {
+        monthsInput.placeholder = "ປ້ອນເດືອນ (1-4)";
+        monthsInput.min = '1';
+        monthsInput.max = '4';
+    } else if (category === 'ບຳເນັດອອກການ') {
+        contributionLabel.textContent = 'ຈຳນວນເງີນສົມທົບ <60 ເດືອນສຸດທ້າຍ:';
+        monthsInput.placeholder = "ປ້ອນເດືອນ (1-60)";
+        monthsInput.min = '1';
+        monthsInput.max = '60';
+    }
+}
+function clearForm(formId, resultId, callback, buttonGroupId, mode) {
+    document.getElementById(formId).reset();
+    const resultEl = document.getElementById(resultId);
+    if (resultEl) resultEl.style.display = 'none';
+    if (callback) callback();
+    if (buttonGroupId) {
+        cancelEdit(formId, buttonGroupId, mode);
+    }
+}
+const resetSalaryForm = () => clearForm('salaryForm', 'salaryResult', toggleFields, 'salary-button-group', 'salary');
+const clearGovForm = () => clearForm('bonusForm', 'govResult', updatePercentage, 'gov-button-group', 'gov');
+const clearEntForm = () => clearForm('supportForm', 'entResult', handleEnterpriseCategoryChange, 'ent-button-group', 'ent');
+
+function calculateYearlyBonus(years) {
+    if (!APP_CONFIG) return 0;
+    const tiers = APP_CONFIG.yearAllowanceTiers;
+    for (const tier of tiers) { if (years <= tier.maxYears) { return (years - tier.previousMax) * tier.rate + tier.base; } }
+    const lastTier = tiers[tiers.length - 1]; return (years - lastTier.previousMax) * lastTier.rate + lastTier.base;
+}
+function calculateTax(taxableIncome) {
+    if (!APP_CONFIG) return 0; const brackets = APP_CONFIG.taxBrackets; let previousMax = 0;
+    for (const bracket of brackets) { if (taxableIncome <= bracket.max) { return (taxableIncome - previousMax) * bracket.rate + bracket.base; } previousMax = bracket.max; } return 0;
+}
+async function calculateSalary() {
+    if (!APP_CONFIG) { showCustomPopup('error', 'ຜິດພາດ', 'ການຕັ້ງຄ່າຍັງບໍ່ພ້ອມໃຊ້ງານ.'); return; }
+    const docId = document.getElementById('salaryEditDocId').value;
+    const isUpdate = !!docId;
+    const category = document.getElementById('category').value;
+    const index = parseFloat(document.getElementById('index').value) || 0;
+    const year = parseFloat(document.getElementById('year').value) || 0;
+    const position = parseFloat(document.getElementById('position').value.replace(/,/g, '')) || 0;
+    if (!category || !index || !year) { showCustomPopup('warning', 'ກະລຸນາປ້ອນຂໍ້ມູນ', 'ກະລຸນາປ້ອນ ປະເພດ, ດັດສະນີ, ປີການ ໃຫ້ຄົບຖ້ວນ.'); return; }
+    Swal.fire({ title: isUpdate ? 'ກຳລັງອັບເດດ...' : 'ກຳລັງຄຳນວນ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    const children = parseFloat(document.getElementById('children').value) || 0;
+    const wife = parseFloat(document.getElementById('wife').value) || 0;
+    const pensionPercent = parseFloat(document.getElementById('pensionPercent').value) || 0;
+    const yearAllowance = calculateYearlyBonus(year);
+    const livingAllowance = APP_CONFIG.salary.livingAllowance;
+    const childAllowance = children * APP_CONFIG.salary.childAllowance;
+    let totalBeforeDeduction, deduction, tax, totalNet, wifeAllowance, dataToSave = {};
+    if (category === 'civil') {
+        totalBeforeDeduction = (index * APP_CONFIG.salary.indexMultiplier) + position + yearAllowance;
+        wifeAllowance = wife * APP_CONFIG.salary.wifeAllowance;
+        deduction = totalBeforeDeduction * APP_CONFIG.deductions.civilRate;
+        const taxableIncome = totalBeforeDeduction - deduction;
+        tax = calculateTax(taxableIncome);
+        totalNet = Math.floor(totalBeforeDeduction - deduction - tax + childAllowance + wifeAllowance + livingAllowance);
+        dataToSave = { category: 'ເງີນເດືອນພະນັກງານລັດຖະກອນ', index, year, position, children, wife, totalBeforeDeduction, yearAllowance, childAllowance, wifeAllowance, deduction, tax, livingAllowance, totalNet };
+    } else {
+        totalBeforeDeduction = ((index * APP_CONFIG.salary.indexMultiplier) + position + yearAllowance) * (pensionPercent / 100);
+        wifeAllowance = 0; tax = 0;
+        deduction = Math.floor(totalBeforeDeduction * APP_CONFIG.deductions.pensionHealthRate);
+        totalNet = Math.floor(totalBeforeDeduction - deduction + childAllowance + livingAllowance);
+        dataToSave = { category: 'ເງີນເດືອນພະນັກງານບຳນານ', index, year, position, children, pensionPercent, totalBeforeDeduction, yearAllowance, childAllowance, deduction, livingAllowance, totalNet };
+    }
+    Swal.close();
+    document.getElementById('totalBeforeDeduction').textContent = totalBeforeDeduction.toLocaleString();
+    document.getElementById('yearAllowance').textContent = yearAllowance.toLocaleString();
+    document.getElementById('childAllowance').textContent = childAllowance.toLocaleString();
+    document.getElementById('wifeAllowance').textContent = wifeAllowance.toLocaleString();
+    document.getElementById('deduction8').textContent = deduction.toLocaleString();
+    document.getElementById('tax').textContent = Math.round(tax).toLocaleString();
+    document.getElementById('livingAllowance').textContent = livingAllowance.toLocaleString();
+    document.getElementById('totalNet').textContent = totalNet.toLocaleString();
+    document.getElementById('salaryResult').style.display = 'block';
+    if (await saveOrUpdateFirestore('salaryHistory', dataToSave, docId)) {
+        showCustomPopup('success', isUpdate ? 'ອັບເດດສຳເລັດ!' : 'ບັນທຶກສຳເລັດ!');
+        if (isUpdate) { resetSalaryForm(); setTimeout(() => showPage('Search'), 500); }
+    }
+}
+async function validateAndCalculateGovernment() {
+    if (!APP_CONFIG) { showCustomPopup('error', 'ຜິດພາດ', 'ການຕັ້ງຄ່າຍັງບໍ່ພ້ອມໃຊ້ງານ.'); return; }
+    const docId = document.getElementById('govEditDocId').value;
+    const isUpdate = !!docId;
+    const formData = {
+        detail: document.getElementById('detail').value,
+        index: parseFloat(document.getElementById('govIndex').value) || 0,
+        serviceYears: parseInt(document.getElementById('serviceYears').value) || 0,
+        positionSalary: parseFloat(document.getElementById('positionSalary').value.replace(/,/g, '')) || 0,
+        percentage: parseFloat(document.getElementById('percentage').value) || 0
+    };
+    if (!formData.detail || !formData.index || !formData.serviceYears) { showCustomPopup('warning', 'ກະລຸນາປ້ອນຂໍ້ມູນ', 'ກະລຸນາປ້ອນຂໍ້ມູນທີ່ຈຳເປັນໃຫ້ຄົບຖ້ວນ.'); return; }
+    if ((formData.detail === "ເງີນອຸດໜຸນບຳນານເສຍຊີວິດ" || formData.detail === "ເງີນອຸດໜຸນໝາຍເສຍຊີວິດ") && (!formData.percentage || formData.percentage <= 0)) { showCustomPopup('warning', 'ຂໍ້ມູນບໍ່ຖືກຕ້ອງ', 'ກະລຸນາໃສ່ເປີເຊັນບຳນານທີ່ຖືກຕ້ອງ'); return; }
+    Swal.fire({ title: isUpdate ? 'ກຳລັງອັບເດດ...' : 'ກຳລັງຄຳນວນ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    const C = APP_CONFIG.govSubsidy;
+    const baseMonthlySalary = formData.index * APP_CONFIG.salary.indexMultiplier;
+    const yearlyBonus = calculateYearlyBonus(formData.serviceYears);
+    const totalBeforePensionCalc = baseMonthlySalary + yearlyBonus + formData.positionSalary;
+    let totalDeduction = 0, monthsReceived = 0, totalAmountReceived = 0;
+    if (formData.detail === "ເງີນອຸດໜຸນບຳເນັດອອກການ") {
+        totalDeduction = Math.floor(totalBeforePensionCalc * (C.severanceRate || 0.85));
+        monthsReceived = C.severancePayMultiplier || 1.5;
+        totalAmountReceived = Math.round(totalDeduction * monthsReceived * formData.serviceYears);
+    } else if (formData.detail === "ເງີນອຸດໜຸນໝາຍເສຍຊີວິດ") {
+        totalDeduction = Math.floor(totalBeforePensionCalc * formData.percentage / 100);
+        monthsReceived = C.widowAllowanceMonths;
+        totalAmountReceived = (totalDeduction * C.widowPensionMultiplier) * monthsReceived;
+    } else {
+        totalDeduction = (formData.detail === "ເງີນອຸດໜຸນບຳນານເສຍຊີວິດ") ? Math.floor(totalBeforePensionCalc * formData.percentage / 100) : totalBeforePensionCalc;
+        if (formData.serviceYears < C.deathAllowanceYearsLimit) {
+            monthsReceived = formData.serviceYears + C.deathAllowanceBaseMonths;
+        } else {
+            monthsReceived = (Math.floor((formData.serviceYears + C.deathAllowanceFormulaMonths1) / C.deathAllowanceFormulaMonths2)) + C.deathAllowanceFormulaMonths3;
+        }
+        totalAmountReceived = totalDeduction * monthsReceived;
+    }
+    Swal.close();
+    document.getElementById('govBaseMonthlySalary').innerText = `${baseMonthlySalary.toLocaleString('en-US')} ກີບ`;
+    document.getElementById('govYearlyBonus').innerText = `${yearlyBonus.toLocaleString('en-US')} ກີບ`;
+    document.getElementById('govTotalDeduction').innerText = `${totalDeduction.toLocaleString('en-US')} ກີບ`;
+    document.getElementById('govMonthsReceived').innerText = `${monthsReceived} ເດືອນ`;
+    document.getElementById('govTotalAmountReceived').innerText = `${totalAmountReceived.toLocaleString('en-US')} ກີບ`;
+    document.getElementById('govResult').style.display = 'block';
+    const saveData = { ...formData, baseMonthlySalary, yearlyBonus, totalDeduction, monthsReceived, totalAmountReceived };
+    if (await saveOrUpdateFirestore('govSupportHistory', saveData, docId)) {
+        showCustomPopup('success', isUpdate ? 'ອັບເດດສຳເລັດ!' : 'ບັນທຶກສຳເລັດ!');
+        if (isUpdate) { clearGovForm(); setTimeout(() => showPage('Search'), 500); }
+    }
+}
+async function calculateEnterprise() {
+    if (!APP_CONFIG) { showCustomPopup('error', 'ຜິດພາດ', 'ການຕັ້ງຄ່າຍັງບໍ່ພ້ອມໃຊ້ງານ.'); return; }
+    const docId = document.getElementById('entEditDocId').value;
+    const isUpdate = !!docId;
+    const data = {
+        category: document.getElementById('entCategory').value,
+        contribution: parseFloat(document.getElementById('contribution').value.replace(/,/g, '')) || 0,
+        months: parseFloat(document.getElementById('months').value) || 0,
+        children: parseFloat(document.getElementById('entChildren').value) || 0
+    };
+    if (!data.category || !data.contribution || !data.months || ( (data.category === 'ອຸດໜຸນເກີດລູກ' || data.category === 'ບຳເນັດເກີດລູກ') && !data.children) ) { showCustomPopup('warning', 'ກະລຸນາປ້ອນຂໍ້ມູນ', 'ກະລຸນາປ້ອນຂໍ້ມູນທີ່ຈຳເປັນໃຫ້ຄົບຖ້ວນ.'); return; }
+    Swal.fire({ title: isUpdate ? 'ກຳລັງອັບເດດ...' : 'ກຳລັງຄຳນວນ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    const C = APP_CONFIG.entSubsidy;
+    let result = 0;
+    const avgContribution = Math.floor(data.contribution / C.baseMonths);
+    if (data.category === 'ບຳເນັດເກີດລູກ') {
+        result = Math.round(avgContribution * C.childbirthBenefitMultiplier) * data.children;
+    } else if (data.category === 'ອຸດໜຸນເກີດລູກ') {
+        const M = C.childbirthAllowanceMultipliers;
+        const childBenefit = data.children * Math.round(avgContribution * C.childbirthBenefitMultiplier);
+        if (data.months == 1) result = (Math.round(avgContribution * M.month1)) + childBenefit;
+        else if (data.months == 2) result = Math.round(avgContribution * M.month2);
+        else if (data.months == 3) result = Math.round(avgContribution * M.month3);
+        else if (data.months == 4) result = Math.round(avgContribution * M.month4) + childBenefit;
+    } else if (data.category === 'ເງີນເສຍຊີວິດ') {
+        const D = C.deathBenefit;
+        var years = Math.floor(data.months / 12);
+        if (years < D.yearLimit) {
+            result = (years + D.baseMonths) * avgContribution;
+        } else {
+            result = (Math.floor((years + D.formulaMonths1) / 2) + D.formulaMonths3) * avgContribution;
+        }
+    } else if (data.category === 'ບຳເນັດອອກການ') {
+        const S = C.severancePay;
+        var effectiveMonths = data.months < (S.maxMonths + 1) ? data.months : S.maxMonths;
+        var years = Math.floor(data.months / 12);
+        result = Math.floor(data.contribution / effectiveMonths) * S.yearMultiplier * years;
+    }
+    Swal.close();
+    const resultFormatted = result.toFixed(2);
+    document.getElementById('entTotal').innerText = parseFloat(resultFormatted).toLocaleString('en-US') + ' ກີບ';
+    document.getElementById('entResult').style.display = 'block';
+    const saveData = { ...data, totalAmountReceived: resultFormatted };
+    if (await saveOrUpdateFirestore('entSupportHistory', saveData, docId)) {
+        showCustomPopup('success', isUpdate ? 'ອັບເດດສຳເລັດ!' : 'ບັນທຶກສຳເລັດ!');
+        if (isUpdate) { clearEntForm(); setTimeout(() => showPage('Search'), 500); }
+    }
+}
+
+// ===== NEW: ຂໍ້ມູນດັດສະນີ (Index Data) =====
+// Data is stored here for simplicity. In a larger app, this would come from a database.
+const indexData = [
+    ['ລະດັບຊັ້ນ', 'ຂັ້ນ', 'ປະເພດ', 'ດັດສະນີ', 'ໝາຍເຫດ'],
+    ['ຊັ້ນສູງ', '4/2', 'ບໍລິຫານ', 248, ''],
+    ['ຊັ້ນສູງ', '4/1', 'ບໍລິຫານ', 242, ''],
+    ['ຊັ້ນສູງ', '3/2', 'ບໍລິຫານ', 236, ''],
+    ['ຊັ້ນສູງ', '3/1', 'ບໍລິຫານ', 230, ''],
+    ['ຊັ້ນສູງ', '2/2', 'ບໍລິຫານ', 224, ''],
+    ['ຊັ້ນສູງ', '2/1', 'ບໍລິຫານ', 218, ''],
+    ['ຊັ້ນສູງ', '1/2', 'ບໍລິຫານ', 212, ''],
+    ['ຊັ້ນສູງ', '1/1', 'ບໍລິຫານ', 206, ''],
+    ['ຊັ້ນກາງ', '4/2', 'ບໍລິຫານ', 200, ''],
+    ['ຊັ້ນກາງ', '4/1', 'ບໍລິຫານ', 194, ''],
+    ['ຊັ້ນກາງ', '3/2', 'ບໍລິຫານ', 188, ''],
+    ['ຊັ້ນກາງ', '3/1', 'ບໍລິຫານ', 182, ''],
+    ['ຊັ້ນກາງ', '2/2', 'ບໍລິຫານ', 176, ''],
+    ['ຊັ້ນກາງ', '2/1', 'ບໍລິຫານ', 170, ''],
+    ['ຊັ້ນກາງ', '1/2', 'ບໍລິຫານ', 164, ''],
+    ['ຊັ້ນກາງ', '1/1', 'ບໍລິຫານ', 158, ''],
+    ['ຊັ້ນຕົ້ນ', '4/2', 'ບໍລິຫານ', 152, ''],
+    ['ຊັ້ນຕົ້ນ', '4/1', 'ບໍລິຫານ', 146, ''],
+    ['ຊັ້ນຕົ້ນ', '3/2', 'ບໍລິຫານ', 140, ''],
+    ['ຊັ້ນຕົ້ນ', '3/1', 'ບໍລິຫານ', 134, ''],
+    ['ຊັ້ນຕົ້ນ', '2/2', 'ບໍລິຫານ', 128, ''],
+    ['ຊັ້ນຕົ້ນ', '2/1', 'ບໍລິຫານ', 122, ''],
+    ['ຊັ້ນຕົ້ນ', '1/2', 'ບໍລິຫານ', 116, ''],
+    ['ຊັ້ນຕົ້ນ', '1/1', 'ບໍລິຫານ', 110, ''],
+    ['ຊັ້ນສູງ', '4/2', 'ວິຊາການ', 234, ''],
+    ['ຊັ້ນສູງ', '4/1', 'ວິຊາການ', 228, ''],
+    ['ຊັ້ນສູງ', '3/2', 'ວິຊາການ', 222, ''],
+    ['ຊັ້ນສູງ', '3/1', 'ວິຊາການ', 216, ''],
+    ['ຊັ້ນສູງ', '2/2', 'ວິຊາການ', 210, ''],
+    ['ຊັ້ນສູງ', '2/1', 'ວິຊາການ', 204, ''],
+    ['ຊັ້ນສູງ', '1/2', 'ວິຊາການ', 198, ''],
+    ['ຊັ້ນສູງ', '1/1', 'ວິຊາການ', 192, ''],
+    ['ຊັ້ນກາງ', '4/2', 'ວິຊາການ', 186, ''],
+    ['ຊັ້ນກາງ', '4/1', 'ວິຊາການ', 180, ''],
+    ['ຊັ້ນກາງ', '3/2', 'ວິຊາການ', 174, ''],
+    ['ຊັ້ນກາງ', '3/1', 'ວິຊາການ', 168, ''],
+    ['ຊັ້ນກາງ', '2/2', 'ວິຊາການ', 162, ''],
+    ['ຊັ້ນກາງ', '2/1', 'ວິຊາການ', 156, ''],
+    ['ຊັ້ນກາງ', '1/2', 'ວິຊາການ', 150, ''],
+    ['ຊັ້ນກາງ', '1/1', 'ວິຊາການ', 144, ''],
+    ['ຊັ້ນຕົ້ນ', '4/2', 'ວິຊາການ', 138, ''],
+    ['ຊັ້ນຕົ້ນ', '4/1', 'ວິຊາການ', 132, ''],
+    ['ຊັ້ນຕົ້ນ', '3/2', 'ວິຊາການ', 126, ''],
+    ['ຊັ້ນຕົ້ນ', '3/1', 'ວິຊາການ', 120, ''],
+    ['ຊັ້ນຕົ້ນ', '2/2', 'ວິຊາການ', 114, ''],
+    ['ຊັ້ນຕົ້ນ', '2/1', 'ວິຊາການ', 108, ''],
+    ['ຊັ້ນຕົ້ນ', '1/2', 'ວິຊາການ', 102, ''],
+    ['ຊັ້ນຕົ້ນ', '1/1', 'ວິຊາການ', 96, ''],
+    ['ປະລິນຍາເອກ', '9', 'ຄູອາຈານ', 356, ''],
+    ['ປະລິນຍາເອກ', '8', 'ຄູອາຈານ', 344, ''],
+    ['ປະລິນຍາເອກ', '7', 'ຄູອາຈານ', 332, ''],
+    ['ປະລິນຍາໂທ', '8', 'ຄູອາຈານ', 320, ''],
+    ['ປະລິນຍາໂທ', '7', 'ຄູອາຈານ', 308, ''],
+    ['ປະລິນຍາໂທ', '6', 'ຄູອາຈານ', 296, ''],
+    ['ປະລິນຍາຕີ', '7', 'ຄູອາຈານ', 284, ''],
+    ['ປະລິນຍາຕີ', '6', 'ຄູອາຈານ', 272, ''],
+    ['ປະລິນຍາຕີ', '5', 'ຄູອາຈານ', 260, ''],
+    ['ຊັ້ນສູງ', '6', 'ຄູອາຈານ', 248, ''],
+    ['ຊັ້ນສູງ', '5', 'ຄູອາຈານ', 236, ''],
+    ['ຊັ້ນສູງ', '4', 'ຄູອາຈານ', 224, ''],
+    ['ຊັ້ນກາງ', '5', 'ຄູອາຈານ', 212, ''],
+    ['ຊັ້ນກາງ', '4', 'ຄູອາຈານ', 200, ''],
+    ['ຊັ້ນກາງ', '3', 'ຄູອາຈານ', 188, ''],
+    ['ຊັ້ນຕົ້ນ', '4', 'ຄູອາຈານ', 176, ''],
+    ['ຊັ້ນຕົ້ນ', '3', 'ຄູອາຈານ', 164, ''],
+    ['ຊັ້ນຕົ້ນ', '2', 'ຄູອາຈານ', 152, '']
+];
+
+
+async function searchData() {
+    const collectionName = document.getElementById('combobox1').value; const searchTerm = document.getElementById('textbox1').value.trim().toLowerCase();
+    if (!collectionName) { showCustomPopup('warning', 'ກະລຸນາເລືອກ', 'ກະລຸນາເລືອກລາຍການທີ່ຈະຄົ້ນຫາກ່ອນ!'); return; }
+    Swal.fire({ title: 'ກຳລັງຄົ້ນຫາ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    let headers = []; let dataRows = [];
+    if (collectionName === 'indexData') {
+        headers = indexData[0];
+        let data = indexData.slice(1);
+        if (searchTerm) { data = data.filter(row => row.some(cell => cell && cell.toString().toLowerCase().includes(searchTerm))); } dataRows = data;
+    } else {
+        const firestoreData = await getDataFromFirestore(collectionName);
+        switch (collectionName) {
+            case 'salaryHistory':
+                headers = ['ວັນທີ', 'ເນື້ອໃນ', 'ດັດສະນີ', 'ປີການ', 'ຕຳແໜ່ງ', 'ລູກ', 'ເມຍ', '%ບຳນານ', 'ລວມກ່ອນຫັກ', 'ເງິນປີການ', 'ເງິນລູກ', 'ເງິນເມຍ', 'ຫັກ(8%/ປະກັນ)', 'ອາກອນ', 'ຄ່າຄອງຊີບ', 'ລວມທັງໝົດ'];
+                dataRows = firestoreData.map(r => {
+                    const isCivil = r.category === 'ເງີນເດືອນພະນັກງານລັດຖະກອນ';
+                    return [ r.savedAt ? new Date(r.savedAt).toLocaleString('lo-LA') : 'N/A', r.category, r.index, r.year, r.position, r.children, isCivil ? r.wife : '-', isCivil ? '-' : r.pensionPercent, r.totalBeforeDeduction, r.yearAllowance, r.childAllowance, isCivil ? r.wifeAllowance : '-', r.deduction, isCivil ? r.tax : '-', r.livingAllowance, r.totalNet, r.id ];
+                }); break;
+            case 'govSupportHistory':
+                headers = ['ວັນທີ', 'ເນື້ອໃນ', 'ດັດສະນີ', 'ປີການ', 'ຕຳແໜ່ງ', '%ບຳນານ', 'ເງິນເດືອນພື້ນຖານ', 'ເງິນປີການ', 'ລວມກ່ອນຫັກ', 'ເດືອນທີ່ໄດ້ຮັບ', 'ລວມທັງໝົດ'];
+                dataRows = firestoreData.map(r => [ r.savedAt ? new Date(r.savedAt).toLocaleString('lo-LA') : 'N/A', r.detail, r.index, r.serviceYears, r.positionSalary, r.percentage || 0, r.baseMonthlySalary, r.yearlyBonus, r.totalDeduction, r.monthsReceived, r.totalAmountReceived, r.id ]);
+                break;
+            case 'entSupportHistory':
+                headers = ['ວັນທີ', 'ເນື້ອໃນ', 'ເງິນສົມທົບ', 'ເດືອນ', 'ຈຳນວນລູກ', 'ລວມທັງໝົດ'];
+                dataRows = firestoreData.map(r => [ r.savedAt ? new Date(r.savedAt).toLocaleString('lo-LA') : 'N/A', r.category, r.contribution, r.months, r.children, r.totalAmountReceived, r.id ]); break;
+        }
+        if (searchTerm) { dataRows = dataRows.filter(row => row.slice(0, -1).some(cell => cell && cell.toString().toLowerCase().includes(searchTerm))); }
+    }
+    displaySearchResults(collectionName, [headers, ...dataRows]); Swal.close();
+}
+function displaySearchResults(collectionName, parsedData) {
+    const tableHeader = document.getElementById('table-header');
+    const tableBody = document.getElementById('table-body');
+    tableHeader.innerHTML = '';
+    tableBody.innerHTML = '';
+    document.getElementById('searchResult').style.display = 'block';
+    if (parsedData.length <= 1) {
+        const colspan = (parsedData[0] || []).length + (collectionName !== 'indexData' ? 1 : 0);
+        tableBody.innerHTML = `<tr><td colspan="${colspan}" style="text-align:center; padding-left: 12px;">ບໍ່ພົບຂໍ້ມູນທີ່ຕົງກັບການຄົ້ນຫາ</td></tr>`;
+        return;
+    }
+    const headers = [...parsedData[0], ...(collectionName !== 'indexData' ? ['ດຳເນີນການ'] : [])];
+    headers.forEach(header => {
+        const th = document.createElement('th');
+        th.textContent = header;
+        tableHeader.appendChild(th);
+    });
+    const rows = parsedData.slice(1);
+    rows.forEach(row => {
+        const tr = document.createElement('tr');
+        const docId = collectionName !== 'indexData' ? row[row.length - 1] : null;
+        const displayRow = collectionName !== 'indexData' ? row.slice(0, -1) : row;
+        const rowType = displayRow[collectionName === 'salaryHistory' ? 1 : (collectionName === 'indexData' ? 2 : 1)];
+
+        displayRow.forEach((value, index) => {
+            const td = document.createElement('td');
+            const header = headers[index];
+            let customLabel = header; let displayValue = value;
+            if (collectionName === 'govSupportHistory' && rowType === 'ເງີນອຸດໜຸນບຳເນັດອອກການ') {
+                if (header === '%ບຳນານ') { td.classList.add('mobile-hidden'); }
+                if (header === 'ເດືອນທີ່ໄດ້ຮັບ') { displayValue = '1.5'; }
+            }
+            if (collectionName === 'entSupportHistory') {
+                if ((rowType === 'ເງີນເສຍຊີວິດ' || rowType === 'ບຳເນັດອອກການ') && header === 'ຈຳນວນລູກ') { td.classList.add('mobile-hidden'); }
+                if (header === 'ເງິນສົມທົບ') {
+                    if (rowType === 'ເງີນເສຍຊີວິດ' || rowType === 'ອຸດໜຸນເກີດລູກ' || rowType === 'ບຳເນັດເກີດລູກ') { customLabel = 'ເງີນສົບທົບ 6 ເດືອນສຸດທ້າຍ'; } 
+                    else if (rowType === 'ບຳເນັດອອກການ') { customLabel = 'ເງີນສົບທົບ <60 ເດືອນສຸດທ້າຍ'; }
+                }
+                if (header === 'ເດືອນ') {
+                    if (rowType === 'ເງີນເສຍຊີວິດ' || rowType === 'ບຳເນັດອອກການ') { customLabel = 'ເດືອນທັງໝົດທີ່ເຂົ້າ ອປຊ'; }
+                }
+            }
+            td.setAttribute('data-label', customLabel);
+            let finalDisplayValue;
+            if (collectionName === 'entSupportHistory' && header === 'ລວມທັງໝົດ') {
+                finalDisplayValue = parseFloat(displayValue).toLocaleString('en-US', { maximumFractionDigits: 0 });
+            } else if (typeof displayValue === 'number' && displayValue >= 1000) {
+                finalDisplayValue = displayValue.toLocaleString('en-US', { maximumFractionDigits: 2 });
+            } else {
+                finalDisplayValue = displayValue === '-' ? '' : (displayValue === null || typeof displayValue === 'undefined' ? '' : displayValue);
+            }
+            td.textContent = finalDisplayValue;
+            if (value === '-' || value === '' || value === null || typeof value === 'undefined') { td.classList.add('mobile-hidden'); }
+            tr.appendChild(td);
+        });
+
+        if (collectionName !== 'indexData') {
+            const actionTd = document.createElement('td');
+            const downloadBtn = document.createElement('button');
+            downloadBtn.className = 'btn btn-primary download-btn';
+            downloadBtn.innerHTML = '<i class="fas fa-download"></i>';
+            downloadBtn.onclick = () => downloadRowAsImage(tr);
+            actionTd.appendChild(downloadBtn);
+            if (isSuperAdmin) {
+                const editBtn = document.createElement('button');
+                editBtn.className = 'btn btn-accent';
+                editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+                editBtn.onclick = () => editRecord(collectionName, docId);
+                actionTd.appendChild(editBtn);
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'btn btn-danger';
+                deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+                deleteBtn.onclick = () => deleteRecord(collectionName, docId);
+                actionTd.appendChild(deleteBtn);
+            }
+            tr.appendChild(actionTd);
+        }
+        tableBody.appendChild(tr);
+    });
+}
+function downloadRowAsImage(elementToCapture) {
+    if (!elementToCapture) return;
+    Swal.fire({ title: 'ກຳລັງສ້າງຮູບພາບ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    const actionCell = elementToCapture.lastElementChild; const originalDisplay = actionCell.style.display;
+    actionCell.style.display = 'none';
+    html2canvas(elementToCapture, { scale: 2, backgroundColor: '#2c3e50', useCORS: true }).then(canvas => {
+        actionCell.style.display = originalDisplay; const link = document.createElement('a'); link.href = canvas.toDataURL('image/jpeg', 0.95); link.download = `calculation_result_${Date.now()}.jpg`; link.click(); Swal.close(); showCustomPopup('success', 'ບັນທຶກຮູບພາບແລ້ວ!');
+    }).catch(error => { actionCell.style.display = originalDisplay; showCustomPopup('error', 'ຜິດພາດ', `ບໍ່ສາມາດບັນທຶກຮູບພາບໄດ້: ${error}`); });
+}
+async function deleteRecord(collectionName, docId) {
+    if (!isSuperAdmin) { showCustomPopup('error', 'ບໍ່ມີສິດ', 'ທ່ານບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ດຳເນີນການນີ້.'); return; }
+    const { doc, deleteDoc } = window.firestoreFunctions;
+    Swal.fire({
+        title: 'ທ່ານແນ່ໃຈບໍ່?', text: "ທ່ານຈະບໍ່ສາມາດກູ້ຄືນຂໍ້ມູນນີ້ໄດ້!", icon: 'warning',
+        showCancelButton: true, confirmButtonColor: 'var(--primary-color)', cancelButtonColor: 'var(--danger-color)',
+        confirmButtonText: 'ແມ່ນ, ລຶບເລີຍ!', cancelButtonText: 'ຍົກເລີກ'
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            try {
+                await deleteDoc(doc(window.db, collectionName, docId));
+                Swal.fire('ລຶບສຳເລັດ!', 'ຂໍ້ມູນໄດ້ຖືກລຶບອອກແລ້ວ.', 'success');
+                document.getElementById('searchButton').click();
+            } catch (error) { console.error("Error deleting document: ", error); Swal.fire('ຜິດພາດ!', 'ບໍ່ສາມາດລຶບຂໍ້ມູນໄດ້.', 'error'); }
+        }
+    });
+}
+async function editRecord(collectionName, docId) {
+    if (!isSuperAdmin) { showCustomPopup('error', 'ບໍ່ມີສິດ', 'ທ່ານບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ດຳເນີນການນີ້.'); return; }
+    const { doc, getDoc } = window.firestoreFunctions;
+    Swal.fire({ title: 'ກຳລັງໂຫລດຂໍ້ມູນ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    try {
+        const docRef = doc(window.db, collectionName, docId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            switch (collectionName) {
+                case 'salaryHistory': populateSalaryFormForEdit(data, docId); showPage('Salary'); break;
+                case 'govSupportHistory': populateGovFormForEdit(data, docId); showPage('Government'); break;
+                case 'entSupportHistory': populateEntFormForEdit(data, docId); showPage('Enterprise'); break;
+                default: showCustomPopup('error', 'ຜິດພາດ', 'ບໍ່ຮູ້ຈັກປະເພດຂອງຂໍ້ມູນນີ້.');
+            }
+            Swal.close();
+        } else { Swal.fire('ຜິດພາດ', 'ບໍ່ພົບຂໍ້ມູນທີ່ຕ້ອງການແກ້ໄຂ.', 'error'); }
+    } catch (error) { Swal.fire('ຜິດພາດ', `ເກີດບັນຫາໃນການໂຫລດຂໍ້ມູນ: ${error.message}`, 'error'); }
+}
+function populateSalaryFormForEdit(data, docId) {
+    const isCivil = data.category === 'ເງີນເດືອນພະນັກງານລັດຖະກອນ';
+    document.getElementById('category').value = isCivil ? 'civil' : 'pension';
+    document.getElementById('index').value = data.index || 0;
+    document.getElementById('year').value = data.year || 0;
+    document.getElementById('position').value = (data.position || 0).toLocaleString('en-US');
+    document.getElementById('children').value = data.children || 0;
+    document.getElementById('wife').value = isCivil ? (data.wife || 0) : 0;
+    document.getElementById('pensionPercent').value = isCivil ? 0 : (data.pensionPercent || 0);
+    document.getElementById('salaryEditDocId').value = docId;
+    toggleFields();
+    const buttonGroup = document.getElementById('salary-button-group');
+    buttonGroup.innerHTML = `
+        <button type="button" class="btn btn-accent" onclick="calculateSalary()"><i class="fas fa-save"></i> ອັບເດດຂໍ້ມູນ</button>
+        <button type="button" class="btn btn-secondary" onclick="cancelEdit('salaryForm', 'salary-button-group', 'salary')"><i class="fas fa-times"></i> ຍົກເລີກ</button>
+    `;
+}
+function populateGovFormForEdit(data, docId) {
+    document.getElementById('detail').value = data.detail || '';
+    document.getElementById('govIndex').value = data.index || 0;
+    document.getElementById('serviceYears').value = data.serviceYears || 0;
+    document.getElementById('positionSalary').value = (data.positionSalary || 0).toLocaleString('en-US');
+    document.getElementById('percentage').value = data.percentage || 0;
+    document.getElementById('govEditDocId').value = docId;
+    updatePercentage();
+    const buttonGroup = document.getElementById('gov-button-group');
+    buttonGroup.innerHTML = `
+        <button type="button" class="btn btn-accent" onclick="validateAndCalculateGovernment()"><i class="fas fa-save"></i> ອັບເດດຂໍ້ມູນ</button>
+        <button type="button" class="btn btn-secondary" onclick="cancelEdit('bonusForm', 'gov-button-group', 'gov')"><i class="fas fa-times"></i> ຍົກເລີກ</button>
+    `;
+}
+function populateEntFormForEdit(data, docId) {
+    document.getElementById('entCategory').value = data.category || '';
+    document.getElementById('contribution').value = (data.contribution || 0).toLocaleString('en-US');
+    document.getElementById('months').value = data.months || 0;
+    document.getElementById('entChildren').value = data.children || 0;
+    document.getElementById('entEditDocId').value = docId;
+    handleEnterpriseCategoryChange();
+    const buttonGroup = document.getElementById('ent-button-group');
+    buttonGroup.innerHTML = `
+        <button type="button" class="btn btn-accent" onclick="calculateEnterprise()"><i class="fas fa-save"></i> ອັບເດດຂໍ້ມູນ</button>
+        <button type="button" class="btn btn-secondary" onclick="cancelEdit('supportForm', 'ent-button-group', 'ent')"><i class="fas fa-times"></i> ຍົກເລີກ</button>
+    `;
+}
+function cancelEdit(formId, buttonGroupId, mode) {
+    document.getElementById(formId).reset();
+    let originalButtons = '';
+    switch(mode) {
+        case 'salary':
+            document.getElementById('salaryEditDocId').value = '';
+            originalButtons = `
+                <button type="button" class="btn btn-primary" onclick="calculateSalary()"><i class="fas fa-calculator"></i> ຄຳນວນ</button>
+                <button type="button" class="btn btn-danger" onclick="resetSalaryForm()"><i class="fas fa-trash"></i> ລ້າງຂໍ້ມູນ</button>
+                <button type="button" class="btn btn-back" onclick="goHomeAndClearForms()"><i class="fas fa-arrow-left"></i> ກັບຄືນ</button>
+            `;
+            break;
+        case 'gov':
+            document.getElementById('govEditDocId').value = '';
+            originalButtons = `
+                <button type="button" class="btn btn-primary" onclick="validateAndCalculateGovernment()"><i class="fas fa-calculator"></i> ຄຳນວນ</button>
+                <button type="button" class="btn btn-danger" onclick="clearGovForm()"><i class="fas fa-trash"></i> ລ້າງຂໍ້ມູນ</button>
+                <button type="button" class="btn btn-back" onclick="goHomeAndClearForms()"><i class="fas fa-arrow-left"></i> ກັບຄືນ</button>
+            `;
+            break;
+        case 'ent':
+            document.getElementById('entEditDocId').value = '';
+            originalButtons = `
+                <button type="button" class="btn btn-primary" onclick="calculateEnterprise()"><i class="fas fa-calculator"></i> ຄຳນວນ</button>
+                <button type="button" class="btn btn-danger" onclick="clearEntForm()"><i class="fas fa-trash"></i> ລ້າງຂໍ້ມູນ</button>
+                <button type="button" class="btn btn-back" onclick="goHomeAndClearForms()"><i class="fas fa-arrow-left"></i> ກັບຄືນ</button>
+            `;
+            break;
+    }
+    document.getElementById(buttonGroupId).innerHTML = originalButtons;
+    if (!document.getElementById('Search').classList.contains('active')) { showPage('Search'); }
+}
+async function submitFeedback(parentId = null) {
+    let feedbackText;
+    const { serverTimestamp, doc, updateDoc, arrayUnion } = window.firestoreFunctions;
+    if (parentId) {
+        if (!isSuperAdmin) { showCustomPopup('error', 'ບໍ່ມີສິດ', 'ສະເພາະ Admin ເທົ່ານັ້ນທີ່ສາມາດຕອບກັບໄດ້.'); return; }
+        const { value: text } = await Swal.fire({ title: 'ຕອບກັບຄຳຄິດເຫັນ', input: 'textarea', inputPlaceholder: 'ຂຽນຄຳຕອບຂອງທ່ານທີ່ນີ້...', showCancelButton: true, confirmButtonText: '<i class="fas fa-paper-plane"></i> ສົ່ງຄຳຕອບ', cancelButtonText: 'ຍົກເລີກ', confirmButtonColor: 'var(--primary-color)', cancelButtonColor: 'var(--danger-color)', });
+        if (!text || !text.trim()) return; feedbackText = text.trim();
+    } else {
+        feedbackText = document.getElementById('feedbackText').value.trim();
+        if (!feedbackText) { showCustomPopup('warning', 'ກະລຸນາປ້ອນຂໍ້ມູນ', 'ກະລຸນາປ້ອນຄຳຄິດເຫັນກ່ອນສົ່ງ!'); return; }
+    }
+    Swal.fire({ title: 'ກຳລັງບັນທຶກ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    try {
+        if (parentId) {
+            const feedbackRef = doc(window.db, "feedbackHistory", parentId);
+            const reply = { id: `reply-${Date.now()}`, text: feedbackText, savedAt: new Date().toISOString() }; await updateDoc(feedbackRef, { replies: arrayUnion(reply) });
+        } else { const newFeedback = { text: feedbackText, savedAt: serverTimestamp(), replies: [] }; await saveOrUpdateFirestore('feedbackHistory', newFeedback); }
+        Swal.close(); if (!parentId) document.getElementById('feedbackText').value = ''; showCustomPopup('success', 'ຂອບໃຈ!', 'ບັນທຶກຄຳຄິດເຫັນຂອງທ່ານສຳເລັດ.');
+    } catch (error) { Swal.close(); console.error("Error submitting feedback: ", error); showCustomPopup('error', 'ຜິດພາດ', `ບໍ່ສາມາດສົ່ງຄຳຄິດເຫັນໄດ້: ${error.message}`); }
+}
+function listenForFeedback() {
+    const displayArea = document.getElementById('feedbackDisplayArea'); if (!displayArea || !window.db) return;
+    const { collection, query, orderBy, limit, onSnapshot } = window.firestoreFunctions; const q = query(collection(window.db, "feedbackHistory"), orderBy("savedAt", "desc"), limit(10));
+    onSnapshot(q, (querySnapshot) => {
+        let html = '<h3>10 ຄຳຄິດເຫັນລ່າສຸດ</h3>'; if (querySnapshot.empty) { html += '<p style="opacity:0.7;">ຍັງບໍ່ມີຄຳຄິດເຫັນເທື່ອ.</p>'; displayArea.innerHTML = html; return; }
+        querySnapshot.forEach((doc) => {
+            const item = { id: doc.id, ...doc.data() }; const savedAtDate = item.savedAt?.toDate ? item.savedAt.toDate() : new Date(); const safeText = document.createElement('div'); safeText.textContent = item.text;
+            html += `<div class="feedback-item" id="${item.id}"><p class="meta">ວັນທີ: ${savedAtDate.toLocaleString('lo-LA')}</p><p>${safeText.innerHTML.replace(/\n/g, '<br>')}</p>`;
+            if (isSuperAdmin) {
+                html += `<button class="feedback-reply-btn" onclick="submitFeedback('${item.id}')"><i class="fas fa-reply"></i> ຕອບກັບ</button>`;
+            }
+            if (item.replies && item.replies.length > 0) { const sortedReplies = item.replies.sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt));
+                sortedReplies.forEach(reply => { const safeReplyText = document.createElement('div'); safeReplyText.textContent = reply.text; html += `<div class="reply-item" id="${reply.id}"><p class="meta"><b>ຄຳຕອບ</b> | ວັນທີ: ${new Date(reply.savedAt).toLocaleString('lo-LA')}</p><p>${safeReplyText.innerHTML.replace(/\n/g, '<br>')}</p></div>`; });
+            } html += `</div>`;
+        });
+        displayArea.innerHTML = html;
+    }, (error) => { console.error("Error listening for feedback: ", error); displayArea.innerHTML = '<h3>ເກີດຂໍ້ຜິດພາດໃນການໂຫຼດຄຳຄິດເຫັນ</h3>'; });
+}
+</script>
+
+
+  
+</body>
+</html>
