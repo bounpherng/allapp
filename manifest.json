@@ -1,6 +1,6 @@
 {
-  "name": "MyApp",
-  "short_name": "MyApp",
+  "name": "LinkApps",
+  "short_name": "LinkApps",
   "description": "ລວມຫຼິງລະບົບອອນໄລນ໌",
   "start_url": "./index.html",
   "display": "standalone",
@@ -20,4 +20,5 @@
     }
   ],
   "scope": "./"
+
 }
