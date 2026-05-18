@@ -1,503 +1,700 @@
 <!doctype html>
 <html lang="lo">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="ລະບົບອອນໄລນ໌" />
-  <meta name="theme-color" content="#2ecc71" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="theme-color" content="#1b4332"/>
   <title>Link Apps</title>
-  
-  <link rel="manifest" href="./manifest.json" />
-  <link rel="icon" href="./icon-192.png" />
-  
+  <link rel="manifest" href="./manifest.json"/>
+  <link rel="icon" href="./icon-192.png"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
   <style>
     :root {
-      --primary-color: #2ecc71;
-      --secondary-color: #27ae60;
-      --danger-color: #e74c3c;
-      --text-color: #ecf0f1;
-      --bg-color-dark: #1a2525;
-      --card-bg: rgba(44, 62, 80, 0.75);
-      --border-color: rgba(46, 204, 113, 0.3);
-      --shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-      --font-family: 'Noto Sans Lao', system-ui, -apple-system, Segoe UI, Arial, sans-serif;
-      --input-bg: rgba(0, 0, 0, 0.2);
+      --green-dark:   #0d2b1d;
+      --green-mid:    #1b4332;
+      --green-bright: #2d6a4f;
+      --green-accent: #40916c;
+      --green-light:  #52b788;
+      --green-pale:   #d8f3dc;
+      --white:        #ffffff;
+      --surface:      #f4f6f4;
+      --text-dark:    #1a2e22;
+      --text-muted:   #6b8f71;
+      --danger:       #e74c3c;
+      --shadow-card:  0 4px 20px rgba(0,0,0,.12);
+      --shadow-nav:   0 -4px 20px rgba(0,0,0,.10);
+      --font:         'Noto Sans Lao', system-ui, sans-serif;
+      --radius-card:  20px;
+      --radius-icon:  16px;
     }
 
-    @keyframes gradient-animation {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
     body {
-      color: var(--text-color);
-      font-family: var(--font-family);
+      font-family: var(--font);
+      background: var(--surface);
+      color: var(--text-dark);
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      min-height: 100vh;
       overflow-x: hidden;
-      background: linear-gradient(-45deg, #1a2525, #2c3e50, #27ae60, #1a2525);
-      background-size: 400% 400%;
-      animation: gradient-animation 15s ease infinite;
-      padding: 16px;
-      line-height: 1.6;
     }
 
     .hidden { display: none !important; }
 
+    /* ─── ANIMATIONS ─────────────────────────── */
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes scaleIn  { from { opacity:0; transform:scale(.88); } to { opacity:1; transform:scale(1); } }
+    @keyframes pulse    { 0%,100% { box-shadow: 0 0 0 0 rgba(64,145,108,.45); } 50% { box-shadow: 0 0 0 12px rgba(64,145,108,0); } }
+
+    /* ─── APP WRAPPER ─────────────────────────── */
+    #login-container,
     #app-content {
-      display: flex;
-      justify-content: center;
-      align-items: center;
       width: 100%;
+      max-width: 480px;
       min-height: 100vh;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 900px;
-      animation: fadeIn .6s ease-out;
+      display: flex;
+      flex-direction: column;
       position: relative;
     }
 
+    /* ══════════════════════════════════════════
+       LOGIN PAGE
+    ══════════════════════════════════════════ */
     #login-container {
-      display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
+      background: linear-gradient(160deg, var(--green-dark) 0%, var(--green-mid) 55%, var(--green-bright) 100%);
+      padding: 40px 24px;
+      animation: fadeUp .6s ease both;
+    }
+
+    .login-box {
       text-align: center;
-      width: 100%;
-      max-width: 400px;
-      animation: fadeIn .6s ease-out;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 24px;
-      padding: clamp(24px, 4vw, 40px);
-      width: 100%;
-      max-width: 100%;
-      box-sizing: border-box;
-      overflow-x: hidden;
-    }
-    
-    #login-container .card {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .hero {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-
-    .logo {
-      width: clamp(80px, 15vw, 100px);
-      aspect-ratio: 1/1;
-      border-radius: 50%;
-      object-fit: cover;
-      box-shadow: 0 0 28px var(--secondary-color);
-      border: 3px solid var(--secondary-color);
-    }
-
-    .title {
-      font-size: clamp(22px, 3vw, 32px);
-      font-weight: 700;
-      text-shadow: 0 0 12px rgba(46, 204, 113, 0.7);
-    }
-
-    .badge {
-      font-weight: 500;
-      color: var(--primary-color);
-      font-size: clamp(14px, 2vw, 16px);
-    }
-    
-    .grid { 
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      width: 100%;
-    }
-    
-    @media (min-width: 769px) {
-      .grid {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 16px;
-      }
-      .link-card {
-        flex-basis: calc(33.333% - 11px);
-        flex-grow: 1;
-      }
-    }
-
-    .link-card {
-      position: relative;
-      overflow: hidden;
-      border-radius: 16px;
-      padding: 16px;
-      background: rgba(0, 0, 0, 0.2);
-      border: 1px solid var(--border-color);
-      transition: transform .3s ease, box-shadow .3s ease, background .3s ease;
-      cursor: pointer;
-      display: flex;
       align-items: center;
       gap: 16px;
-      text-decoration: none;
     }
 
-    .link-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
-      background: rgba(46, 204, 113, 0.15);
+    .login-logo {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid rgba(255,255,255,.35);
+      box-shadow: 0 0 40px rgba(64,145,108,.6);
+      animation: pulse 2.5s ease-in-out infinite;
     }
 
-    .link-icon { font-size: 24px; line-height: 1; color: var(--secondary-color); width: 40px; text-align: center; }
-    .link-text { flex-grow: 1; font-size: clamp(16px, 2.5vw, 18px); font-weight: 500; color: #fff; }
-    .link-arrow { font-size: 20px; opacity: .8; transition: transform .3s ease; color: var(--text-color); }
-    .link-card:hover .link-arrow { transform: translateX(5px); }
+    .login-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--white);
+      text-shadow: 0 2px 8px rgba(0,0,0,.3);
+    }
 
-    #sidebar-toggle {
-      display: block;
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      background: transparent;
+    .login-sub {
+      font-size: 14px;
+      color: rgba(255,255,255,.7);
+      font-weight: 400;
+    }
+
+    .google-btn {
+      margin-top: 12px;
+      background: var(--white);
       border: none;
-      color: var(--text-color);
-      font-size: 24px;
+      border-radius: 50px;
+      padding: 14px 32px;
+      font-family: var(--font);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-dark);
       cursor: pointer;
-      z-index: 1001;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 6px 24px rgba(0,0,0,.25);
+      transition: transform .2s, box-shadow .2s;
     }
 
-    #sidebar {
-      position: fixed;
-      top: 0;
-      left: -320px;
-      height: 100%;
-      width: 300px;
-      z-index: 1000;
-      transition: left 0.3s ease;
-      padding: 20px;
-      overflow-y: auto;
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+    .google-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(0,0,0,.3); }
+    .google-btn:active { transform: translateY(0); }
+    .google-btn i { font-size: 20px; color: #db4437; }
+
+    /* ══════════════════════════════════════════
+       MAIN APP LAYOUT
+    ══════════════════════════════════════════ */
+
+    /* ── HEADER ── */
+    .app-header {
+      background: linear-gradient(160deg, var(--green-dark) 0%, var(--green-mid) 60%, var(--green-bright) 100%);
+      padding: 0 20px 48px;
+      position: relative;
+      width: 100%;
+      flex-shrink: 0;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 18px;
+      padding-bottom: 8px;
+    }
+
+    .header-top-btn {
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 50px;
+      color: var(--white);
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 7px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: background .2s;
+    }
+
+    .header-top-btn:hover { background: rgba(255,255,255,.25); }
+
+    /* sidebar toggle = hamburger icon, styled as top-right btn */
+    #sidebar-toggle {
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 18px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    #sidebar-toggle:hover { background: rgba(255,255,255,.3); }
+
+    .header-logo-wrap {
       display: flex;
       flex-direction: column;
+      align-items: center;
+      padding: 12px 0 4px;
+      gap: 4px;
     }
 
-    #sidebar.open { left: 0; }
+    .header-logo {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid rgba(255,255,255,.4);
+      box-shadow: 0 4px 24px rgba(0,0,0,.3);
+    }
+
+    /* ── BODY SCROLL AREA ── */
+    .app-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 16px 90px;
+      margin-top: -36px; /* overlap the header */
+    }
+
+    /* ── TITLE CARD ── */
+    .title-card {
+      background: var(--white);
+      border-radius: var(--radius-card);
+      padding: 20px 20px 16px;
+      text-align: center;
+      box-shadow: var(--shadow-card);
+      animation: fadeUp .5s ease both;
+    }
+
+    .main-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--green-mid);
+      line-height: 1.3;
+    }
+
+    .main-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .date-badge {
+      display: inline-block;
+      margin-top: 10px;
+      background: var(--green-pale);
+      color: var(--green-bright);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 14px;
+      border-radius: 50px;
+    }
+
+    /* ── ICON GRID ── */
+    #link-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .app-card {
+      background: var(--green-mid);
+      border-radius: var(--radius-card);
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+      padding: 14px 10px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(13,43,29,.25);
+      transition: transform .25s, box-shadow .25s;
+      animation: scaleIn .4s ease both;
+    }
+
+    .app-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,.08) 0%, transparent 60%);
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    .app-card:hover  { transform: translateY(-4px) scale(1.03); box-shadow: 0 10px 28px rgba(13,43,29,.35); }
+    .app-card:active { transform: scale(.97); }
+
+    .card-icon-wrap {
+      width: 52px;
+      height: 52px;
+      background: rgba(255,255,255,.13);
+      border-radius: var(--radius-icon);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: var(--white);
+      flex-shrink: 0;
+    }
+
+    .card-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,.9);
+      text-align: center;
+      line-height: 1.3;
+      word-break: break-word;
+    }
+
+    .card-edit-dot {
+      position: absolute;
+      top: 9px;
+      right: 9px;
+      width: 22px;
+      height: 22px;
+      background: rgba(255,255,255,.18);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      color: rgba(255,255,255,.7);
+    }
+
+    /* loading state */
+    #link-grid:empty::before,
+    #link-grid.loading::before {
+      content: '';
+      grid-column: 1/-1;
+      height: 4px;
+    }
+
+    .grid-loading {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 30px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 480px;
+      background: var(--white);
+      box-shadow: var(--shadow-nav);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 10px 0 max(10px, env(safe-area-inset-bottom));
+      z-index: 900;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: var(--text-muted);
+      font-size: 20px;
+      padding: 4px 20px;
+      transition: color .2s;
+    }
+
+    .nav-btn span { font-size: 11px; font-family: var(--font); }
+    .nav-btn.active { color: var(--green-bright); }
+
+    .nav-fab {
+      background: var(--green-bright);
+      border: none;
+      border-radius: 50%;
+      width: 54px;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(45,106,79,.5);
+      transition: transform .2s, box-shadow .2s;
+      margin-bottom: 4px;
+    }
+
+    .nav-fab:hover  { transform: scale(1.1); box-shadow: 0 8px 24px rgba(45,106,79,.6); }
+    .nav-fab:active { transform: scale(.95); }
+
+    /* ══════════════════════════════════════════
+       SIDEBAR
+    ══════════════════════════════════════════ */
     #sidebar-backdrop {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(5px);
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      backdrop-filter: blur(4px);
       z-index: 999;
     }
 
     #sidebar-backdrop.active { display: block; }
-    #sidebar .hero { margin-bottom: 16px; gap: 8px; }
-    .user-info { font-size: 14px; color: #bdc3c7; word-break: break-all; }
 
-    .sidebar-menu { width: 100%; border-top: 1px solid var(--border-color); margin-top: 16px; padding-top: 16px; }
+    #sidebar {
+      position: fixed;
+      top: 0;
+      left: -300px;
+      height: 100%;
+      width: 280px;
+      z-index: 1000;
+      background: linear-gradient(160deg, var(--green-dark) 0%, var(--green-mid) 100%);
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      transition: left .3s cubic-bezier(.4,0,.2,1);
+      overflow-y: auto;
+    }
+
+    #sidebar.open { left: 0; }
+
+    .sidebar-header {
+      background: rgba(0,0,0,.2);
+      padding: 40px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+    }
+
+    .sidebar-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(255,255,255,.35);
+    }
+
+    .sidebar-name { font-size: 16px; font-weight: 600; color: var(--white); }
+    .sidebar-email { font-size: 12px; color: rgba(255,255,255,.6); word-break: break-all; }
+
+    .sidebar-menu { padding: 16px 12px; flex: 1; }
+
     .sidebar-btn {
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--text-color);
-      border: 1px solid var(--border-color);
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 12px;
+      color: var(--white);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
       padding: 12px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-family: var(--font-family);
-      font-size: 16px;
       width: 100%;
-      margin-bottom: 12px;
-      transition: background .3s, transform .2s;
-      text-align: left;
+      margin-bottom: 8px;
+      cursor: pointer;
       display: flex;
       align-items: center;
       gap: 12px;
+      transition: background .2s, transform .2s;
+      text-align: left;
     }
 
-    .sidebar-btn:hover { background: rgba(46, 204, 113, 0.2); transform: translateX(5px); }
-    .sidebar-btn.danger-btn { background: var(--danger-color); border-color: #c0392b; }
-    .sidebar-btn.danger-btn:hover { background: #c0392b; }
-    .footer { margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 20px; text-align: center; font-size: clamp(13px, 2vw, 14px); color: #b7c4c9; }
-    .social-links { display: flex; justify-content: center; gap: 16px; margin-bottom: 16px; }
-    .social-links a { color: var(--text-color); font-size: 24px; transition: color .3s ease, transform .3s ease; }
-    .social-links a:hover { color: var(--primary-color); transform: scale(1.1); }
+    .sidebar-btn i { width: 18px; text-align: center; }
+    .sidebar-btn:hover { background: rgba(255,255,255,.18); transform: translateX(4px); }
+    .sidebar-btn.danger { background: rgba(231,76,60,.2); border-color: rgba(231,76,60,.3); }
+    .sidebar-btn.danger:hover { background: rgba(231,76,60,.4); }
 
-    #admin-panel .card, #config-panel .card { padding: clamp(16px, 3vw, 24px); min-height: auto; }
-    #admin-panel h2, #config-panel h2 { margin-bottom: 20px; }
-    
-    .form-grid { 
-        display: grid;
-        gap: 16px; 
-        margin-bottom: 20px; 
-    }
-    @media (min-width: 600px) { 
-        .form-grid { 
-            grid-template-columns: 1fr 1fr;
-        } 
-    }
-    
-    .form-group { display: flex; flex-direction: column; }
-    .form-group label { margin-bottom: 6px; font-size: 14px; }
-    .form-group input, .form-group select {
-      background-color: rgba(0,0,0,0.2);
-      border: 1px solid var(--border-color);
-      color: var(--text-color);
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 16px;
+    /* ══════════════════════════════════════════
+       ADMIN / CONFIG PANELS
+    ══════════════════════════════════════════ */
+    .panel-page {
       width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      background: var(--surface);
+      padding: 0;
+      display: flex;
+      flex-direction: column;
     }
-    .form-actions { display: flex; gap: 12px; justify-content: flex-end; }
-    .btn {
+
+    .panel-header {
+      background: linear-gradient(160deg, var(--green-dark) 0%, var(--green-mid) 100%);
+      padding: 20px 20px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--white);
+    }
+
+    .panel-back {
+      background: rgba(255,255,255,.15);
       border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
       font-size: 16px;
       cursor: pointer;
-      font-family: var(--font-family);
-      transition: background-color .3s;
+      flex-shrink: 0;
+      transition: background .2s;
     }
-    .btn-primary { background-color: var(--primary-color); color: #fff; }
-    .btn-primary:hover { background-color: var(--secondary-color); }
-    .btn-secondary { background-color: #95a5a6; color: #fff; }
-    .btn-secondary:hover { background-color: #7f8c8d; }
-    .btn-danger { background-color: var(--danger-color); color: #fff; }
-    .btn-danger:hover { background-color: #c0392b; }
 
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      background: rgba(0, 0, 0, 0.2);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    }
-    .data-table th, .data-table td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid var(--border-color);
-      font-size: 14px;
-    }
-    .data-table th {
-      background-color: var(--secondary-color);
-      color: #fff;
-      text-transform: uppercase;
-      font-weight: 700;
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-    .data-table tr:last-child td { border-bottom: none; }
-    .data-table tr:hover { background-color: rgba(46, 204, 113, 0.1); }
-    .btn-icon { background: transparent; border: none; font-size: 18px; cursor: pointer; color: var(--primary-color); padding: 5px; }
-    .btn-edit { color: #3498db; }
-    .btn-delete { color: var(--danger-color); }
+    .panel-back:hover { background: rgba(255,255,255,.28); }
+    .panel-title { font-size: 18px; font-weight: 700; }
 
-    #config-panel h1, #config-panel h2 {
-      color: var(--primary-color);
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    #config-panel fieldset {
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
+    .panel-body { flex: 1; overflow-y: auto; padding: 16px 16px 90px; }
+
+    .card-surface {
+      background: var(--white);
+      border-radius: var(--radius-card);
       padding: 20px;
-      margin-bottom: 20px;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 16px;
     }
-    #config-panel legend {
-      color: var(--primary-color);
+
+    .section-title {
+      font-size: 16px;
       font-weight: 700;
-      font-size: 1.2em;
-      padding: 0 10px;
+      color: var(--green-mid);
+      margin-bottom: 16px;
     }
-    #config-panel .form-grid {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    }
-    #config-panel .dynamic-group {
-        border: 1px solid rgba(255,255,255,0.1);
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 10px;
-        background-color: rgba(0,0,0,0.1);
-    }
-    #config-panel .dynamic-group h4 {
-        margin-top: 0;
-        margin-bottom: 15px;
-        border-bottom: 1px solid var(--border-color);
-        padding-bottom: 10px;
-    }
-    #config-panel .btn {
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+
+    .form-group label { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+
+    .form-group input,
+    .form-group select {
+      background: var(--surface);
+      border: 1.5px solid #d4e6d9;
+      border-radius: 10px;
+      color: var(--text-dark);
+      font-family: var(--font);
+      font-size: 14px;
+      padding: 11px 14px;
       width: 100%;
-      margin-top: 10px;
+      transition: border-color .2s;
     }
 
-    @media (max-width: 600px) {
-      .data-table, .data-table tbody, .data-table td, .data-table tr, .data-table th {
-        display: block;
-        width: 100%;
-      }
-      .data-table thead { display: none; }
-      .data-table tr {
-        margin-bottom: 15px;
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        overflow: hidden;
-      }
-      .data-table td {
-        border-bottom: 1px solid var(--border-color);
-        text-align: right;
-        padding-left: 50%;
-        position: relative;
-      }
-      .data-table td::before {
-        content: attr(data-label);
-        position: absolute;
-        left: 10px;
-        width: calc(50% - 20px);
-        text-align: left;
-        font-weight: 700;
-        color: var(--secondary-color);
-      }
-      
-      .data-table td:last-child {
-        text-align: center;
-        padding: 12px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 16px;
-      }
-      .data-table td:last-child::before {
-        content: none;
-      }
-      .btn-icon {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 12px;
-        border: 1px solid var(--border-color);
-        border-radius: 6px;
-        background-color: rgba(255, 255, 255, 0.05);
-        font-size: 16px;
-        transition: background-color 0.2s;
-      }
-      .btn-icon:hover {
-        background-color: rgba(255, 255, 255, 0.15);
-      }
-      .btn-icon span {
-        display: inline;
-      }
-    }
-    
-    @media (max-width: 768px) {
-      body { padding: 0; }
-      #app-content, .container { padding: 0; }
-      .card {
-        border-radius: 0;
-        border-left: none;
-        border-right: none;
-        min-height: 100vh;
-        width: 100vw;
-        display: flex;
-        flex-direction: column;
-        padding: 40px 20px;
-      }
-      #login-container .card { justify-content: center; }
-      .title { font-size: clamp(20px, 5vw, 28px); }
-      .link-text { font-size: clamp(15px, 4vw, 17px); }
-      .form-grid { grid-template-columns: 1fr !important; gap: 12px; }
-      .form-actions { flex-direction: column; align-items: stretch; }
-      .form-actions .btn { width: 100%; margin-bottom: 8px; }
-      #admin-panel .card, #config-panel .card { padding: 16px; border-radius: 0; }
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--green-accent);
     }
 
-    @media (min-width: 769px) {
-      #sidebar { border-top-right-radius: 24px; border-bottom-right-radius: 24px; }
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 600;
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+    }
+
+    .btn:active { transform: scale(.97); }
+    .btn-primary { background: var(--green-bright); color: var(--white); box-shadow: 0 4px 16px rgba(45,106,79,.35); }
+    .btn-primary:hover { background: var(--green-mid); }
+    .btn-secondary { background: #e8ede9; color: var(--text-dark); }
+    .btn-danger { background: var(--danger); color: var(--white); }
+    .btn-sm { font-size: 13px; padding: 8px 14px; border-radius: 8px; }
+    .btn-full { width: 100%; }
+
+    .form-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+    /* Data table */
+    .data-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    .data-table th, .data-table td { padding: 10px 12px; font-size: 13px; text-align: left; border-bottom: 1px solid #eaf0eb; }
+    .data-table th { font-weight: 700; color: var(--green-mid); background: var(--green-pale); }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: #f6fbf7; }
+
+    .btn-icon { background: transparent; border: none; cursor: pointer; font-size: 16px; padding: 6px; border-radius: 8px; transition: background .15s; }
+    .btn-edit { color: #3498db; }
+    .btn-edit:hover { background: #ebf5fb; }
+    .btn-delete { color: var(--danger); }
+    .btn-delete:hover { background: #fdf1f0; }
+
+    /* Config fieldsets */
+    fieldset {
+      border: 1.5px solid #d4e6d9;
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    legend { color: var(--green-bright); font-weight: 700; font-size: 14px; padding: 0 8px; }
+
+    .dynamic-group {
+      background: var(--surface);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 10px;
+      border: 1px solid #e0eee3;
+    }
+
+    .dynamic-group h4 { font-size: 13px; font-weight: 700; color: var(--green-mid); margin-bottom: 12px; }
+
+    /* ── FOOTER ── */
+    .app-footer {
+      padding: 20px 20px 0;
+      text-align: center;
+    }
+
+    .social-links { display: flex; justify-content: center; gap: 18px; margin-bottom: 14px; }
+    .social-links a { color: var(--green-accent); font-size: 22px; transition: color .2s, transform .2s; }
+    .social-links a:hover { color: var(--green-mid); transform: scale(1.15); }
+
+    .footer-note { font-size: 12px; color: var(--text-muted); line-height: 1.8; }
+    .footer-note a { color: var(--green-bright); text-decoration: none; font-weight: 600; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 400px) {
+      #link-grid { gap: 9px; }
+      .card-icon-wrap { width: 44px; height: 44px; font-size: 20px; }
+      .card-label { font-size: 10px; }
     }
   </style>
 </head>
 <body>
+
+  <!-- ═══ LOGIN ═══════════════════════════════════ -->
   <div id="login-container">
-    <section class="card">
-      <header class="hero">
-        <img class="logo" src="https://i.ibb.co/F4VGPVB1/image.png" alt="ລະບົບອອນໄລ Logo" />
-        <h1 class="title">ກະລຸນາເຂົ້າສູ່ລະບົບ</h1>
-        <p class="badge">ເພື່ອສືບຕໍ່ໃຊ້ງານລະບົບ</p>
-      </header>
-      <button id="google-signin-btn" style="background-color: #ffffff; color: #333; border: none; padding: 12px 24px; border-radius: 8px; font-family: var(--font-family); font-size: 16px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; transition: background-color .3s ease, box-shadow .3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-        <i class="fab fa-google" style="font-size: 20px; color: #DB4437;"></i>
+    <div class="login-box">
+      <img class="login-logo" src="https://i.ibb.co/F4VGPVB1/image.png" alt="Logo"/>
+      <h1 class="login-title">ກະລຸນາເຂົ້າສູ່ລະບົບ</h1>
+      <p class="login-sub">ເພື່ອສືບຕໍ່ໃຊ້ງານລະບົບ</p>
+      <button id="google-signin-btn" class="google-btn">
+        <i class="fab fa-google"></i>
         <span>ເຂົ້າສູ່ລະບົບດ້ວຍ Google</span>
       </button>
-    </section>
+    </div>
   </div>
 
+  <!-- ═══ MAIN APP ══════════════════════════════ -->
   <div id="app-content" class="hidden">
-    <button id="sidebar-toggle" aria-label="Open sidebar menu"><i class="fas fa-bars"></i></button>
+
+    <!-- Sidebar Backdrop -->
     <div id="sidebar-backdrop"></div>
+
+    <!-- Sidebar -->
     <aside id="sidebar">
-      <header class="hero">
-        <img id="user-photo" class="logo" src="https://placehold.co/120x120/2c3e50/ecf0f1?text=User" alt="ຮູບໂປຣໄຟລ໌" />
-        <h2 id="user-display-name" class="title" style="font-size: 1.2em;">ຍິນດີຕ້ອນຮັບ</h2>
-        <p id="user-email" class="user-info"></p>
-      </header>
+      <div class="sidebar-header">
+        <img id="user-photo" class="sidebar-avatar" src="https://placehold.co/120x120/1b4332/ffffff?text=U" alt="ຮູບ"/>
+        <p id="user-display-name" class="sidebar-name">ຍິນດີຕ້ອນຮັບ</p>
+        <p id="user-email" class="sidebar-email"></p>
+      </div>
       <div class="sidebar-menu">
-        <button id="admin-manage-btn" class="sidebar-btn hidden"><i class="fas fa-database"></i><span>ຂໍ້ມຸນປູ່ມ</span></button>
-        <button id="config-manage-btn" class="sidebar-btn hidden"><i class="fas fa-cog"></i><span>ຂໍ້ມຸນຄຳນວນອຸດໜຸນ</span></button>
+        <button id="admin-manage-btn" class="sidebar-btn hidden"><i class="fas fa-database"></i><span>ຂໍ້ມູນປຸ່ມ</span></button>
+        <button id="config-manage-btn" class="sidebar-btn hidden"><i class="fas fa-cog"></i><span>ຂໍ້ມູນຄຳນວນອຸດໜູນ</span></button>
         <button id="manage-calc-btn" class="sidebar-btn hidden"><i class="fas fa-calculator"></i><span>ແກ້ໄຂຜົນການຄຳນວນ</span></button>
-        <button id="personal-info-btn" class="sidebar-btn hidden"><i class="fas fa-user-shield"></i><span>ຂໍ້ມຸນສ່ວນຕົວ</span></button>
+        <button id="personal-info-btn" class="sidebar-btn hidden"><i class="fas fa-user-shield"></i><span>ຂໍ້ມູນສ່ວນຕົວ</span></button>
         <button id="about-app-btn" class="sidebar-btn"><i class="fas fa-info-circle"></i><span>ກ່ຽວກັບແອັບ</span></button>
-        <button id="logout-btn" class="sidebar-btn danger-btn"><i class="fas fa-sign-out-alt"></i><span>ອອກຈາກລະບົບ</span></button>
+        <button id="logout-btn" class="sidebar-btn danger"><i class="fas fa-sign-out-alt"></i><span>ອອກຈາກລະບົບ</span></button>
       </div>
     </aside>
 
-    <main id="main-content" class="container">
-      <section class="card main-card">
-        <header class="hero">
-          <img class="logo" src="https://i.ibb.co/F4VGPVB1/image.png" alt="ລະບົບອອນໄລ Logo" />
-          <h1 class="title">Link Apps</h1>
-          <p class="badge" id="lao-date"></p>
-        </header>
-       
-        <div class="grid" id="link-grid"></div>
-        <footer class="footer">
+    <!-- ─── DASHBOARD ──────────────────────── -->
+    <div id="main-content">
+
+      <!-- Header -->
+      <div class="app-header">
+        <div class="header-top">
+          <button id="admin-quick-btn" class="header-top-btn hidden">
+            <i class="fas fa-shield-alt"></i> ຈັດການລະບົບ
+          </button>
+          <div style="flex:1"></div>
+          <button id="sidebar-toggle" aria-label="ເມນູ"><i class="fas fa-bars"></i></button>
+        </div>
+        <div class="header-logo-wrap">
+          <img class="header-logo" src="https://i.ibb.co/F4VGPVB1/image.png" alt="Logo"/>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="app-body">
+        <!-- Title card -->
+        <div class="title-card">
+          <h1 class="main-title">ລະບົບສາລະສ​ນເທດ</h1>
+          <p class="main-sub">ໂຮງຮຽນ ສື່ຄຣູດອກທອມ</p>
+          <span class="date-badge" id="lao-date"></span>
+        </div>
+
+        <!-- App icon grid -->
+        <div id="link-grid">
+          <div class="grid-loading"><i class="fas fa-circle-notch fa-spin"></i> ກຳລັງໂຫລດ...</div>
+        </div>
+
+        <!-- Footer -->
+        <div class="app-footer">
           <div class="social-links">
             <a href="https://www.facebook.com/Phetsaiyaphoom?rdid=r1ybXu9G2h95D2NO" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
             <a href="https://www.youtube.com/@it-banban5487" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
@@ -505,731 +702,486 @@
           </div>
           <div class="footer-note">
             <p>ພັດທະນາໂດຍ: <b>ທ.ບຸນເຜີ້ງ ເພັດໄຊຍະພູມ</b></p>
-            <p>ໂທ: <a href="tel:+8562091270509"><b>020 9127 0509</b></a></p>
-            <p>Vs: 1.1,Copyright 2025 ©</p>
+            <p>ໂທ: <a href="tel:+8562091270509">020 9127 0509</a></p>
+            <p style="margin-top:4px;opacity:.7;">v1.2 · Copyright 2025 ©</p>
           </div>
-        </footer>
-      </section>
-    </main>
+        </div>
+      </div>
 
-    <div id="admin-panel" class="container hidden">
-      <section class="card">
-        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-          <h2 class="title" style="font-size: 1.5em; margin-bottom: 0;">ຈັດການຂໍ້ມູນ Dashboard</h2>
-          <button id="back-to-dashboard-btn" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> ກັບຄືນ</button>
-        </header>
-        <form id="button-form" class="card" style="background: rgba(0,0,0,0.2); margin-bottom: 24px;">
-          <h3 id="form-title" style="margin-bottom: 16px;">ເພີ່ມປຸ່ມໃໝ່</h3>
+      <!-- Bottom Nav -->
+      <nav class="bottom-nav">
+        <button class="nav-btn active" id="nav-home">
+          <i class="fas fa-home"></i>
+          <span>ໜ້າຫຼັກ</span>
+        </button>
+        <button class="nav-fab" id="nav-add" title="ເພີ່ມ"><i class="fas fa-plus"></i></button>
+        <button class="nav-btn" id="nav-settings">
+          <i class="fas fa-cog"></i>
+          <span>ຕັ້ງຄ່າ</span>
+        </button>
+      </nav>
+    </div><!-- /#main-content -->
+
+    <!-- ─── ADMIN PANEL ──────────────────── -->
+    <div id="admin-panel" class="panel-page hidden">
+      <div class="panel-header">
+        <button id="back-to-dashboard-btn" class="panel-back"><i class="fas fa-arrow-left"></i></button>
+        <h2 class="panel-title">ຈັດການຂໍ້ມູນ Dashboard</h2>
+      </div>
+      <div class="panel-body">
+        <div class="card-surface">
+          <h3 class="section-title" id="form-title">ເພີ່ມປຸ່ມໃໝ່</h3>
           <input type="hidden" id="form-doc-id">
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="button-name">ຊື່ປຸ່ມ (Name)</label>
-              <input type="text" id="button-name" required>
+          <div class="form-grid-2">
+            <div class="form-group" style="grid-column:1/-1">
+              <label>ຊື່ປຸ່ມ</label>
+              <input type="text" id="button-name" required placeholder="ຊື່ລາຍການ">
+            </div>
+            <div class="form-group" style="grid-column:1/-1">
+              <label>ລິ້ງ (URL)</label>
+              <input type="url" id="button-link" required placeholder="https://...">
             </div>
             <div class="form-group">
-              <label for="button-link">ລິ້ງ (Link)</label>
-              <input type="url" id="button-link" required>
+              <label>ໄອຄອນ (Font Awesome)</label>
+              <input type="text" id="button-icon" placeholder="fa-globe">
             </div>
             <div class="form-group">
-              <label for="button-icon">ໄອຄອນ (Font Awesome)</label>
-              <input type="text" id="button-icon" placeholder="ຕົວຢ່າງ: fa-globe">
-            </div>
-            <div class="form-group">
-              <label for="button-sort">ລຳດັບ (Sort Order)</label>
+              <label>ລຳດັບ</label>
               <input type="number" id="button-sort" value="99">
             </div>
-            <div class="form-group">
-              <label for="button-status">ສະຖານະ (Status)</label>
+            <div class="form-group" style="grid-column:1/-1">
+              <label>ສະຖານະ</label>
               <select id="button-status">
-                <option value="true">ເປີດໃຊ້ງານ (True)</option>
-                <option value="false">ປິດໃຊ້ງານ (False)</option>
+                <option value="true">ເປີດໃຊ້ງານ</option>
+                <option value="false">ປິດໃຊ້ງານ</option>
               </select>
             </div>
           </div>
           <div class="form-actions">
-            <button type="button" id="form-clear-btn" class="btn btn-secondary">ລ້າງຟອມ</button>
-            <button type="submit" class="btn btn-primary">ບັນທຶກ</button>
+            <button id="form-clear-btn" class="btn btn-secondary btn-sm">ລ້າງ</button>
+            <button id="form-submit-btn" class="btn btn-primary btn-sm">ບັນທຶກ</button>
           </div>
-        </form>
-        <div class="table-container">
+        </div>
+
+        <div class="card-surface" style="overflow:auto">
+          <h3 class="section-title">ລາຍການທັງໝົດ</h3>
           <table class="data-table">
             <thead>
-              <tr>
-                <th>ຊື່</th>
-                <th>Icon</th>
-                <th>ລຳດັບ</th>
-                <th>ສະຖານະ</th>
-                <th>ຈັດການ</th>
-              </tr>
+              <tr><th>ຊື່</th><th>Icon</th><th>ລຳດັບ</th><th>ສະຖານະ</th><th>ຈັດການ</th></tr>
             </thead>
             <tbody id="buttons-table-body"></tbody>
           </table>
         </div>
-      </section>
+      </div>
     </div>
-    
-    <div id="config-panel" class="container hidden">
-        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-            <h2 class="title" style="font-size: 1.5em; margin-bottom: 0;">ຈັດການຂໍ້ມູນການຕັ້ງຄ່າ</h2>
-            <button id="back-to-dashboard-from-config-btn" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> ກັບຄືນ</button>
-        </header>
-        <p style="text-align:center; opacity:0.8; margin-bottom: 20px;">
-            ຟອມນີ້ຈະໂຫຼດ ແລະ ບັນທຶກຂໍ້ມູນທັງໝົດລົງໃນ Document: <strong>configuration/appConfig</strong>
-        </p>
 
+    <!-- ─── CONFIG PANEL ─────────────────── -->
+    <div id="config-panel" class="panel-page hidden">
+      <div class="panel-header">
+        <button id="back-to-dashboard-from-config-btn" class="panel-back"><i class="fas fa-arrow-left"></i></button>
+        <h2 class="panel-title">ຈັດການການຕັ້ງຄ່າ</h2>
+      </div>
+      <div class="panel-body">
         <form id="config-form">
-            <fieldset>
-                <legend>ເງິນເດືອນ (Salary)</legend>
-                <div class="form-grid">
-                    <div class="form-group"><label for="salary_indexMultiplier">ຕົວຄູນດັດສະນີ</label><input type="number" id="salary_indexMultiplier"></div>
-                    <div class="form-group"><label for="salary_livingAllowance">ເງິນຄ່າຄອງຊີບ</label><input type="number" id="salary_livingAllowance"></div>
-                    <div class="form-group"><label for="salary_childAllowance">ອຸດໜູນລູກ</label><input type="number" id="salary_childAllowance"></div>
-                    <div class="form-group"><label for="salary_wifeAllowance">ອຸດໜູນເມຍ</label><input type="number" id="salary_wifeAllowance"></div>
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>ການຫັກ (Deductions)</legend>
-                <div class="form-grid">
-                    <div class="form-group"><label for="deductions_civilRate">ອັດຕາຫັກປະກັນສັງຄົມ (ລັດຖະກອນ)</label><input type="number" step="0.001" id="deductions_civilRate"></div>
-                    <div class="form-group"><label for="deductions_pensionHealthRate">ອັດຕາຫັກປະກັນສຸຂະພາບ (ບຳນານ)</label><input type="number" step="0.00001" id="deductions_pensionHealthRate"></div>
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>ອຸດໜູນພາກລັດ (Government Subsidy)</legend>
-                <div class="form-grid">
-                    <div class="form-group"><label for="govSubsidy_deathAllowanceYearsLimit">ປີຈຳກັດ (ເສຍຊີວິດ)</label><input type="number" id="govSubsidy_deathAllowanceYearsLimit"></div>
-                    <div class="form-group"><label for="govSubsidy_deathAllowanceBaseMonths">ເດືອນພື້ນຖານ (ເສຍຊີວິດ)</label><input type="number" id="govSubsidy_deathAllowanceBaseMonths"></div>
-                    <div class="form-group"><label for="govSubsidy_deathAllowanceFormulaMonths1">ເດືອນໃນສູດ 1</label><input type="number" id="govSubsidy_deathAllowanceFormulaMonths1"></div>
-                    <div class="form-group"><label for="govSubsidy_deathAllowanceFormulaMonths2">ເດືອນໃນສູດ 2</label><input type="number" id="govSubsidy_deathAllowanceFormulaMonths2"></div>
-                    <div class="form-group"><label for="govSubsidy_deathAllowanceFormulaMonths3">ເດືອນໃນສູດ 3</label><input type="number" id="govSubsidy_deathAllowanceFormulaMonths3"></div>
-                    <div class="form-group"><label for="govSubsidy_widowAllowanceMonths">ເດືອນອຸດໜູນໝ້າຍ</label><input type="number" id="govSubsidy_widowAllowanceMonths"></div>
-                    <div class="form-group"><label for="govSubsidy_severancePayMultiplier">ຕົວຄູນບຳເນັດອອກການ</label><input type="number" step="0.1" id="govSubsidy_severancePayMultiplier"></div>
-                    <div class="form-group"><label for="govSubsidy_widowPensionMultiplier">ຕົວຄູນບຳນານໝ້າຍ</label><input type="number" step="0.1" id="govSubsidy_widowPensionMultiplier"></div>
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>ອຸດໜູນພາກວິສາຫະກິດ (Enterprise Subsidy)</legend>
-                <div class="form-grid">
-                     <div class="form-group"><label for="entSubsidy_baseMonths">ເດືອນພື້ນຖານ</label><input type="number" id="entSubsidy_baseMonths"></div>
-                     <div class="form-group"><label for="entSubsidy_childbirthBenefitMultiplier">ຕົວຄູນບຳເນັດເກີດລູກ</label><input type="number" step="0.1" id="entSubsidy_childbirthBenefitMultiplier"></div>
-                </div>
-                <br>
-                <div class="dynamic-group">
-                    <h4>ຕົວຄູນອຸດໜູນເກີດລູກ</h4>
-                    <div class="form-grid">
-                         <div class="form-group"><label for="entSubsidy_ca_month1">ເດືອນ 1</label><input type="number" step="0.1" id="entSubsidy_ca_month1"></div>
-                        <div class="form-group"><label for="entSubsidy_ca_month2">ເດືອນ 2</label><input type="number" step="0.1" id="entSubsidy_ca_month2"></div>
-                        <div class="form-group"><label for="entSubsidy_ca_month3">ເດືອນ 3</label><input type="number" step="0.1" id="entSubsidy_ca_month3"></div>
-                        <div class="form-group"><label for="entSubsidy_ca_month4">ເດືອນ 4</label><input type="number" step="0.1" id="entSubsidy_ca_month4"></div>
-                    </div>
-                </div>
-                <div class="dynamic-group">
-                    <h4>ເງິນເສຍຊີວິດ</h4>
-                    <div class="form-grid">
-                        <div class="form-group"><label for="entSubsidy_db_yearLimit">ປີຈຳກັດ</label><input type="number" id="entSubsidy_db_yearLimit"></div>
-                        <div class="form-group"><label for="entSubsidy_db_baseMonths">ເດືອນພື້ນຖານ</label><input type="number" id="entSubsidy_db_baseMonths"></div>
-                        <div class="form-group"><label for="entSubsidy_db_formulaMonths1">ເດືອນໃນສູດ 1</label><input type="number" id="entSubsidy_db_formulaMonths1"></div>
-                        <div class="form-group"><label for="entSubsidy_db_formulaMonths2">ເດືອນໃນສູດ 2</label><input type="number" id="entSubsidy_db_formulaMonths2"></div>
-                        <div class="form-group"><label for="entSubsidy_db_formulaMonths3">ເດືອນໃນສູດ 3</label><input type="number" id="entSubsidy_db_formulaMonths3"></div>
-                    </div>
-                </div>
-                <div class="dynamic-group">
-                    <h4>ບຳເນັດອອກການ</h4>
-                    <div class="form-grid">
-                         <div class="form-group"><label for="entSubsidy_sp_maxMonths">ເດືອນສູງສຸດ</label><input type="number" id="entSubsidy_sp_maxMonths"></div>
-                         <div class="form-group"><label for="entSubsidy_sp_yearMultiplier">ຕົວຄູນປີ</label><input type="number" step="0.1" id="entSubsidy_sp_yearMultiplier"></div>
-                    </div>
-                </div>
-            </fieldset>
-            
-            <fieldset>
-                <legend>ຂັ້ນເງິນປີການ (Year Allowance Tiers)</legend>
-                <div id="yearTiersContainer"></div>
-            </fieldset>
-
-            <fieldset>
-                <legend>ຂັ້ນອາກອນ (Tax Brackets)</legend>
-                <div id="taxBracketsContainer"></div>
-            </fieldset>
-
-            <fieldset>
-                <legend>ການຕັ້ງຄ່າໜ້າເວັບ (UI)</legend>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="ui_visitorCountStart">ຈຳນວນຜູ້ເຂົ້າຊົມເລີ່ມຕົ້ນ</label>
-                        <input type="number" id="ui_visitorCountStart">
-                    </div>
-                </div>
-            </fieldset>
-
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">ບັນທຶກການຕັ້ງຄ່າ</button>
+          <fieldset>
+            <legend>ເງິນເດືອນ (Salary)</legend>
+            <div class="form-grid-2">
+              <div class="form-group"><label>ຕົວຄູນດັດສະນີ</label><input type="number" id="salary_indexMultiplier"></div>
+              <div class="form-group"><label>ເງິນຄ່າຄອງຊີບ</label><input type="number" id="salary_livingAllowance"></div>
+              <div class="form-group"><label>ອຸດໜູນລູກ</label><input type="number" id="salary_childAllowance"></div>
+              <div class="form-group"><label>ອຸດໜູນເມຍ</label><input type="number" id="salary_wifeAllowance"></div>
             </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>ການຫັກ (Deductions)</legend>
+            <div class="form-grid-2">
+              <div class="form-group"><label>ອັດຕາຫັກ (ລັດຖະກອນ)</label><input type="number" step="0.001" id="deductions_civilRate"></div>
+              <div class="form-group"><label>ອັດຕາຫັກ (ບຳນານ)</label><input type="number" step="0.00001" id="deductions_pensionHealthRate"></div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>ອຸດໜູນພາກລັດ (Gov Subsidy)</legend>
+            <div class="form-grid-2">
+              <div class="form-group"><label>ປີຈຳກັດ (ເສຍຊີວິດ)</label><input type="number" id="govSubsidy_deathAllowanceYearsLimit"></div>
+              <div class="form-group"><label>ເດືອນພື້ນຖານ (ເສຍຊີວິດ)</label><input type="number" id="govSubsidy_deathAllowanceBaseMonths"></div>
+              <div class="form-group"><label>ເດືອນໃນສູດ 1</label><input type="number" id="govSubsidy_deathAllowanceFormulaMonths1"></div>
+              <div class="form-group"><label>ເດືອນໃນສູດ 2</label><input type="number" id="govSubsidy_deathAllowanceFormulaMonths2"></div>
+              <div class="form-group"><label>ເດືອນໃນສູດ 3</label><input type="number" id="govSubsidy_deathAllowanceFormulaMonths3"></div>
+              <div class="form-group"><label>ເດືອນອຸດໜູນໝ້າຍ</label><input type="number" id="govSubsidy_widowAllowanceMonths"></div>
+              <div class="form-group"><label>ຕົວຄູນບຳເນັດ</label><input type="number" step="0.1" id="govSubsidy_severancePayMultiplier"></div>
+              <div class="form-group"><label>ຕົວຄູນບຳນານໝ້າຍ</label><input type="number" step="0.1" id="govSubsidy_widowPensionMultiplier"></div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>ອຸດໜູນພາກວິສາຫະກິດ (Enterprise)</legend>
+            <div class="form-grid-2">
+              <div class="form-group"><label>ເດືອນພື້ນຖານ</label><input type="number" id="entSubsidy_baseMonths"></div>
+              <div class="form-group"><label>ຕົວຄູນເກີດລູກ</label><input type="number" step="0.1" id="entSubsidy_childbirthBenefitMultiplier"></div>
+            </div>
+            <div class="dynamic-group">
+              <h4>ຕົວຄູນອຸດໜູນເກີດລູກ</h4>
+              <div class="form-grid-2">
+                <div class="form-group"><label>ເດືອນ 1</label><input type="number" step="0.1" id="entSubsidy_ca_month1"></div>
+                <div class="form-group"><label>ເດືອນ 2</label><input type="number" step="0.1" id="entSubsidy_ca_month2"></div>
+                <div class="form-group"><label>ເດືອນ 3</label><input type="number" step="0.1" id="entSubsidy_ca_month3"></div>
+                <div class="form-group"><label>ເດືອນ 4</label><input type="number" step="0.1" id="entSubsidy_ca_month4"></div>
+              </div>
+            </div>
+            <div class="dynamic-group">
+              <h4>ເງິນເສຍຊີວິດ</h4>
+              <div class="form-grid-2">
+                <div class="form-group"><label>ປີຈຳກັດ</label><input type="number" id="entSubsidy_db_yearLimit"></div>
+                <div class="form-group"><label>ເດືອນພື້ນຖານ</label><input type="number" id="entSubsidy_db_baseMonths"></div>
+                <div class="form-group"><label>ເດືອນໃນສູດ 1</label><input type="number" id="entSubsidy_db_formulaMonths1"></div>
+                <div class="form-group"><label>ເດືອນໃນສູດ 2</label><input type="number" id="entSubsidy_db_formulaMonths2"></div>
+                <div class="form-group"><label>ເດືອນໃນສູດ 3</label><input type="number" id="entSubsidy_db_formulaMonths3"></div>
+              </div>
+            </div>
+            <div class="dynamic-group">
+              <h4>ບຳເນັດອອກການ</h4>
+              <div class="form-grid-2">
+                <div class="form-group"><label>ເດືອນສູງສຸດ</label><input type="number" id="entSubsidy_sp_maxMonths"></div>
+                <div class="form-group"><label>ຕົວຄູນປີ</label><input type="number" step="0.1" id="entSubsidy_sp_yearMultiplier"></div>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>ຂັ້ນເງິນປີການ (Year Tiers)</legend>
+            <div id="yearTiersContainer"></div>
+          </fieldset>
+
+          <fieldset>
+            <legend>ຂັ້ນອາກອນ (Tax Brackets)</legend>
+            <div id="taxBracketsContainer"></div>
+          </fieldset>
+
+          <fieldset>
+            <legend>UI</legend>
+            <div class="form-group">
+              <label>ຈຳນວນຜູ້ເຂົ້າຊົມເລີ່ມຕົ້ນ</label>
+              <input type="number" id="ui_visitorCountStart">
+            </div>
+          </fieldset>
+
+          <button type="submit" class="btn btn-primary btn-full">ບັນທຶກການຕັ້ງຄ່າ</button>
         </form>
+      </div>
     </div>
-  </div>
+
+  </div><!-- /#app-content -->
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script type="module">
-    // Import Firebase modules
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, collection, getDocs, doc, addDoc, updateDoc, deleteDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    
-    // Firebase configuration from your project
+    import { initializeApp }        from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut }
+                                     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, getDocs, doc, addDoc, updateDoc, deleteDoc, getDoc, setDoc }
+                                     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
     const firebaseConfig = {
-      apiKey: "AIzaSyD8fd_23dLQPbLqfqbakpJtlzjIOD_B-Jw",
-      authDomain: "myapp-506ca.firebaseapp.com",
-      projectId: "myapp-506ca",
-      storageBucket: "myapp-506ca.appspot.com",
+      apiKey:            "AIzaSyD8fd_23dLQPbLqfqbakpJtlzjIOD_B-Jw",
+      authDomain:        "myapp-506ca.firebaseapp.com",
+      projectId:         "myapp-506ca",
+      storageBucket:     "myapp-506ca.appspot.com",
       messagingSenderId: "341275741284",
-      appId: "1:341275741284:web:f955e6c5a273e4be616371"
+      appId:             "1:341275741284:web:f955e6c5a273e4be616371"
     };
-    
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
+
+    const app  = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getFirestore(app);
-    const buttonsCollectionRef = collection(db, "dashboard_buttons");
+    const db   = getFirestore(app);
+    const buttonsCol = collection(db, "dashboard_buttons");
 
-    // --- DOM Elements ---
-    const loginContainer = document.getElementById('login-container');
-    const appContent = document.getElementById('app-content');
-    const mainContent = document.getElementById('main-content');
-    const googleSignInBtn = document.getElementById('google-signin-btn');
-    const logoutBtn = document.getElementById('logout-btn');
-    const userPhoto = document.getElementById('user-photo');
-    const userDisplayName = document.getElementById('user-display-name');
-    const userEmail = document.getElementById('user-email');
-    const linkGrid = document.getElementById('link-grid');
-    const laoDateEl = document.getElementById('lao-date');
-    const sidebarToggle = document.getElementById('sidebar-toggle');
-    const sidebar = document.getElementById('sidebar');
-    const sidebarBackdrop = document.getElementById('sidebar-backdrop');
-    const aboutAppBtn = document.getElementById('about-app-btn');
-    
-    // Admin Panel (Dashboard buttons)
-    const adminPanel = document.getElementById('admin-panel');
-    const adminManageBtn = document.getElementById('admin-manage-btn');
-    const backToDashboardBtn = document.getElementById('back-to-dashboard-btn');
-    const buttonForm = document.getElementById('button-form');
-    const formTitle = document.getElementById('form-title');
-    const formDocId = document.getElementById('form-doc-id');
-    const formClearBtn = document.getElementById('form-clear-btn');
-    const buttonsTableBody = document.getElementById('buttons-table-body');
-    
-    // Admin Panel (Config settings)
-    const configPanel = document.getElementById('config-panel');
-    const configManageBtn = document.getElementById('config-manage-btn');
-    const backToDashboardFromConfigBtn = document.getElementById('back-to-dashboard-from-config-btn');
-    const configForm = document.getElementById('config-form');
+    /* ── DOM refs ── */
+    const $ = id => document.getElementById(id);
+    const loginContainer   = $('login-container');
+    const appContent       = $('app-content');
+    const mainContent      = $('main-content');
+    const adminPanel       = $('admin-panel');
+    const configPanel      = $('config-panel');
+    const linkGrid         = $('link-grid');
+    const laoDateEl        = $('lao-date');
+    const sidebarToggle    = $('sidebar-toggle');
+    const sidebar          = $('sidebar');
+    const sidebarBackdrop  = $('sidebar-backdrop');
+    const adminQuickBtn    = $('admin-quick-btn');
 
-    // Personal Info & NEW Calculation Management Button
-    const personalInfoBtn = document.getElementById('personal-info-btn');
-    const manageCalcBtn = document.getElementById('manage-calc-btn');
+    /* ── Helpers ── */
+    const toast = (title, icon = 'success') =>
+      Swal.fire({ toast:true, position:'top-end', icon, title, showConfirmButton:false, timer:3000, timerProgressBar:true });
 
-    // --- Helper Functions ---
-    const showNotification = (title, icon = 'success') => {
+    const askAdminCode = (cb) =>
       Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: icon,
-        title: title,
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.addEventListener('mouseenter', Swal.stopTimer)
-          toast.addEventListener('mouseleave', Swal.resumeTimer)
-        }
-      });
-    };
-    
-    const promptForAdminCode = (onSuccessCallback) => {
-        Swal.fire({
-            title: 'ໃສ່ລະຫັດເພື່ອເຂົ້າເຖິງ',
-            input: 'password',
-            inputPlaceholder: 'ກະລຸນາໃສ່ລະຫັດ',
-            inputAttributes: {
-                autocapitalize: 'off',
-                autocorrect: 'off'
-            },
-            showCancelButton: true,
-            confirmButtonText: 'ຢືນยัน',
-            cancelButtonText: 'ຍົກເລີກ',
-            showLoaderOnConfirm: true,
-            preConfirm: (code) => {
-                if (code === '6203') {
-                   return true;
-                } else {
-                    Swal.showValidationMessage('ລະຫັດບໍ່ຖືກຕ້ອງ!');
-                    return false;
-                }
-            },
-            allowOutsideClick: () => !Swal.isLoading()
-        }).then((result) => {
-            if (result.isConfirmed) {
-                onSuccessCallback();
-            }
-        });
-    };
-    
-    const closeSidebar = () => {
-        sidebar.classList.remove('open');
-        sidebarBackdrop.classList.remove('active');
-    };
+        title:'ໃສ່ລະຫັດເຂົ້າເຖິງ', input:'password', inputPlaceholder:'ລະຫັດ',
+        showCancelButton:true, confirmButtonText:'ຢືນຢັນ', cancelButtonText:'ຍົກເລີກ',
+        preConfirm: c => c === '6203' ? true : (Swal.showValidationMessage('ລະຫັດບໍ່ຖືກຕ້ອງ!'), false),
+      }).then(r => r.isConfirmed && cb());
 
-    // --- Authentication ---
-    const signInWithGoogle = () => {
-      const provider = new GoogleAuthProvider();
-      signInWithPopup(auth, provider).catch((error) => console.error("Sign-in Error:", error));
-    };
+    const closeSidebar = () => { sidebar.classList.remove('open'); sidebarBackdrop.classList.remove('active'); };
+    const openSidebar  = () => { sidebar.classList.add('open');    sidebarBackdrop.classList.add('active'); };
 
-    const signOutUser = () => {
-      signOut(auth).catch((error) => console.error("Sign-out Error:", error));
-    };
-    
-    onAuthStateChanged(auth, (user) => {
+    const showMain   = () => { mainContent.classList.remove('hidden'); adminPanel.classList.add('hidden'); configPanel.classList.add('hidden'); };
+    const showAdmin  = () => { mainContent.classList.add('hidden');    adminPanel.classList.remove('hidden'); configPanel.classList.add('hidden'); };
+    const showConfig = () => { mainContent.classList.add('hidden');    adminPanel.classList.add('hidden');    configPanel.classList.remove('hidden'); };
+
+    /* ── Auth ── */
+    $('google-signin-btn').onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(console.error);
+    $('logout-btn').onclick        = () => signOut(auth).catch(console.error);
+
+    onAuthStateChanged(auth, user => {
       if (user) {
         loginContainer.classList.add('hidden');
         appContent.classList.remove('hidden');
-        mainContent.classList.remove('hidden');
-        adminPanel.classList.add('hidden');
-        configPanel.classList.add('hidden');
-        updateUserInfo(user);
-        checkAdminStatusAndLoadDashboard(user);
+        showMain();
+        $('user-photo').src         = user.photoURL || 'https://placehold.co/120x120/1b4332/ffffff?text=U';
+        $('user-display-name').textContent = user.displayName || 'ຜູ້ໃຊ້';
+        $('user-email').textContent = user.email;
+        checkAdminAndLoad(user);
       } else {
         loginContainer.classList.remove('hidden');
         appContent.classList.add('hidden');
         linkGrid.innerHTML = '';
-        // Hide all admin buttons on logout
-        adminManageBtn.classList.add('hidden');
-        configManageBtn.classList.add('hidden');
-        personalInfoBtn.classList.add('hidden');
-        manageCalcBtn.classList.add('hidden');
+        ['admin-manage-btn','config-manage-btn','personal-info-btn','manage-calc-btn','admin-quick-btn']
+          .forEach(id => $(id).classList.add('hidden'));
       }
     });
 
-    const updateUserInfo = (user) => {
-      userPhoto.src = user.photoURL || 'https://placehold.co/120x120/2c3e50/ecf0f1?text=User';
-      userDisplayName.textContent = user.displayName || 'ຜູ້ໃຊ້';
-      userEmail.textContent = user.email;
-    };
-
-    // --- Admin & Dashboard Logic ---
-    const checkAdminStatusAndLoadDashboard = async (user) => {
+    const checkAdminAndLoad = async (user) => {
       try {
-        const adminQuerySnapshot = await getDocs(collection(db, "admins"));
-        const adminEmails = adminQuerySnapshot.docs.map(doc => doc.data().email.trim().toLowerCase());
-        
-        // Admin check based on email list in Firestore OR specific UID
-        const isEmailAdmin = adminEmails.includes(user.email.toLowerCase());
-        const isUIDAdmin = user.uid === 'KiG4XbEvJEfNl8QjubHF540KIUI2';
-        const isAdmin = isEmailAdmin || isUIDAdmin;
-        
-        // Toggle visibility of all admin buttons based on status
-        adminManageBtn.classList.toggle('hidden', !isAdmin);
-        configManageBtn.classList.toggle('hidden', !isAdmin);
-        personalInfoBtn.classList.toggle('hidden', !isAdmin);
-        manageCalcBtn.classList.toggle('hidden', !isAdmin); // Toggle new button
-        
-        loadDashboardButtons(isAdmin);
-      } catch (error) {
-        console.error("Error checking admin status:", error);
-        loadDashboardButtons(false); // Load public view on error
-        adminManageBtn.classList.add('hidden');
-        configManageBtn.classList.add('hidden');
-        personalInfoBtn.classList.add('hidden');
-        manageCalcBtn.classList.add('hidden');
+        const snap = await getDocs(collection(db, "admins"));
+        const emails = snap.docs.map(d => d.data().email.trim().toLowerCase());
+        const isAdmin = emails.includes(user.email.toLowerCase()) || user.uid === 'KiG4XbEvJEfNl8QjubHF540KIUI2';
+        ['admin-manage-btn','config-manage-btn','personal-info-btn','manage-calc-btn']
+          .forEach(id => $(id).classList.toggle('hidden', !isAdmin));
+        adminQuickBtn.classList.toggle('hidden', !isAdmin);
+        loadDashboard(isAdmin);
+      } catch {
+        loadDashboard(false);
       }
     };
 
-    const loadDashboardButtons = async (isAdmin) => {
-      linkGrid.innerHTML = 'ກຳລັງໂຫລດ...';
+    /* ── Dashboard ── */
+    const loadDashboard = async (isAdmin) => {
+      linkGrid.innerHTML = '<div class="grid-loading"><i class="fas fa-circle-notch fa-spin"></i> ກຳລັງໂຫລດ...</div>';
       try {
-        const querySnapshot = await getDocs(buttonsCollectionRef);
-        let buttons = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        buttons.sort((a, b) => (a.sortOrder || 99) - (b.sortOrder || 99));
-        
-        const buttonsToShow = isAdmin ? buttons : buttons.filter(button => String(button.status) === "true");
-        renderButtons(buttonsToShow);
-      } catch (error) {
-        console.error("Error loading dashboard buttons:", error);
-        linkGrid.innerHTML = '<p style="color: var(--danger-color);">ບໍ່ສາມາດໂຫລດຂໍ້ມູນໄດ້.</p>';
+        const snap = await getDocs(buttonsCol);
+        let btns = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        btns.sort((a,b) => (a.sortOrder||99) - (b.sortOrder||99));
+        if (!isAdmin) btns = btns.filter(b => String(b.status) === 'true');
+        renderDashboard(btns, isAdmin);
+      } catch {
+        linkGrid.innerHTML = '<div class="grid-loading" style="color:#e74c3c"><i class="fas fa-exclamation-triangle"></i> ໂຫລດຂໍ້ມູນບໍ່ສຳເລັດ</div>';
       }
     };
 
-    const renderButtons = (buttons) => {
-      linkGrid.innerHTML = buttons.length === 0 ?
-        '<p>ບໍ່ພົບຂໍ້ມູນລາຍການ.</p>' :
-        buttons.map(button => `
-          <a class="link-card" href="${button.link || '#'}" target="_blank" rel="noopener">
-            <i class="link-icon fas ${button.icon || 'fa-link'}"></i>
-            <span class="link-text">${button.name || 'ບໍ່ມີຊື່'}</span>
-            <i class="link-arrow fas fa-chevron-right"></i>
-          </a>
-        `).join('');
+    const renderDashboard = (btns, isAdmin) => {
+      if (!btns.length) {
+        linkGrid.innerHTML = '<div class="grid-loading">ບໍ່ພົບລາຍການ</div>';
+        return;
+      }
+      linkGrid.innerHTML = btns.map((b, i) => `
+        <a class="app-card" href="${b.link||'#'}" target="_blank" rel="noopener"
+           style="animation-delay:${i * 0.07}s">
+          ${isAdmin ? `<div class="card-edit-dot"><i class="fas fa-pencil-alt"></i></div>` : ''}
+          <div class="card-icon-wrap">
+            <i class="fas ${b.icon||'fa-link'}"></i>
+          </div>
+          <span class="card-label">${b.name||'ບໍ່ມີຊື່'}</span>
+        </a>
+      `).join('');
     };
 
-    // --- Admin Panel (Dashboard Buttons) Logic ---
+    /* ── Admin Panel ── */
     const loadAdminTable = async () => {
-      buttonsTableBody.innerHTML = '<tr><td colspan="5">ກຳລັງໂຫລດ...</td></tr>';
+      $('buttons-table-body').innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px">ກຳລັງໂຫລດ...</td></tr>';
       try {
-        const querySnapshot = await getDocs(buttonsCollectionRef);
-        let buttons = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        buttons.sort((a, b) => (a.sortOrder || 99) - (b.sortOrder || 99));
-        renderAdminTable(buttons);
-      } catch (error) {
-        console.error("Error loading data for admin table:", error);
-        buttonsTableBody.innerHTML = '<tr><td colspan="5" style="color: var(--danger-color);">ໂຫລດຂໍ້ມູນບໍ່ສຳເລັດ</td></tr>';
-      }
+        const snap = await getDocs(buttonsCol);
+        let btns = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (a.sortOrder||99)-(b.sortOrder||99));
+        $('buttons-table-body').innerHTML = btns.length === 0
+          ? '<tr><td colspan="5">ບໍ່ມີຂໍ້ມູນ</td></tr>'
+          : btns.map(b => `
+              <tr data-id="${b.id}">
+                <td>${b.name||''}</td>
+                <td><i class="fas ${b.icon||''}"></i></td>
+                <td>${b.sortOrder||99}</td>
+                <td>${String(b.status)==='true'?'✅':'❌'}</td>
+                <td>
+                  <button class="btn-icon btn-edit" data-id="${b.id}"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon btn-delete" data-id="${b.id}"><i class="fas fa-trash-alt"></i></button>
+                </td>
+              </tr>`).join('');
+      } catch { toast('ໂຫລດຂໍ້ມູນບໍ່ສຳເລັດ', 'error'); }
     };
 
-    const renderAdminTable = (buttons) => {
-      buttonsTableBody.innerHTML = buttons.length === 0 ?
-        '<tr><td colspan="5">ບໍ່ມີຂໍ້ມູນໃນລະບົບ</td></tr>' :
-        buttons.map(btn => `
-          <tr data-id="${btn.id}">
-            <td data-label="ຊື່">${btn.name || ''}</td>
-            <td data-label="Icon"><i class="fas ${btn.icon || ''}"></i> ${btn.icon || ''}</td>
-            <td data-label="ລຳດັບ">${btn.sortOrder || 99}</td>
-            <td data-label="ສະຖານະ">${String(btn.status) === 'true' ? 'ເປີດ' : 'ປິດ'}</td>
-            <td data-label="ຈັດການ">
-              <button class="btn-icon btn-edit" data-id="${btn.id}" title="ແກ້ໄຂ"><i class="fas fa-edit"></i> <span>ແກ້ໄຂ</span></button>
-              <button class="btn-icon btn-delete" data-id="${btn.id}" title="ລົບ"><i class="fas fa-trash-alt"></i> <span>ລົບ</span></button>
-            </td>
-          </tr>
-        `).join('');
+    const clearForm = () => {
+      $('form-doc-id').value  = '';
+      $('button-name').value  = '';
+      $('button-link').value  = '';
+      $('button-icon').value  = '';
+      $('button-sort').value  = '99';
+      $('button-status').value= 'true';
+      $('form-title').textContent = 'ເພີ່ມປຸ່ມໃໝ່';
     };
 
-    const handleFormSubmit = async (e) => {
-      e.preventDefault();
-      const docId = formDocId.value;
-      const buttonData = {
-        name: document.getElementById('button-name').value,
-        link: document.getElementById('button-link').value,
-        icon: document.getElementById('button-icon').value,
-        sortOrder: Number(document.getElementById('button-sort').value),
-        status: document.getElementById('button-status').value,
+    $('form-submit-btn').onclick = async () => {
+      const docId = $('form-doc-id').value;
+      const data  = {
+        name:      $('button-name').value,
+        link:      $('button-link').value,
+        icon:      $('button-icon').value,
+        sortOrder: Number($('button-sort').value),
+        status:    $('button-status').value,
       };
+      if (!data.name || !data.link) return toast('ກະລຸນາໃສ່ຊື່ ແລະ ລິ້ງ', 'warning');
       try {
-        if (docId) {
-          await updateDoc(doc(db, "dashboard_buttons", docId), buttonData);
-          showNotification("ອັບເດດຂໍ້ມູນສຳເລັດ!");
-        } else {
-          await addDoc(buttonsCollectionRef, buttonData);
-          showNotification("ເພີ່ມຂໍ້ມູນໃໝ່ສຳເລັດ!");
-        }
+        if (docId) { await updateDoc(doc(db, "dashboard_buttons", docId), data); toast('ອັບເດດສຳເລັດ!'); }
+        else        { await addDoc(buttonsCol, data); toast('ເພີ່ມສຳເລັດ!'); }
         clearForm();
         loadAdminTable();
-        checkAdminStatusAndLoadDashboard(auth.currentUser);
-      } catch (error) {
-        console.error("Error saving data:", error);
-        showNotification("ເກີດຂໍ້ຜິດພາດໃນການບັນທຶກຂໍ້ມູນ.", 'error');
-      }
+        checkAdminAndLoad(auth.currentUser);
+      } catch(e) { toast('ເກີດຂໍ້ຜິດພາດ: ' + e.message, 'error'); }
     };
 
-    const handleTableClick = (e) => {
-      const button = e.target.closest('button');
-      if (!button) return;
-      const docId = button.dataset.id;
-      if (!docId) return;
-      if (button.classList.contains('btn-edit')) {
-        editButton(docId);
-      }
-      if (button.classList.contains('btn-delete')) {
-        deleteButton(docId);
-      }
-    };
+    $('form-clear-btn').onclick = clearForm;
 
-    const editButton = async (docId) => {
-      Swal.fire({ title: 'ກຳລັງໂຫລດຂໍ້ມູນ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    $('buttons-table-body').addEventListener('click', async e => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      if (btn.classList.contains('btn-edit')) {
+        const snap = await getDoc(doc(db, "dashboard_buttons", id));
+        if (snap.exists()) {
+          const d = snap.data();
+          $('form-doc-id').value   = id;
+          $('button-name').value   = d.name||'';
+          $('button-link').value   = d.link||'';
+          $('button-icon').value   = d.icon||'';
+          $('button-sort').value   = d.sortOrder||99;
+          $('button-status').value = String(d.status)==='true'?'true':'false';
+          $('form-title').textContent = 'ແກ້ໄຂຂໍ້ມູນ';
+          window.scrollTo(0,0);
+        }
+      }
+      if (btn.classList.contains('btn-delete')) {
+        const r = await Swal.fire({ title:'ລຶບລາຍການນີ້?', icon:'warning', showCancelButton:true, confirmButtonColor:'#e74c3c', confirmButtonText:'ລຶບ', cancelButtonText:'ຍົກເລີກ' });
+        if (r.isConfirmed) { await deleteDoc(doc(db, "dashboard_buttons", id)); toast('ລຶບສຳເລັດ!'); loadAdminTable(); checkAdminAndLoad(auth.currentUser); }
+      }
+    });
+
+    /* ── Config Panel ── */
+    const getConfigRef = () => doc(db, "configuration", "appConfig");
+    const getVal = id => Number($(id).value);
+
+    const loadConfig = async () => {
+      Swal.fire({ title:'ກຳລັງໂຫລດ...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
       try {
-        const docSnap = await getDoc(doc(db, "dashboard_buttons", docId));
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          formDocId.value = docId;
-          document.getElementById('button-name').value = data.name || '';
-          document.getElementById('button-link').value = data.link || '';
-          document.getElementById('button-icon').value = data.icon || '';
-          document.getElementById('button-sort').value = data.sortOrder || 99;
-          document.getElementById('button-status').value = String(data.status) === 'true' ? 'true' : 'false';
-          formTitle.textContent = "ແກ້ໄຂຂໍ້ມູນປຸ່ມ";
-          Swal.close();
-          buttonForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        } else {
-            Swal.close();
-            showNotification("ບໍ່ພົບຂໍ້ມູນທີ່ຕ້ອງການແກ້ໄຂ", "error");
-        }
-      } catch (error) {
+        const snap = await getDoc(getConfigRef());
+        if (!snap.exists()) { Swal.close(); return; }
+        const d = snap.data();
+        const set = (id, v) => { if ($(id)) $(id).value = v??''; };
+        set('salary_indexMultiplier', d.salary?.indexMultiplier);
+        set('salary_livingAllowance', d.salary?.livingAllowance);
+        set('salary_childAllowance',  d.salary?.childAllowance);
+        set('salary_wifeAllowance',   d.salary?.wifeAllowance);
+        set('deductions_civilRate',            d.deductions?.civilRate);
+        set('deductions_pensionHealthRate',    d.deductions?.pensionHealthRate);
+        ['deathAllowanceYearsLimit','deathAllowanceBaseMonths','deathAllowanceFormulaMonths1',
+         'deathAllowanceFormulaMonths2','deathAllowanceFormulaMonths3','widowAllowanceMonths',
+         'severancePayMultiplier','widowPensionMultiplier'].forEach(k => set(`govSubsidy_${k}`, d.govSubsidy?.[k]));
+        set('entSubsidy_baseMonths',                    d.entSubsidy?.baseMonths);
+        set('entSubsidy_childbirthBenefitMultiplier',   d.entSubsidy?.childbirthBenefitMultiplier);
+        ['month1','month2','month3','month4'].forEach(m => set(`entSubsidy_ca_${m}`, d.entSubsidy?.childbirthAllowanceMultipliers?.[m]));
+        ['yearLimit','baseMonths','formulaMonths1','formulaMonths2','formulaMonths3'].forEach(k => set(`entSubsidy_db_${k}`, d.entSubsidy?.deathBenefit?.[k]));
+        set('entSubsidy_sp_maxMonths',    d.entSubsidy?.severancePay?.maxMonths);
+        set('entSubsidy_sp_yearMultiplier',d.entSubsidy?.severancePay?.yearMultiplier);
+        set('ui_visitorCountStart', d.ui?.visitorCountStart);
+
+        const fillTiers = (containerId, items) => {
+          $(containerId).innerHTML = '';
+          (items||[]).forEach((t, i) => {
+            $(containerId).innerHTML += `<div class="dynamic-group tier-group"><h4>ຂັ້ນທີ ${i+1}</h4>
+              <div class="form-grid-2">
+                <div class="form-group"><label>maxYears</label><input type="text" class="tier-maxYears" value="${t.maxYears}"></div>
+                <div class="form-group"><label>rate</label><input type="number" class="tier-rate" value="${t.rate}"></div>
+                <div class="form-group"><label>base</label><input type="number" class="tier-base" value="${t.base}"></div>
+                <div class="form-group"><label>previousMax</label><input type="number" class="tier-previousMax" value="${t.previousMax}"></div>
+              </div></div>`;
+          });
+        };
+        fillTiers('yearTiersContainer', d.yearAllowanceTiers);
+        const taxCon = $('taxBracketsContainer');
+        taxCon.innerHTML = '';
+        (d.taxBrackets||[]).forEach((b,i) => {
+          taxCon.innerHTML += `<div class="dynamic-group bracket-group"><h4>ຂັ້ນທີ ${i+1}</h4>
+            <div class="form-grid-2">
+              <div class="form-group"><label>max</label><input type="text" class="bracket-max" value="${b.max}"></div>
+              <div class="form-group"><label>rate</label><input type="number" step="0.01" class="bracket-rate" value="${b.rate}"></div>
+              <div class="form-group"><label>base</label><input type="number" class="bracket-base" value="${b.base}"></div>
+            </div></div>`;
+        });
         Swal.close();
-        console.error("Error fetching document for edit:", error);
-        showNotification("ເກີດຂໍ້ຜິດພາດໃນການໂຫລດຂໍ້ມູນ", "error");
-      }
+      } catch(e) { Swal.fire('ຜິດພາດ', e.message, 'error'); }
     };
 
-    const deleteButton = (docId) => {
-        Swal.fire({
-            title: 'ທ່ານແນ່ໃຈບໍ່?',
-            text: "ທ່ານຕ້ອງການລົບລາຍການນີ້ແທ້ບໍ່? ຖ້າລົບແລ້ວຈະບໍ່ສາມາດກູ້ຄືນໄດ້!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#e74c3c',
-            cancelButtonColor: '#95a5a6',
-            confirmButtonText: 'ແມ່ນ, ລົບເລີຍ!',
-            cancelButtonText: 'ຍົກເລີກ'
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    await deleteDoc(doc(db, "dashboard_buttons", docId));
-                    showNotification("ລົບຂໍ້ມູນສຳເລັດ!", 'success');
-                    loadAdminTable();
-                    checkAdminStatusAndLoadDashboard(auth.currentUser);
-                } catch (error) {
-                    console.error("Error deleting document:", error);
-                    showNotification("ເກີດຂໍ້ຜິດພາດໃນການລົບຂໍ້ມູນ.", 'error');
-                }
-            }
-        });
-    };
-    
-    const clearForm = () => {
-      buttonForm.reset();
-      formDocId.value = '';
-      formTitle.textContent = "ເພີ່ມປຸ່ມໃໝ່";
-    };
-
-    // --- Admin Panel (Configuration) Logic ---
-    const getConfigDocRef = () => doc(db, "configuration", "appConfig");
-
-    async function loadConfigIntoForm() {
-        Swal.fire({ title: 'ກຳລັງໂຫຼດຂໍ້ມູນການຕັ້ງຄ່າ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-        const docRef = getConfigDocRef();
-        try {
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                populateFormWithData(data);
-                Swal.fire('ໂຫຼດສຳເລັດ', 'ໂຫຼດການຕັ້ງຄ່າຈາກຖານຂໍ້ມູນສຳເລັດ.', 'success');
-            } else {
-                Swal.fire('ຄຳເຕືອນ', 'ບໍ່ພົບຂໍ້ມູນການຕັ້ງຄ່າ, ກະລຸນາຕັ້ງຄ່າຂໍ້ມູນກ່ອນ.', 'warning');
-            }
-        } catch (error) {
-            console.error("Error loading config document:", error);
-            Swal.fire('ຜິດພາດ', `ບໍ່ສາມາດໂຫຼດຂໍ້ມູນໄດ້: ${error.message}`, 'error');
-        }
-    }
-
-    function populateFormWithData(data) {
-        try {
-            const populateGroup = (groupName, groupData) => {
-                if (!groupData) return;
-                Object.keys(groupData).forEach(key => {
-                    const element = document.getElementById(`${groupName}_${key}`);
-                    if (element) element.value = groupData[key];
-                });
-            };
-            
-            populateGroup('salary', data.salary);
-            populateGroup('deductions', data.deductions);
-            populateGroup('govSubsidy', data.govSubsidy);
-            populateGroup('ui', data.ui);
-            
-            if (data.entSubsidy) {
-                document.getElementById('entSubsidy_baseMonths').value = data.entSubsidy.baseMonths;
-                document.getElementById('entSubsidy_childbirthBenefitMultiplier').value = data.entSubsidy.childbirthBenefitMultiplier;
-                populateGroup('entSubsidy_ca', data.entSubsidy.childbirthAllowanceMultipliers);
-                populateGroup('entSubsidy_db', data.entSubsidy.deathBenefit);
-                populateGroup('entSubsidy_sp', data.entSubsidy.severancePay);
-            }
-            
-            const yearTiersContainer = document.getElementById('yearTiersContainer');
-            yearTiersContainer.innerHTML = '';
-            if (data.yearAllowanceTiers) {
-                data.yearAllowanceTiers.forEach((tier, index) => {
-                    yearTiersContainer.innerHTML += `
-                        <div class="dynamic-group tier-group">
-                            <h4>ຂັ້ນທີ ${index + 1}</h4>
-                            <div class="form-grid">
-                                <div class="form-group"><label>ປີສູງສຸດ (maxYears)</label><input type="text" class="tier-maxYears" value="${tier.maxYears}"></div>
-                                <div class="form-group"><label>ອັດຕາ (rate)</label><input type="number" class="tier-rate" value="${tier.rate}"></div>
-                                <div class="form-group"><label>ເງິນພື້ນຖານ (base)</label><input type="number" class="tier-base" value="${tier.base}"></div>
-                                <div class="form-group"><label>ປີສູງສຸດກ່ອນໜ້າ (previousMax)</label><input type="number" class="tier-previousMax" value="${tier.previousMax}"></div>
-                            </div>
-                        </div>`;
-                });
-            }
-
-            const taxBracketsContainer = document.getElementById('taxBracketsContainer');
-            taxBracketsContainer.innerHTML = '';
-            if (data.taxBrackets) {
-                data.taxBrackets.forEach((bracket, index) => {
-                    taxBracketsContainer.innerHTML += `
-                         <div class="dynamic-group bracket-group">
-                            <h4>ຂັ້ນທີ ${index + 1}</h4>
-                            <div class="form-grid">
-                                <div class="form-group"><label>ລາຍຮັບສູງສຸດ (max)</label><input type="text" class="bracket-max" value="${bracket.max}"></div>
-                                <div class="form-group"><label>ອັດຕາ (rate)</label><input type="number" step="0.01" class="bracket-rate" value="${bracket.rate}"></div>
-                                <div class="form-group"><label>ອາກອນພື້ນຖານ (base)</label><input type="number" class="bracket-base" value="${bracket.base}"></div>
-                            </div>
-                        </div>`;
-                });
-            }
-        } catch (error) {
-            console.error("Error populating form with data:", error);
-            Swal.fire('ຜິດພາດ', `ບໍ່ສາມາດຕັ້ງຄ່າຂໍ້ມູນໃສ່ຟອມໄດ້: ${error.message}`, 'error');
-        }
-    }
-
-    async function handleConfigFormSubmit(e) {
-        e.preventDefault();
-        Swal.fire({ title: 'ກຳລັງບັນທຶກຂໍ້ມູນ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-        try {
-            const getVal = (id) => Number(document.getElementById(id).value);
-            const newConfig = {
-                salary: { indexMultiplier: getVal('salary_indexMultiplier'), livingAllowance: getVal('salary_livingAllowance'), childAllowance: getVal('salary_childAllowance'), wifeAllowance: getVal('salary_wifeAllowance') },
-                deductions: { civilRate: getVal('deductions_civilRate'), pensionHealthRate: getVal('deductions_pensionHealthRate') },
-                govSubsidy: { deathAllowanceYearsLimit: getVal('govSubsidy_deathAllowanceYearsLimit'), deathAllowanceBaseMonths: getVal('govSubsidy_deathAllowanceBaseMonths'), deathAllowanceFormulaMonths1: getVal('govSubsidy_deathAllowanceFormulaMonths1'), deathAllowanceFormulaMonths2: getVal('govSubsidy_deathAllowanceFormulaMonths2'), deathAllowanceFormulaMonths3: getVal('govSubsidy_deathAllowanceFormulaMonths3'), widowAllowanceMonths: getVal('govSubsidy_widowAllowanceMonths'), severancePayMultiplier: getVal('govSubsidy_severancePayMultiplier'), widowPensionMultiplier: getVal('govSubsidy_widowPensionMultiplier') },
-                entSubsidy: {
-                    baseMonths: getVal('entSubsidy_baseMonths'), childbirthBenefitMultiplier: getVal('entSubsidy_childbirthBenefitMultiplier'),
-                    childbirthAllowanceMultipliers: { month1: getVal('entSubsidy_ca_month1'), month2: getVal('entSubsidy_ca_month2'), month3: getVal('entSubsidy_ca_month3'), month4: getVal('entSubsidy_ca_month4') },
-                    deathBenefit: { yearLimit: getVal('entSubsidy_db_yearLimit'), baseMonths: getVal('entSubsidy_db_baseMonths'), formulaMonths1: getVal('entSubsidy_db_formulaMonths1'), formulaMonths2: getVal('entSubsidy_db_formulaMonths2'), formulaMonths3: getVal('entSubsidy_db_formulaMonths3') },
-                    severancePay: { maxMonths: getVal('entSubsidy_sp_maxMonths'), yearMultiplier: getVal('entSubsidy_sp_yearMultiplier') }
-                },
-                ui: { visitorCountStart: getVal('ui_visitorCountStart') },
-                yearAllowanceTiers: [],
-                taxBrackets: []
-            };
-
-            document.querySelectorAll('.tier-group').forEach(group => {
-                const maxYearsValue = group.querySelector('.tier-maxYears').value;
-                newConfig.yearAllowanceTiers.push({
-                    maxYears: maxYearsValue.toLowerCase() === 'infinity' ? 'Infinity' : Number(maxYearsValue),
-                    rate: Number(group.querySelector('.tier-rate').value),
-                    base: Number(group.querySelector('.tier-base').value),
-                    previousMax: Number(group.querySelector('.tier-previousMax').value)
-                });
-            });
-
-            document.querySelectorAll('.bracket-group').forEach(group => {
-                 const maxValue = group.querySelector('.bracket-max').value;
-                 newConfig.taxBrackets.push({
-                    max: maxValue.toLowerCase() === 'infinity' ? 'Infinity' : Number(maxValue),
-                    rate: Number(group.querySelector('.bracket-rate').value),
-                    base: Number(group.querySelector('.bracket-base').value)
-                });
-            });
-
-            const docRef = getConfigDocRef();
-            await setDoc(docRef, newConfig);
-            Swal.fire('ບັນທຶກສຳເລັດ!', 'ຂໍ້ມູນການຕັ້ງຄ່າໄດ້ຖືກອັບເດດແລ້ວ.', 'success');
-        } catch (error) {
-             console.error(error);
-             Swal.fire('ຜິດພາດ', `ບໍ່ສາມາດບັນທຶກຂໍ້ມູນໄດ້: ${error.message}`, 'error');
-        }
-    }
-
-    // --- Event Listeners ---
-    googleSignInBtn.addEventListener('click', signInWithGoogle);
-    logoutBtn.addEventListener('click', signOutUser);
-    
-    sidebarToggle.addEventListener('click', () => {
-      sidebar.classList.toggle('open');
-      sidebarBackdrop.classList.toggle('active');
+    $('config-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      Swal.fire({ title:'ກຳລັງບັນທຶກ...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+      try {
+        const cfg = {
+          salary:     { indexMultiplier:getVal('salary_indexMultiplier'), livingAllowance:getVal('salary_livingAllowance'), childAllowance:getVal('salary_childAllowance'), wifeAllowance:getVal('salary_wifeAllowance') },
+          deductions: { civilRate:getVal('deductions_civilRate'), pensionHealthRate:getVal('deductions_pensionHealthRate') },
+          govSubsidy: { deathAllowanceYearsLimit:getVal('govSubsidy_deathAllowanceYearsLimit'), deathAllowanceBaseMonths:getVal('govSubsidy_deathAllowanceBaseMonths'), deathAllowanceFormulaMonths1:getVal('govSubsidy_deathAllowanceFormulaMonths1'), deathAllowanceFormulaMonths2:getVal('govSubsidy_deathAllowanceFormulaMonths2'), deathAllowanceFormulaMonths3:getVal('govSubsidy_deathAllowanceFormulaMonths3'), widowAllowanceMonths:getVal('govSubsidy_widowAllowanceMonths'), severancePayMultiplier:getVal('govSubsidy_severancePayMultiplier'), widowPensionMultiplier:getVal('govSubsidy_widowPensionMultiplier') },
+          entSubsidy: { baseMonths:getVal('entSubsidy_baseMonths'), childbirthBenefitMultiplier:getVal('entSubsidy_childbirthBenefitMultiplier'), childbirthAllowanceMultipliers:{month1:getVal('entSubsidy_ca_month1'),month2:getVal('entSubsidy_ca_month2'),month3:getVal('entSubsidy_ca_month3'),month4:getVal('entSubsidy_ca_month4')}, deathBenefit:{yearLimit:getVal('entSubsidy_db_yearLimit'),baseMonths:getVal('entSubsidy_db_baseMonths'),formulaMonths1:getVal('entSubsidy_db_formulaMonths1'),formulaMonths2:getVal('entSubsidy_db_formulaMonths2'),formulaMonths3:getVal('entSubsidy_db_formulaMonths3')}, severancePay:{maxMonths:getVal('entSubsidy_sp_maxMonths'),yearMultiplier:getVal('entSubsidy_sp_yearMultiplier')} },
+          ui:         { visitorCountStart:getVal('ui_visitorCountStart') },
+          yearAllowanceTiers: [...document.querySelectorAll('.tier-group')].map(g => ({ maxYears:g.querySelector('.tier-maxYears').value.toLowerCase()==='infinity'?'Infinity':Number(g.querySelector('.tier-maxYears').value), rate:Number(g.querySelector('.tier-rate').value), base:Number(g.querySelector('.tier-base').value), previousMax:Number(g.querySelector('.tier-previousMax').value) })),
+          taxBrackets: [...document.querySelectorAll('.bracket-group')].map(g => ({ max:g.querySelector('.bracket-max').value.toLowerCase()==='infinity'?'Infinity':Number(g.querySelector('.bracket-max').value), rate:Number(g.querySelector('.bracket-rate').value), base:Number(g.querySelector('.bracket-base').value) })),
+        };
+        await setDoc(getConfigRef(), cfg);
+        Swal.fire('ສຳເລັດ!', 'ຂໍ້ມູນໄດ້ຖືກອັບເດດ', 'success');
+      } catch(e) { Swal.fire('ຜິດພາດ', e.message, 'error'); }
     });
 
-    sidebarBackdrop.addEventListener('click', closeSidebar);
-    
-    adminManageBtn.addEventListener('click', () => {
-      promptForAdminCode(() => {
-        mainContent.classList.add('hidden');
-        configPanel.classList.add('hidden');
-        adminPanel.classList.remove('hidden');
-        closeSidebar();
-        loadAdminTable();
-      });
+    /* ── Navigation & Events ── */
+    sidebarToggle.onclick  = openSidebar;
+    sidebarBackdrop.onclick= closeSidebar;
+
+    $('back-to-dashboard-btn').onclick = () => { showMain(); closeSidebar(); };
+    $('back-to-dashboard-from-config-btn').onclick = () => { showMain(); closeSidebar(); };
+
+    $('admin-manage-btn').onclick = () => askAdminCode(() => { showAdmin(); closeSidebar(); loadAdminTable(); });
+    $('config-manage-btn').onclick= () => askAdminCode(() => { showConfig(); closeSidebar(); loadConfig(); });
+    $('manage-calc-btn').onclick  = () => askAdminCode(() => { window.location.href='./calculator.html'; });
+    $('personal-info-btn').onclick= () => askAdminCode(() => { window.location.href='./personal_info.html'; });
+
+    adminQuickBtn.onclick = () => askAdminCode(() => { showAdmin(); loadAdminTable(); });
+
+    $('nav-home').onclick     = showMain;
+    $('nav-add').onclick      = () => askAdminCode(() => { showAdmin(); loadAdminTable(); });
+    $('nav-settings').onclick = () => { sidebar.classList.toggle('open'); sidebarBackdrop.classList.toggle('active'); };
+
+    $('about-app-btn').onclick = () => Swal.fire({
+      title:'<strong>ກ່ຽວກັບແອັບ</strong>', icon:'info',
+      html:'ລະບົບລວມເຄື່ອງມືອອນໄລນ໌<br>ພັດທະນາໂດຍ: <b>ທ. ບຸນເຜີ້ງ ເພັດໄຊຍະພູມ</b>',
+      confirmButtonText:'<i class="fa fa-thumbs-up"></i> ຮັບຊາບ!',
+      confirmButtonColor:'#2d6a4f',
     });
 
-    configManageBtn.addEventListener('click', () => {
-        promptForAdminCode(() => {
-            mainContent.classList.add('hidden');
-            adminPanel.classList.add('hidden');
-            configPanel.classList.remove('hidden');
-            closeSidebar();
-            loadConfigIntoForm();
-        });
-    });
-
-    // ===== NEW EVENT LISTENER FOR CALCULATION MANAGEMENT =====
-    manageCalcBtn.addEventListener('click', () => {
-        promptForAdminCode(() => {
-            // On successful code entry, navigate to the calculator/editor page
-            window.location.href = './calculator.html';
-        });
-    });
-
-    personalInfoBtn.addEventListener('click', () => {
-        promptForAdminCode(() => {
-            // On successful code entry, navigate to the personal info page
-            window.location.href = './personal_info.html';
-        });
-    });
-    
-    backToDashboardBtn.addEventListener('click', () => {
-      mainContent.classList.remove('hidden');
-      adminPanel.classList.add('hidden');
-    });
-
-    backToDashboardFromConfigBtn.addEventListener('click', () => {
-      mainContent.classList.remove('hidden');
-      configPanel.classList.add('hidden');
-    });
-
-    aboutAppBtn.addEventListener('click', () => {
-      Swal.fire({
-        title: '<strong>ກ່ຽວກັບແອັບພລິເຄຊັນ</strong>',
-        icon: 'info',
-        html: 'ລະບົບລວມເຄື່ອງມືອອນໄລນ໌<br>' + 'ພັດທະນາໂດຍ: <b>ທ. ບຸນເຜີ້ງ ເພັດໄຊຍະພູມ</b>',
-        showCloseButton: true,
-        focusConfirm: false,
-        confirmButtonText: '<i class="fa fa-thumbs-up"></i> ຮັບຊາບ!',
-        confirmButtonAriaLabel: 'Thumbs up, great!',
-      })
-    });
-
-    buttonForm.addEventListener('submit', handleFormSubmit);
-    formClearBtn.addEventListener('click', clearForm);
-    buttonsTableBody.addEventListener('click', handleTableClick);
-    configForm.addEventListener('submit', handleConfigFormSubmit);
-
-    // --- Initial Load ---
-    function formatLaoDate() {
-      const date = new Date();
-      const days = ['ວັນອາທິດ', 'ວັນຈັນ', 'ວັນອັງຄານ', 'ວັນພຸດ', 'ວັນພະຫັດ', 'ວັນສຸກ', 'ວັນເສົາ'];
-      const months = ['ມັງກອນ', 'ກຸມພາ', 'ມີນາ', 'ເມສາ', 'ພຶດສະພາ', 'ມິຖຸນາ', 'ກໍລະກົດ', 'ສິງຫາ', 'ກັນຍາ', 'ຕຸລາ', 'ພະຈິກ', 'ທັນວາ'];
-      return `${days[date.getDay()]} ທີ ${date.getDate()} ເດືອນ ${months[date.getMonth()]} ປີ ${date.getFullYear()}`;
-    }
-    laoDateEl.textContent = formatLaoDate();
+    /* ── Date ── */
+    const days   = ['ອາທິດ','ຈັນ','ອັງຄານ','ພຸດ','ພະຫັດ','ສຸກ','ເສົາ'];
+    const months = ['ມັງກອນ','ກຸມພາ','ມີນາ','ເມສາ','ພຶດສະພາ','ມິຖຸນາ','ກໍລະກົດ','ສິງຫາ','ກັນຍາ','ຕຸລາ','ພະຈິກ','ທັນວາ'];
+    const now = new Date();
+    laoDateEl.textContent = `ວັນ${days[now.getDay()]} ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
   </script>
 
-<script>
-    if ('serviceWorker' in navigator) {
-     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js')
-          .then(registration => {
-            console.log('Service Worker registered: ', registration);
-          })
-          .catch(error => {
-            console.log('Service Worker registration failed: ', error);
-          });
-      });
-    }
-</script>
-  
-
+  <script>
+    if ('serviceWorker' in navigator)
+      window.addEventListener('load', () =>
+        navigator.serviceWorker.register('./service-worker.js').catch(() => {}));
+  </script>
 </body>
 </html>
